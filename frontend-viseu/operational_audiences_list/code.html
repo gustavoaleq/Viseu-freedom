@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lista de Audiências Operacional - Freedom.AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b981", 
+                        "primary-hover": "#059669",
+                        "primary-dark": "#047857",
+                        "background-light": "#f0fdf4", 
+                        "background-dark": "#064e3b", 
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#065f46", 
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#1f4239",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #2d5a4d;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-slate-900 font-display text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+<nav class="bg-surface-light dark:bg-slate-800 border-b border-border-light dark:border-slate-700 px-6 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold text-lg">F</div>
+<span class="font-bold text-lg tracking-tight hidden sm:block">Freedom.AI <span class="text-slate-400 font-normal">| Hub Operacional</span></span>
+</div>
+<div class="hidden md:flex items-center text-sm text-slate-500 dark:text-slate-400 ml-6 pl-6 border-l border-border-light dark:border-slate-700">
+<span>Dashboard</span>
+<span class="material-icons text-base mx-1">chevron_right</span>
+<span>Operacional</span>
+<span class="material-icons text-base mx-1">chevron_right</span>
+<span class="font-medium text-slate-800 dark:text-slate-100">Lista de Audiências</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-icons absolute left-3 top-2.5 text-slate-400 text-lg">search</span>
+<input class="pl-10 pr-4 py-2 text-sm rounded-lg border border-border-light dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/50 w-64" placeholder="Buscar operações..." type="text"/>
+</div>
+<button class="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons text-slate-600 dark:text-slate-300">notifications_none</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 overflow-hidden border border-slate-300 dark:border-slate-600">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Portrait of a user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDolKyolZPljd9L0DhrZpKd32LrPQB_Y5LnLpkK2EPL9gvEHwpPTDC58NsU-J-H6rPDbi7A2p0eKx8flTqxbU1BMrGmyB0VOwgWix2xWcBmBsKcRJfNRsWuM8iZnNe1l-jqalQsLv870hL6ui2K-mFHiUnPRiHzsHUt3BCQ2YutogmqZGsgH0p8HoIFfuIlCj-qaJUD7fzuDlrd9E5zyF1PXfdf6UEmg6oHT_lspMnRikN7f1lD59a_Fv8_FtJjx1KKE1sJ3qO8Kzc"/>
+</div>
+</div>
+</nav>
+<main class="flex-1 p-6 md:p-8 overflow-hidden flex flex-col h-[calc(100vh-64px)]">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 shrink-0">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Lista de Audiências Operacional</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerencie audiências, designação de prepostos e atualizações de status.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-light dark:border-slate-600 bg-surface-light dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium text-sm transition-all shadow-sm">
+<span class="material-icons text-lg">upload_file</span>
+                    Importar Planilha
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-all shadow-md shadow-primary/20">
+<span class="material-icons text-lg">add</span>
+                    Novo Registro
+                </button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-slate-800 rounded-xl p-4 border border-border-light dark:border-slate-700 shadow-sm mb-6 shrink-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+<div class="relative group">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">Período</label>
+<div class="flex items-center bg-slate-50 dark:bg-slate-900 border border-border-light dark:border-slate-600 rounded-lg px-3 py-2 text-sm">
+<span class="material-icons text-slate-400 text-lg mr-2">calendar_today</span>
+<select class="bg-transparent border-none p-0 focus:ring-0 w-full text-slate-700 dark:text-slate-200 text-sm cursor-pointer">
+<option>Esta Semana</option>
+<option>Próxima Semana</option>
+<option>Este Mês</option>
+<option>Personalizado</option>
+</select>
+</div>
+</div>
+<div class="relative group">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">Status</label>
+<div class="flex items-center bg-slate-50 dark:bg-slate-900 border border-border-light dark:border-slate-600 rounded-lg px-3 py-2 text-sm">
+<span class="material-icons text-slate-400 text-lg mr-2">filter_list</span>
+<select class="bg-transparent border-none p-0 focus:ring-0 w-full text-slate-700 dark:text-slate-200 text-sm cursor-pointer">
+<option>Todos os Status</option>
+<option>Importada</option>
+<option>A confirmar (D-1)</option>
+<option>Confirmada</option>
+<option>Realizada</option>
+</select>
+</div>
+</div>
+<div class="relative group">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">Parceiro</label>
+<div class="flex items-center bg-slate-50 dark:bg-slate-900 border border-border-light dark:border-slate-600 rounded-lg px-3 py-2 text-sm">
+<span class="material-icons text-slate-400 text-lg mr-2">business</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 w-full text-slate-700 dark:text-slate-200 text-sm placeholder-slate-400" placeholder="Buscar Parceiro..." type="text"/>
+</div>
+</div>
+<div class="relative group">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">TRT / Região</label>
+<div class="flex items-center bg-slate-50 dark:bg-slate-900 border border-border-light dark:border-slate-600 rounded-lg px-3 py-2 text-sm">
+<span class="material-icons text-slate-400 text-lg mr-2">map</span>
+<select class="bg-transparent border-none p-0 focus:ring-0 w-full text-slate-700 dark:text-slate-200 text-sm cursor-pointer">
+<option>Todas as Regiões</option>
+<option>TRT-2 (SP)</option>
+<option>TRT-1 (RJ)</option>
+<option>TRT-15 (Campinas)</option>
+</select>
+</div>
+</div>
+<div class="relative group flex items-end pb-2">
+<label class="inline-flex items-center cursor-pointer">
+<input class="form-checkbox h-4 w-4 text-primary border-slate-300 dark:border-slate-600 rounded focus:ring-primary" type="checkbox"/>
+<span class="ml-2 text-sm text-slate-700 dark:text-slate-300">Somente requer ação</span>
+</label>
+</div>
+<div class="flex items-end">
+<button class="w-full h-[38px] flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 hover:border-primary text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm">
+<span class="material-icons text-base">restart_alt</span>
+                    Limpar Filtros
+                </button>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-slate-800 rounded-xl border border-border-light dark:border-slate-700 shadow-sm flex-1 flex flex-col overflow-hidden">
+<div class="overflow-x-auto custom-scrollbar flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 dark:bg-slate-900 sticky top-0 z-10">
+<tr>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700 w-10">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700 cursor-pointer hover:text-primary transition-colors group">
+<div class="flex items-center gap-1">Data/Hora <span class="material-icons text-sm opacity-0 group-hover:opacity-100">arrow_downward</span></div>
+</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">TRT/Região</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Modalidade</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Local/Link</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Processo/ID</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Preposto</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Parceiro</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700">Status</th>
+<th class="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-border-light dark:border-slate-700 text-right">Próxima Ação</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-slate-700 text-sm">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+<td class="p-4 border-l-4 border-l-transparent hover:border-l-primary transition-all">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</td>
+<td class="p-4 whitespace-nowrap">
+<div class="font-medium text-slate-900 dark:text-white">24 Out, 2023</div>
+<div class="text-xs text-slate-500">14:30</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">TRT-2 (SP)</td>
+<td class="p-4 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+<span class="material-icons text-xs">videocam</span> Online
+                                </div>
+</td>
+<td class="p-4 whitespace-nowrap max-w-[150px] truncate">
+<a class="text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-icons text-sm">link</span> Join Zoom
+                                </a>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-mono text-xs">1001245-88.2023.5.02.0001</td>
+<td class="p-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-xs font-bold">JD</div>
+<span class="text-slate-700 dark:text-slate-200">João Dias</span>
+</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">Silva &amp; Santos Adv</td>
+<td class="p-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-100 dark:border-amber-800">
+                                    A confirmar (D-1)
+                                </span>
+</td>
+<td class="p-4 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Ver detalhe">
+<span class="material-icons text-lg">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400" title="Reenviar D-1">
+<span class="material-icons text-lg">send</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-orange-600 dark:hover:text-orange-400" title="Trocar preposto">
+<span class="material-icons text-lg">manage_accounts</span>
+</button>
+<button class="p-1.5 rounded bg-primary/10 hover:bg-primary text-primary hover:text-white dark:text-primary dark:hover:text-white transition-colors" title="Confirmar">
+<span class="material-icons text-lg">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+<td class="p-4 border-l-4 border-l-transparent hover:border-l-primary transition-all">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</td>
+<td class="p-4 whitespace-nowrap">
+<div class="font-medium text-slate-900 dark:text-white">25 Out, 2023</div>
+<div class="text-xs text-slate-500">09:00</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">TRT-15 (Campinas)</td>
+<td class="p-4 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+<span class="material-icons text-xs">business</span> Presencial
+                                </div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 max-w-[150px] truncate" title="Av. Francisco Glicério, 123 - Centro">
+                                Av. Francisco Glicério, 123...
+                            </td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-mono text-xs">0054321-12.2023.5.15.0043</td>
+<td class="p-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-xs font-bold">AS</div>
+<span class="text-slate-700 dark:text-slate-200">Ana Silva</span>
+</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">Global Tech Legal</td>
+<td class="p-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800">
+                                    Confirmada
+                                </span>
+</td>
+<td class="p-4 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Ver detalhe">
+<span class="material-icons text-lg">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400" title="Reenviar D-1">
+<span class="material-icons text-lg">send</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-orange-600 dark:hover:text-orange-400" title="Trocar preposto">
+<span class="material-icons text-lg">manage_accounts</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+<td class="p-4 border-l-4 border-l-transparent hover:border-l-primary transition-all">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</td>
+<td class="p-4 whitespace-nowrap">
+<div class="font-medium text-slate-900 dark:text-white">26 Out, 2023</div>
+<div class="text-xs text-slate-500">11:00</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">TRT-1 (RJ)</td>
+<td class="p-4 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+<span class="material-icons text-xs">videocam</span> Online
+                                </div>
+</td>
+<td class="p-4 whitespace-nowrap max-w-[150px] truncate">
+<a class="text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-icons text-sm">link</span> Join Teams
+                                </a>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-mono text-xs">0098765-33.2023.5.01.0022</td>
+<td class="p-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="text-slate-400 italic text-xs">Não atribuído</span>
+<button class="text-primary hover:text-primary-hover"><span class="material-icons text-base">add_circle_outline</span></button>
+</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">Oliveira &amp; Partners</td>
+<td class="p-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                                    Importada
+                                </span>
+</td>
+<td class="p-4 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Ver detalhe">
+<span class="material-icons text-lg">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-orange-600 dark:hover:text-orange-400" title="Atribuir Preposto">
+<span class="material-icons text-lg">person_add</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+<td class="p-4 border-l-4 border-l-transparent hover:border-l-primary transition-all">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</td>
+<td class="p-4 whitespace-nowrap">
+<div class="font-medium text-slate-900 dark:text-white">26 Out, 2023</div>
+<div class="text-xs text-slate-500">15:00</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">TRT-2 (SP)</td>
+<td class="p-4 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+<span class="material-icons text-xs">business</span> Presencial
+                                </div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 max-w-[150px] truncate" title="Rua da Consolação, 1000">
+                                Rua da Consolação...
+                            </td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-mono text-xs">0011223-44.2023.5.02.0055</td>
+<td class="p-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xs font-bold">RL</div>
+<span class="text-slate-700 dark:text-slate-200">Roberto Lima</span>
+</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">Law &amp; Order Corp</td>
+<td class="p-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+                                    Realizada
+                                </span>
+</td>
+<td class="p-4 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Ver detalhe">
+<span class="material-icons text-lg">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+<td class="p-4 border-l-4 border-l-transparent hover:border-l-primary transition-all">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-600 bg-transparent" type="checkbox"/>
+</td>
+<td class="p-4 whitespace-nowrap">
+<div class="font-medium text-slate-900 dark:text-white">27 Out, 2023</div>
+<div class="text-xs text-slate-500">10:00</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">TRT-2 (SP)</td>
+<td class="p-4 whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+<span class="material-icons text-xs">videocam</span> Online
+                                </div>
+</td>
+<td class="p-4 whitespace-nowrap max-w-[150px] truncate">
+<a class="text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-icons text-sm">link</span> Join Google Meet
+                                </a>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300 font-mono text-xs">0022334-55.2023.5.02.0066</td>
+<td class="p-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 flex items-center justify-center text-xs font-bold">MJ</div>
+<span class="text-slate-700 dark:text-slate-200">Maria Julia</span>
+</div>
+</td>
+<td class="p-4 whitespace-nowrap text-slate-600 dark:text-slate-300">Fast Legal</td>
+<td class="p-4 whitespace-nowrap">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-100 dark:border-amber-800">
+                                    A confirmar (D-1)
+                                </span>
+</td>
+<td class="p-4 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Ver detalhe">
+<span class="material-icons text-lg">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400" title="Reenviar D-1">
+<span class="material-icons text-lg">send</span>
+</button>
+<button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-orange-600 dark:hover:text-orange-400" title="Trocar preposto">
+<span class="material-icons text-lg">manage_accounts</span>
+</button>
+<button class="p-1.5 rounded bg-primary/10 hover:bg-primary text-primary hover:text-white dark:text-primary dark:hover:text-white transition-colors" title="Confirmar">
+<span class="material-icons text-lg">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-surface-light dark:bg-slate-800 px-4 py-3 border-t border-border-light dark:border-slate-700 flex items-center justify-between shrink-0">
+<div class="text-sm text-slate-500 dark:text-slate-400">
+                    Mostrando <span class="font-medium text-slate-900 dark:text-white">1</span> até <span class="font-medium text-slate-900 dark:text-white">5</span> de <span class="font-medium text-slate-900 dark:text-white">128</span> resultados
+                </div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 text-sm rounded border border-border-light dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed">Anterior</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-sm font-medium">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium transition-colors">3</button>
+<span class="text-slate-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium transition-colors">12</button>
+<button class="px-3 py-1 text-sm rounded border border-border-light dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Próximo</button>
+</div>
+</div>
+</div>
+</main>
+<script>
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+
+</body></html>

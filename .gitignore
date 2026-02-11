@@ -1,0 +1,36 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+build/
+
+# Ambiente
+.env
+.env.local
+.env.production
+
+# Prisma
+src/generated/
+
+# IDE e ferramentas
+.vscode/
+.idea/
+.cursor/
+.claude/
+.skills/
+.github/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+tmp/
+.tmp/

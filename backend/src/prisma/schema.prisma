@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// === Enums ===
+
+enum StatusAudiencia {
+  IMPORTADA
+  AGENDADA
+  A_CONFIRMAR
+  CONFIRMADA
+  NAO_POSSO
+  SEM_RESPOSTA
+  SUBSTITUICAO_NECESSARIA
+  EM_ANDAMENTO
+  CHECK_IN_PENDENTE
+  RELATORIO_PENDENTE
+  CONCLUIDA
+  CANCELADA
+}
+
+enum Modalidade {
+  PRESENCIAL
+  ONLINE
+}
+
+enum TipoMensagem {
+  CONFIRMACAO_D1
+  REITERACAO_H1H30
+  CHECK_IN
+  RELATORIO_POS
+  SUBSTITUICAO_AVISO
+  ESCALONAMENTO
+}
+
+enum DirecaoMensagem {
+  ENVIADA
+  RECEBIDA
+}
+
+enum StatusEnvioMensagem {
+  PENDENTE
+  ENVIADA
+  ENTREGUE
+  LIDA
+  FALHA
+}
+
+enum StatusImportacao {
+  PROCESSANDO
+  CONCLUIDA
+  ERRO
+}
+
+enum OcorrenciaAudiencia {
+  SIM
+  NAO
+  REMARCADA
+}
+
+enum ResultadoAudiencia {
+  ACORDO
+  SEM_ACORDO
+  AUSENCIA
+  REDESIGNADA
+}
+
+enum StatusSubstituicao {
+  ABERTA
+  RESOLVIDA
+  CANCELADA
+}
+
+enum RoleUsuario {
+  ADMIN
+  OPERADOR
+  GESTOR
+}
+
+// === Entidades ===
+
+model Usuario {
+  id        String       @id @default(uuid())
+  nome      String
+  email     String       @unique
+  senha     String
+  role      RoleUsuario  @default(OPERADOR)
+  ativo     Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("usuarios")
+}
+
+model Trt {
+  id        String      @id @default(uuid())
+  numero    String      @unique
+  nome      String
+  ativo     Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  audiencias Audiencia[]
+
+  @@map("trts")
+}
+
+model Preposto {
+  id                String     @id @default(uuid())
+  nome              String
+  telefoneWhatsapp  String     @unique
+  email             String?
+  cpf               String?
+  ativo             Boolean    @default(true)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  audiencias            Audiencia[]
+  mensagens             Mensagem[]
+  substituicoesAnterior Substituicao[] @relation("PrepostoAnterior")
+  substituicoesNovo     Substituicao[] @relation("PrepostoNovo")
+
+  @@map("prepostos")
+}
+
+model Parceiro {
+  id        String            @id @default(uuid())
+  nome      String
+  ativo     Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  contatos   ContatoParceiro[]
+  audiencias Audiencia[]
+
+  @@map("parceiros")
+}
+
+model ContatoParceiro {
+  id                  String    @id @default(uuid())
+  parceiroId          String
+  nome                String
+  telefoneWhatsapp    String
+  email               String?
+  cargo               String?
+  ordemEscalonamento  Int       @default(1)
+  createdAt           DateTime  @default(now())
+
+  parceiro  Parceiro   @relation(fields: [parceiroId], references: [id])
+  mensagens Mensagem[]
+
+  @@map("contatos_parceiro")
+}
+
+model Importacao {
+  id                   String           @id @default(uuid())
+  nomeArquivo          String
+  totalRegistros       Int              @default(0)
+  registrosImportados  Int              @default(0)
+  registrosIgnorados   Int              @default(0)
+  mapeamentoColunas    Json?
+  status               StatusImportacao  @default(PROCESSANDO)
+  erros                Json?
+  createdAt            DateTime         @default(now())
+
+  audiencias Audiencia[]
+
+  @@map("importacoes")
+}
+
+model Audiencia {
+  id              String           @id @default(uuid())
+  numeroProcesso  String
+  reclamante      String?
+  data            DateTime
+  hora            String
+  modalidade      Modalidade
+  local           String?
+  link            String?
+  trtId           String
+  vara            String?
+  status          StatusAudiencia  @default(AGENDADA)
+  prepostoId      String
+  parceiroId      String
+  importacaoId    String?
+  observacoes     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  trt         Trt          @relation(fields: [trtId], references: [id])
+  preposto    Preposto     @relation(fields: [prepostoId], references: [id])
+  parceiro    Parceiro     @relation(fields: [parceiroId], references: [id])
+  importacao  Importacao?  @relation(fields: [importacaoId], references: [id])
+
+  mensagens          Mensagem[]
+  historicoStatus    HistoricoStatus[]
+  relatorio          RelatorioAudiencia?
+  substituicoes      Substituicao[]
+
+  @@index([data])
+  @@index([status])
+  @@index([trtId])
+  @@index([prepostoId])
+  @@index([parceiroId])
+  @@map("audiencias")
+}
+
+model Mensagem {
+  id                  String              @id @default(uuid())
+  audienciaId         String
+  prepostoId          String?
+  contatoParceiroId   String?
+  tipo                TipoMensagem
+  direcao             DirecaoMensagem
+  conteudo            String
+  respostaBotao       String?
+  observacao          String?
+  whatsappMessageId   String?
+  statusEnvio         StatusEnvioMensagem  @default(PENDENTE)
+  createdAt           DateTime             @default(now())
+
+  audiencia       Audiencia        @relation(fields: [audienciaId], references: [id])
+  preposto        Preposto?        @relation(fields: [prepostoId], references: [id])
+  contatoParceiro ContatoParceiro? @relation(fields: [contatoParceiroId], references: [id])
+
+  @@index([audienciaId])
+  @@index([whatsappMessageId])
+  @@map("mensagens")
+}
+
+model RelatorioAudiencia {
+  id                   String                @id @default(uuid())
+  audienciaId          String                @unique
+  audienciaOcorreu     OcorrenciaAudiencia?
+  resultado            ResultadoAudiencia?
+  advogadoPresente     Boolean?
+  advogadoDominioCaso  Boolean?
+  problemaRelevante    Boolean?
+  relato               String?
+  createdAt            DateTime              @default(now())
+
+  audiencia Audiencia @relation(fields: [audienciaId], references: [id])
+
+  @@map("relatorios_audiencia")
+}
+
+model HistoricoStatus {
+  id              String          @id @default(uuid())
+  audienciaId     String
+  statusAnterior  StatusAudiencia
+  statusNovo      StatusAudiencia
+  motivo          String?
+  atualizadoPor   String
+  createdAt       DateTime        @default(now())
+
+  audiencia Audiencia @relation(fields: [audienciaId], references: [id])
+
+  @@index([audienciaId])
+  @@map("historico_status")
+}
+
+model Substituicao {
+  id                  String              @id @default(uuid())
+  audienciaId         String
+  prepostoAnteriorId  String
+  prepostoNovoId      String?
+  motivo              String
+  status              StatusSubstituicao  @default(ABERTA)
+  createdAt           DateTime            @default(now())
+  resolvidoEm         DateTime?
+
+  audiencia        Audiencia @relation(fields: [audienciaId], references: [id])
+  prepostoAnterior Preposto  @relation("PrepostoAnterior", fields: [prepostoAnteriorId], references: [id])
+  prepostoNovo     Preposto? @relation("PrepostoNovo", fields: [prepostoNovoId], references: [id])
+
+  @@map("substituicoes")
+}

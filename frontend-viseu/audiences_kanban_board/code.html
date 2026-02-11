@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kanban de Audiências - Freedom.AI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#0df2ad",
+                "primary-darker": "#09b380",
+                "background-light": "#f5f8f7",
+                "background-dark": "#10221d",
+                "surface-light": "#ffffff",
+                "surface-dark": "#1a332d",
+                "column-light": "#eef2f1",
+                "column-dark": "#152b25",
+                },
+                fontFamily: {
+                "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>.kanban-container::-webkit-scrollbar {
+            height: 12px;
+            width: 12px;
+        }
+        .kanban-container::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        .kanban-container::-webkit-scrollbar-thumb {
+            background-color: rgba(13, 242, 173, 0.2); 
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+        .kanban-container::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(13, 242, 173, 0.5); 
+        }.kanban-column::-webkit-scrollbar {
+            width: 4px;
+        }
+        .kanban-column::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .dark .kanban-column::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200 font-display antialiased h-screen flex overflow-hidden selection:bg-primary selection:text-background-dark">
+<aside class="w-20 lg:w-64 bg-surface-light dark:bg-surface-dark border-r border-gray-200 dark:border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300 z-20">
+<div class="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-gray-200 dark:border-gray-800">
+<div class="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-background-dark font-bold text-xl">F</div>
+<span class="ml-3 font-bold text-lg hidden lg:block tracking-tight text-gray-900 dark:text-white">Freedom.AI</span>
+</div>
+<nav class="flex-1 py-6 px-3 space-y-2 overflow-y-auto">
+<a class="flex items-center px-3 py-2.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors" href="#">
+<span class="material-icons-outlined group-hover:text-primary">dashboard</span>
+<span class="ml-3 hidden lg:block text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded-lg bg-primary/10 text-primary group transition-colors" href="#">
+<span class="material-icons-outlined">view_kanban</span>
+<span class="ml-3 hidden lg:block text-sm font-medium">Audiências</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors" href="#">
+<span class="material-icons-outlined group-hover:text-primary">people</span>
+<span class="ml-3 hidden lg:block text-sm font-medium">Prepostos</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors" href="#">
+<span class="material-icons-outlined group-hover:text-primary">gavel</span>
+<span class="ml-3 hidden lg:block text-sm font-medium">Tribunais (TRT)</span>
+</a>
+<div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+<a class="flex items-center px-3 py-2.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors" href="#">
+<span class="material-icons-outlined group-hover:text-primary">settings</span>
+<span class="ml-3 hidden lg:block text-sm font-medium">Configurações</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-gray-200 dark:border-gray-800">
+<div class="flex items-center">
+<div class="relative">
+<img alt="User Profile" class="h-9 w-9 rounded-full object-cover ring-2 ring-primary/50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzkFNkPyXzbPjqzJTeYj3shtIUMsxrhHyP62vMoZo8zvH5DRDNnKbgm4-zEIHHe_TvkelU7zEGCB1pUfXggom3ZJBmHAK84j9hAV0Pqf8oDnRVXOv-oUrcNDTQOJhz29pPc2KxP_TE0QM0avwHC7mE8rDYoAIdmnf0Cg0lswCBHTuXYCcBUw5w3LeRhwaQ68h-xk-gXUNPuFZJuHk1kTILw4SY1JLmxbenGof4YDGyxXV3mHNR_dbIYDQiwPPmtdtMG2S9dxYyDac"/>
+<span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-surface-light dark:ring-surface-dark"></span>
+</div>
+<div class="ml-3 hidden lg:block">
+<p class="text-sm font-medium text-gray-900 dark:text-white">Gerente Op.</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Ver Perfil</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+<header class="h-16 bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 flex-shrink-0 z-10">
+<div class="flex items-center space-x-4">
+<h1 class="text-xl font-bold text-gray-900 dark:text-white">Kanban de Audiências</h1>
+<div class="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+<div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-base mr-1">calendar_today</span>
+<span>Hoje, 24 Out</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<div class="relative hidden md:block">
+<input class="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 border-none rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary w-64 placeholder-gray-500" placeholder="Buscar processo, preposto..." type="text"/>
+<span class="material-icons-outlined absolute left-2.5 top-2 text-gray-400 text-lg">search</span>
+</div>
+<button class="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors border border-transparent hover:border-primary/20">
+<span class="material-icons-outlined">filter_list</span>
+</button>
+<button class="bg-primary hover:bg-primary/90 text-background-dark px-4 py-2 rounded-lg text-sm font-semibold flex items-center transition-colors shadow-lg shadow-primary/20">
+<span class="material-icons-outlined text-lg mr-1.5">add</span>
+                    Nova Audiência
+                </button>
+</div>
+</header>
+<div class="flex-1 overflow-x-auto overflow-y-hidden kanban-container bg-background-light dark:bg-background-dark p-6 relative">
+<div class="inline-flex h-full items-start space-x-4 pb-2">
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Importada</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">4</span>
+</div>
+<button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"><span class="material-icons-outlined text-base">more_horiz</span></button>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> 25/10 - 09:00
+                                </span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Em 24h</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 1002345-88.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 02 - SP</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Silva &amp; Associados</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Zoom</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Preposto:</span>
+<div class="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold text-gray-600 dark:text-gray-300">?</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">A confirmar (D-1)</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">2</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border-l-4 border-l-red-500 border-y border-r border-gray-200 dark:border-gray-700 dark:border-l-red-500 cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">Urgente H-1h30</div>
+<div class="flex justify-between items-start mb-2 mt-1">
+<span class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">alarm</span> Hoje - 14:00
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 0043210-55.2024</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 15 - Campinas</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Jurídico Central</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">business</span>
+<span>Presencial</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Roberto A.</span>
+<img alt="Avatar" class="h-6 w-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDlwjd4TI4spHLmbfuHGwAHmkaQtmcCHpuHQGYFnh8XpXLQOWgpSUvUbRLqSCXYBiBRq_-s5NLUqp8s9nYRcmUrI_4lXwtK5u82SzBdlnqDo2xOflX9I0KK8TExUW0pzCZKTz96bwvAbPNvhY9dCjkCtZpKTbuMus8GQ1TtjsePA4P--X-IfpbwTfKbB6arpt1UM8_4vc5YrtH0C1brK22-62-fIgOpejfDt6D80HNgx3XQ4WGJ9_neLjeHI76QFVOqmroQOKztpQ"/>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> 25/10 - 10:30
+                                </span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Em 24h</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 0998877-11.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 01 - RJ</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Escritório Modelo</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Zoom</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Ana C.</span>
+<img alt="Assignee avatar" class="h-6 w-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRx9LN82dNwusq3DxP_JGBiUXeOjFrHc5GO-VrWXWXfvQmAYHQjfvdriCkcv2BNINsNcF32Qc3wqq-rjnUdi0_LQ7tfJnXPRzcHus5ZzKodCoW4RDbCq1KaZ2P-8uWuXorLCSym144HnLO_MhVuZgBcaRf-LQkiR6X97M7Q03Ce_qgjCo2lgav7rC13BQWiY0ZbqTQ6l8n85_XeqqCWmWdDJjGl-6G5YOxN2BQEswQC49ZpiM37ZfklaxhYpXjpj8u_UjuB42TE9k"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50 bg-primary/5 rounded-t-xl">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary shadow shadow-primary/50"></span>
+<h3 class="font-semibold text-gray-900 dark:text-white">Confirmada</h3>
+<span class="bg-primary/20 text-primary-darker dark:text-primary text-xs px-2 py-0.5 rounded-full font-medium border border-primary/20">5</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors border-l-4 border-l-primary">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> 26/10 - 08:15
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 0055112-99.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 03 - MG</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Lima Advogados</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Google Meet</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Carlos M.</span>
+<img alt="Avatar" class="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-gray-800" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmpCr6bFH7JhNCffXXeYVqA86HRMvhqqmLdemrMchMeRguYGLnsQ6ua9FGP_LSRgIRq5NDZeFBdNFrETHJduec7eZSeNPgoapQqa5BSOWQNFcD2-EPQraKrgF1HtIUujyvhq8a84OX_UWyJUP_tbSb8l13mG7VxneYyv43Kiwy9IkaXiLPaL0Vks0OzPxZSLOmK9uKwTOW18sQfCBnGV2FASc57fxQI-js2P6Ac8BgB713CXoqtlaQQ1jLKUj8_TI4YTsQzndsFRU"/>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-primary/50 transition-colors border-l-4 border-l-primary">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> 26/10 - 13:00
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 1000222-33.2024</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 02 - SP</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: TechCorp Legal</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">business</span>
+<span>Fórum Ruy B.</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Juliana S.</span>
+<img alt="Assignee avatar" class="h-6 w-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_vfGcT4rNN9YcazZouOI4oEhwDYK-iJlOClUUfCAjoFr6PdMsGl4SgbSjzwijZmAaWJijjxXkTE0vThJg2RcFoAex0d-LRY0clh8ptdGtlnEJk0oAcAVnuLy8FVZW9q4Nlau9X9gO-lQ14Z4n-gs_6z41K0UlV2cA59CKAMAz5sH3x56wZF0isUkHIL6g7Yf1ZGRGc7Kb3DetlYUD4KfhoIz3bLyUHL900fyIAIMSNuvm6rigN_Kj2z2OmaE2KJp8lLSD5eX8e2g"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50 opacity-80 hover:opacity-100 transition-opacity">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Não posso</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">1</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> 25/10 - 16:00
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Preposto: Marcos T.</h4>
+<p class="text-xs text-red-500 dark:text-red-400 mb-1">Recusado: Licença Médica</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Processo: 555444-11.2023</p>
+</div>
+<div class="flex items-center justify-end mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<button class="text-xs text-primary hover:underline">Reatribuir</button>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-gray-500"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Sem resposta</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">1</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">event</span> Hoje - 16:30
+                                </span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">Hoje</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 123456-77.2024</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 04 - RS</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Não atribuído</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Zoom</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Felipe A.</span>
+<div class="h-6 w-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-[10px] font-bold">F</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50 bg-orange-50 dark:bg-orange-900/10 rounded-t-xl">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+<h3 class="font-semibold text-gray-900 dark:text-white">Substituição nec.</h3>
+<span class="bg-orange-200 dark:bg-orange-800 text-orange-800 dark:text-orange-200 text-xs px-2 py-0.5 rounded-full font-medium">3</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-orange-200 dark:border-orange-800 cursor-pointer relative">
+<div class="absolute inset-y-0 left-0 w-1 bg-orange-500 rounded-l-lg"></div>
+<div class="pl-2 mb-2">
+<span class="text-xs font-semibold text-orange-600 dark:text-orange-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">warning</span> Ação Necessária
+                                </span>
+</div>
+<div class="pl-2 mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 00492-2022</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 04 - RS</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Jurídico Sul</p>
+</div>
+</div>
+<div class="pl-2 flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<span class="text-xs text-gray-500">Conflito reportado</span>
+<button class="bg-primary hover:bg-primary-darker transition text-background-dark text-xs font-semibold px-2 py-1 rounded">Buscar Sub</button>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Check-in pendente</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">1</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-blue-400 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">schedule</span> INICIA EM BREVE
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 887766-55.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Link ainda não acessado</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 02 - SP</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">videocam</span>
+<span>Zoom</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Lucas F.</span>
+<button class="text-xs text-primary font-medium hover:text-primary/80">Lembrar</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Em andamento</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">1</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-primary/40 dark:border-primary/40 cursor-pointer">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-primary flex items-center">
+<span class="material-icons-outlined text-sm mr-1">play_circle</span> AO VIVO
+                                </span>
+<span class="text-xs text-gray-400">Iniciada há 15m</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 554433-22.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 02 - SP | Vara 34</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: Silva Law</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+<span class="material-icons-outlined text-sm">monitor</span>
+<span>Monitorando</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">Sarah L.</span>
+<img alt="Assignee avatar" class="h-6 w-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs9DBI8llmXB31mRLOKrD59VHm78C0e_lPhcyPD2iHBBkK7ORQVvY1x-WxVVcwZnShIOIueU3XnIBU7ecv1qy1reTwOS2WEMdiqLQ3fOpzyJRcg6z5qKBxAldIQClmtjUryrIMPUz3QSjAh1gOKB6W4dwsvJJ1ImHt8B0QilFhO45sJzz4FRxXWVWU59IQx6e-Cg3UFwdz1COV_fb-QucMLyRs_nLz_Xvv0xcy_k9lMAnj4G_lIfOGQWdFR-XjLJ8iz8ysoQdJMy0"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Relatório pendente</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">3</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer opacity-75 hover:opacity-100">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">done</span> Finalizada há 1h
+                                </span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 778899-00.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Aguardando feedback</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Parceiro: V. Advogados</p>
+</div>
+</div>
+<div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<span class="text-[10px] text-gray-400 uppercase tracking-wide">João V.</span>
+<button class="text-xs text-purple-500 font-medium hover:underline">Enviar Relatório</button>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50 bg-green-50 dark:bg-green-900/10 rounded-t-xl">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+<h3 class="font-semibold text-gray-900 dark:text-white">Concluída</h3>
+<span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-0.5 rounded-full font-medium">14</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-green-600 dark:text-green-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">check_circle</span> Feito
+                                </span>
+<span class="text-xs text-gray-400">Ontem</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1 strike-through">Processo: 112233-44.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Preposto: Maria C.</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 18 - GO</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-green-600 dark:text-green-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">check_circle</span> Feito
+                                </span>
+<span class="text-xs text-gray-400">Ontem</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1">Processo: 556677-88.2023</h4>
+<div class="space-y-1">
+<p class="text-xs text-gray-500 dark:text-gray-400">Preposto: Pedro H.</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">TRT: 05 - BA</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-80 flex-shrink-0 flex flex-col h-full bg-column-light dark:bg-column-dark rounded-xl border border-gray-200 dark:border-gray-800/50 opacity-60 hover:opacity-100 transition-opacity">
+<div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700/50">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-gray-600"></span>
+<h3 class="font-semibold text-gray-700 dark:text-gray-200">Cancelada</h3>
+<span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-medium">2</span>
+</div>
+</div>
+<div class="p-3 space-y-3 flex-1 overflow-y-auto kanban-column">
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 cursor-not-allowed">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center">
+<span class="material-icons-outlined text-sm mr-1">cancel</span> Cancelada
+                                </span>
+<span class="text-xs text-gray-400">22 Out</span>
+</div>
+<div class="mb-3">
+<h4 class="text-sm font-medium text-gray-900 dark:text-white mb-1 line-through">Processo: 0001122-33.2023</h4>
+<p class="text-xs text-gray-500 dark:text-gray-400">Acordo realizado antes da aud.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-labelledby="modal-title" aria-modal="true" class="hidden fixed inset-0 z-50 overflow-y-auto" id="confirmation-modal" role="dialog">
+<div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+<div aria-hidden="true" class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"></div>
+<span aria-hidden="true" class="hidden sm:inline-block sm:align-middle sm:h-screen">​</span>
+<div class="relative inline-block align-bottom bg-surface-light dark:bg-surface-dark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200 dark:border-gray-700">
+<div class="bg-surface-light dark:bg-surface-dark px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+<div class="sm:flex sm:items-start">
+<div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10">
+<span class="material-icons-outlined text-red-600 dark:text-red-400">warning</span>
+</div>
+<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+<h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">Confirmar Alteração de Status</h3>
+<div class="mt-2">
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Você está movendo este card para uma coluna sensível. Por favor, informe o motivo desta alteração.</p>
+<div class="mb-4">
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="reason">Motivo</label>
+<select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-background-dark dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md" id="reason" name="reason">
+<option>Selecione um motivo...</option>
+<option>Preposto doente</option>
+<option>Conflito de agenda</option>
+<option>Problema técnico</option>
+<option>Acordo prévio</option>
+<option>Outro</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="comments">Observações adicionais</label>
+<textarea class="shadow-sm focus:ring-primary focus:border-primary mt-1 block w-full sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-background-dark dark:text-white rounded-md p-2" id="comments" placeholder="Descreva mais detalhes..." rows="3"></textarea>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-gray-800/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+<button class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" type="button">Confirmar</button>
+<button class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-surface-dark text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" type="button">Cancelar</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>
