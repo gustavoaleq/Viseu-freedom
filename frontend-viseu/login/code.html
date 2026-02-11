@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login Hub Operacional | Freedom.AI &amp; Viseu Advogados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06f9a8",
+                        "background-light": "#f5f8f7",
+                        "background-dark": "#0f231c",
+                        "neutral-dark": "#1a2e26",
+                        "neutral-gray": "#64748b",
+                        "neutral-border": "#e2e8f0"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-4">
+<div class="w-full max-w-md">
+<!-- Main Login Card -->
+<div class="bg-white dark:bg-neutral-dark/40 shadow-xl rounded-xl border border-neutral-border/50 dark:border-primary/10 overflow-hidden">
+<div class="p-8 md:p-10">
+<!-- Logo Section -->
+<div class="flex items-center justify-center gap-6 mb-10">
+<div class="flex flex-col items-center">
+<img alt="Freedom.AI Logo" class="h-8 w-auto object-contain" data-alt="Freedom.AI corporate logo in emerald and dark green" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOGYwfA-ALmkZTIrQPl1SuKabi-VmKJpXviu3VgbbSOM3cz55bYbXhBZESp5UD53z5WgpCwZQH-FZt4MlinGaEiIDJyGJosPCJ5i1sGItcjQqOxS0KT0tS40KI4LGqNHnaxw0wUbhh7ROVcLHs50XCfWyH6zsILSqEQiH_psQNP7AvNXVzhCEr_QiaHtVUVOwnKNUzxMCZQQz-KY1h-XRrtRvcDPpE-mLLkM0pnKxJjLwVD6t25aRBW2CfkgEtpeqpzgWx8_blTa4"/>
+</div>
+<div class="h-8 w-px bg-neutral-border dark:bg-primary/20"></div>
+<div class="flex flex-col items-center">
+<img alt="Viseu Advogados Logo" class="h-8 w-auto object-contain" data-alt="Viseu Advogados law firm logo professional style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAccjG1yie3IxzKuX6WTlhQEbZe96Z5fa7ZKubJFb0nBAy_5M1kVc3uue93zrvqGtPwd9co4mADyY090iX6CLja_E517ffZE7z2KFLoXg5pV9pm8wzln0cnAWp6KVtALOq8dIWMTgg3pODo3yxZat-KQTnvpjl35BERV7Snwp4s_XGMwOKq8UmkEwZijm0U_Y-XfC3asvShxrh5Od_F8RtSGeqzsRketywqSHnyZkJFEsT-rUbper32qbshuU3XVHJTiRG_ECll_OI"/>
+</div>
+</div>
+<!-- Title -->
+<div class="text-center mb-8">
+<h1 class="text-2xl font-bold text-neutral-dark dark:text-white mb-2">Bem-vindo ao Hub Operacional</h1>
+<p class="text-neutral-gray dark:text-gray-400 text-sm">Insira suas credenciais para acessar a plataforma</p>
+</div>
+<!-- Login Form -->
+<form action="#" class="space-y-6">
+<div>
+<label class="block text-sm font-semibold text-neutral-dark dark:text-gray-200 mb-2" for="email">E-mail Corporativo</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-gray">
+<span class="material-icons text-lg">mail_outline</span>
+</span>
+<input class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark/50 border border-neutral-border dark:border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-neutral-dark dark:text-white placeholder-neutral-gray/60" id="email" name="email" placeholder="nome@viseu.com.br" required="" type="email"/>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="block text-sm font-semibold text-neutral-dark dark:text-gray-200" for="password">Senha</label>
+<a class="text-xs font-medium text-emerald-600 dark:text-primary hover:underline transition-all" href="#">Esqueci minha senha</a>
+</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-gray">
+<span class="material-icons text-lg">lock_outline</span>
+</span>
+<input class="block w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark/50 border border-neutral-border dark:border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-neutral-dark dark:text-white placeholder-neutral-gray/60" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-neutral-border rounded" id="remember" type="checkbox"/>
+<label class="ml-2 block text-sm text-neutral-gray dark:text-gray-400" for="remember">Manter conectado neste dispositivo</label>
+</div>
+<button class="w-full bg-primary hover:bg-emerald-400 text-neutral-dark font-bold py-3.5 px-4 rounded-lg shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2" type="submit">
+<span>Acessar Sistema</span>
+<span class="material-icons text-lg">login</span>
+</button>
+</form>
+</div>
+<!-- Footer Area -->
+<div class="px-8 py-6 bg-background-light dark:bg-background-dark/80 border-t border-neutral-border dark:border-primary/10 text-center">
+<p class="text-sm text-neutral-gray dark:text-gray-400">
+                    Novo parceiro ou colaborador? 
+                    <a class="font-bold text-neutral-dark dark:text-primary hover:underline ml-1" href="#">Solicitar acesso</a>
+</p>
+</div>
+</div>
+<!-- External Footer Links -->
+<div class="mt-8 flex flex-wrap justify-center gap-6 text-xs text-neutral-gray dark:text-gray-500 font-medium">
+<a class="hover:text-primary transition-colors uppercase tracking-wider" href="#">Suporte Técnico</a>
+<span class="hidden md:block">•</span>
+<a class="hover:text-primary transition-colors uppercase tracking-wider" href="#">Política de Privacidade</a>
+<span class="hidden md:block">•</span>
+<a class="hover:text-primary transition-colors uppercase tracking-wider" href="#">Termos de Uso</a>
+</div>
+<!-- Background Decoration (Subtle) -->
+<div class="fixed top-0 left-0 w-full h-1 bg-primary/30"></div>
+<div class="fixed -bottom-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+<div class="fixed -top-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -z-10"></div>
+</div>
+</body></html>

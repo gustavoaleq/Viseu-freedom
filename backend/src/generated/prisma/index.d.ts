@@ -8898,9 +8898,15 @@ export namespace Prisma {
     id: string | null
     numeroProcesso: string | null
     reclamante: string | null
+    reclamada: string | null
+    tipoAudiencia: string | null
     data: Date | null
     hora: string | null
     modalidade: $Enums.Modalidade | null
+    comarca: string | null
+    advogado: string | null
+    contatoAdvogado: string | null
+    correspondente: string | null
     local: string | null
     link: string | null
     trtId: string | null
@@ -8918,9 +8924,15 @@ export namespace Prisma {
     id: string | null
     numeroProcesso: string | null
     reclamante: string | null
+    reclamada: string | null
+    tipoAudiencia: string | null
     data: Date | null
     hora: string | null
     modalidade: $Enums.Modalidade | null
+    comarca: string | null
+    advogado: string | null
+    contatoAdvogado: string | null
+    correspondente: string | null
     local: string | null
     link: string | null
     trtId: string | null
@@ -8938,9 +8950,15 @@ export namespace Prisma {
     id: number
     numeroProcesso: number
     reclamante: number
+    reclamada: number
+    tipoAudiencia: number
     data: number
     hora: number
     modalidade: number
+    comarca: number
+    advogado: number
+    contatoAdvogado: number
+    correspondente: number
     local: number
     link: number
     trtId: number
@@ -8960,9 +8978,15 @@ export namespace Prisma {
     id?: true
     numeroProcesso?: true
     reclamante?: true
+    reclamada?: true
+    tipoAudiencia?: true
     data?: true
     hora?: true
     modalidade?: true
+    comarca?: true
+    advogado?: true
+    contatoAdvogado?: true
+    correspondente?: true
     local?: true
     link?: true
     trtId?: true
@@ -8980,9 +9004,15 @@ export namespace Prisma {
     id?: true
     numeroProcesso?: true
     reclamante?: true
+    reclamada?: true
+    tipoAudiencia?: true
     data?: true
     hora?: true
     modalidade?: true
+    comarca?: true
+    advogado?: true
+    contatoAdvogado?: true
+    correspondente?: true
     local?: true
     link?: true
     trtId?: true
@@ -9000,9 +9030,15 @@ export namespace Prisma {
     id?: true
     numeroProcesso?: true
     reclamante?: true
+    reclamada?: true
+    tipoAudiencia?: true
     data?: true
     hora?: true
     modalidade?: true
+    comarca?: true
+    advogado?: true
+    contatoAdvogado?: true
+    correspondente?: true
     local?: true
     link?: true
     trtId?: true
@@ -9093,9 +9129,15 @@ export namespace Prisma {
     id: string
     numeroProcesso: string
     reclamante: string | null
+    reclamada: string | null
+    tipoAudiencia: string | null
     data: Date
     hora: string
     modalidade: $Enums.Modalidade
+    comarca: string | null
+    advogado: string | null
+    contatoAdvogado: string | null
+    correspondente: string | null
     local: string | null
     link: string | null
     trtId: string
@@ -9130,9 +9172,15 @@ export namespace Prisma {
     id?: boolean
     numeroProcesso?: boolean
     reclamante?: boolean
+    reclamada?: boolean
+    tipoAudiencia?: boolean
     data?: boolean
     hora?: boolean
     modalidade?: boolean
+    comarca?: boolean
+    advogado?: boolean
+    contatoAdvogado?: boolean
+    correspondente?: boolean
     local?: boolean
     link?: boolean
     trtId?: boolean
@@ -9159,9 +9207,15 @@ export namespace Prisma {
     id?: boolean
     numeroProcesso?: boolean
     reclamante?: boolean
+    reclamada?: boolean
+    tipoAudiencia?: boolean
     data?: boolean
     hora?: boolean
     modalidade?: boolean
+    comarca?: boolean
+    advogado?: boolean
+    contatoAdvogado?: boolean
+    correspondente?: boolean
     local?: boolean
     link?: boolean
     trtId?: boolean
@@ -9183,9 +9237,15 @@ export namespace Prisma {
     id?: boolean
     numeroProcesso?: boolean
     reclamante?: boolean
+    reclamada?: boolean
+    tipoAudiencia?: boolean
     data?: boolean
     hora?: boolean
     modalidade?: boolean
+    comarca?: boolean
+    advogado?: boolean
+    contatoAdvogado?: boolean
+    correspondente?: boolean
     local?: boolean
     link?: boolean
     trtId?: boolean
@@ -9207,9 +9267,15 @@ export namespace Prisma {
     id?: boolean
     numeroProcesso?: boolean
     reclamante?: boolean
+    reclamada?: boolean
+    tipoAudiencia?: boolean
     data?: boolean
     hora?: boolean
     modalidade?: boolean
+    comarca?: boolean
+    advogado?: boolean
+    contatoAdvogado?: boolean
+    correspondente?: boolean
     local?: boolean
     link?: boolean
     trtId?: boolean
@@ -9223,7 +9289,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AudienciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numeroProcesso" | "reclamante" | "data" | "hora" | "modalidade" | "local" | "link" | "trtId" | "vara" | "status" | "prepostoId" | "parceiroId" | "importacaoId" | "observacoes" | "createdAt" | "updatedAt", ExtArgs["result"]["audiencia"]>
+  export type AudienciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numeroProcesso" | "reclamante" | "reclamada" | "tipoAudiencia" | "data" | "hora" | "modalidade" | "comarca" | "advogado" | "contatoAdvogado" | "correspondente" | "local" | "link" | "trtId" | "vara" | "status" | "prepostoId" | "parceiroId" | "importacaoId" | "observacoes" | "createdAt" | "updatedAt", ExtArgs["result"]["audiencia"]>
   export type AudienciaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     trt?: boolean | TrtDefaultArgs<ExtArgs>
     preposto?: boolean | PrepostoDefaultArgs<ExtArgs>
@@ -9264,9 +9330,15 @@ export namespace Prisma {
       id: string
       numeroProcesso: string
       reclamante: string | null
+      reclamada: string | null
+      tipoAudiencia: string | null
       data: Date
       hora: string
       modalidade: $Enums.Modalidade
+      comarca: string | null
+      advogado: string | null
+      contatoAdvogado: string | null
+      correspondente: string | null
       local: string | null
       link: string | null
       trtId: string
@@ -9712,9 +9784,15 @@ export namespace Prisma {
     readonly id: FieldRef<"Audiencia", 'String'>
     readonly numeroProcesso: FieldRef<"Audiencia", 'String'>
     readonly reclamante: FieldRef<"Audiencia", 'String'>
+    readonly reclamada: FieldRef<"Audiencia", 'String'>
+    readonly tipoAudiencia: FieldRef<"Audiencia", 'String'>
     readonly data: FieldRef<"Audiencia", 'DateTime'>
     readonly hora: FieldRef<"Audiencia", 'String'>
     readonly modalidade: FieldRef<"Audiencia", 'Modalidade'>
+    readonly comarca: FieldRef<"Audiencia", 'String'>
+    readonly advogado: FieldRef<"Audiencia", 'String'>
+    readonly contatoAdvogado: FieldRef<"Audiencia", 'String'>
+    readonly correspondente: FieldRef<"Audiencia", 'String'>
     readonly local: FieldRef<"Audiencia", 'String'>
     readonly link: FieldRef<"Audiencia", 'String'>
     readonly trtId: FieldRef<"Audiencia", 'String'>
@@ -14877,9 +14955,15 @@ export namespace Prisma {
     id: 'id',
     numeroProcesso: 'numeroProcesso',
     reclamante: 'reclamante',
+    reclamada: 'reclamada',
+    tipoAudiencia: 'tipoAudiencia',
     data: 'data',
     hora: 'hora',
     modalidade: 'modalidade',
+    comarca: 'comarca',
+    advogado: 'advogado',
+    contatoAdvogado: 'contatoAdvogado',
+    correspondente: 'correspondente',
     local: 'local',
     link: 'link',
     trtId: 'trtId',
@@ -15645,9 +15729,15 @@ export namespace Prisma {
     id?: StringFilter<"Audiencia"> | string
     numeroProcesso?: StringFilter<"Audiencia"> | string
     reclamante?: StringNullableFilter<"Audiencia"> | string | null
+    reclamada?: StringNullableFilter<"Audiencia"> | string | null
+    tipoAudiencia?: StringNullableFilter<"Audiencia"> | string | null
     data?: DateTimeFilter<"Audiencia"> | Date | string
     hora?: StringFilter<"Audiencia"> | string
     modalidade?: EnumModalidadeFilter<"Audiencia"> | $Enums.Modalidade
+    comarca?: StringNullableFilter<"Audiencia"> | string | null
+    advogado?: StringNullableFilter<"Audiencia"> | string | null
+    contatoAdvogado?: StringNullableFilter<"Audiencia"> | string | null
+    correspondente?: StringNullableFilter<"Audiencia"> | string | null
     local?: StringNullableFilter<"Audiencia"> | string | null
     link?: StringNullableFilter<"Audiencia"> | string | null
     trtId?: StringFilter<"Audiencia"> | string
@@ -15673,9 +15763,15 @@ export namespace Prisma {
     id?: SortOrder
     numeroProcesso?: SortOrder
     reclamante?: SortOrderInput | SortOrder
+    reclamada?: SortOrderInput | SortOrder
+    tipoAudiencia?: SortOrderInput | SortOrder
     data?: SortOrder
     hora?: SortOrder
     modalidade?: SortOrder
+    comarca?: SortOrderInput | SortOrder
+    advogado?: SortOrderInput | SortOrder
+    contatoAdvogado?: SortOrderInput | SortOrder
+    correspondente?: SortOrderInput | SortOrder
     local?: SortOrderInput | SortOrder
     link?: SortOrderInput | SortOrder
     trtId?: SortOrder
@@ -15704,9 +15800,15 @@ export namespace Prisma {
     NOT?: AudienciaWhereInput | AudienciaWhereInput[]
     numeroProcesso?: StringFilter<"Audiencia"> | string
     reclamante?: StringNullableFilter<"Audiencia"> | string | null
+    reclamada?: StringNullableFilter<"Audiencia"> | string | null
+    tipoAudiencia?: StringNullableFilter<"Audiencia"> | string | null
     data?: DateTimeFilter<"Audiencia"> | Date | string
     hora?: StringFilter<"Audiencia"> | string
     modalidade?: EnumModalidadeFilter<"Audiencia"> | $Enums.Modalidade
+    comarca?: StringNullableFilter<"Audiencia"> | string | null
+    advogado?: StringNullableFilter<"Audiencia"> | string | null
+    contatoAdvogado?: StringNullableFilter<"Audiencia"> | string | null
+    correspondente?: StringNullableFilter<"Audiencia"> | string | null
     local?: StringNullableFilter<"Audiencia"> | string | null
     link?: StringNullableFilter<"Audiencia"> | string | null
     trtId?: StringFilter<"Audiencia"> | string
@@ -15732,9 +15834,15 @@ export namespace Prisma {
     id?: SortOrder
     numeroProcesso?: SortOrder
     reclamante?: SortOrderInput | SortOrder
+    reclamada?: SortOrderInput | SortOrder
+    tipoAudiencia?: SortOrderInput | SortOrder
     data?: SortOrder
     hora?: SortOrder
     modalidade?: SortOrder
+    comarca?: SortOrderInput | SortOrder
+    advogado?: SortOrderInput | SortOrder
+    contatoAdvogado?: SortOrderInput | SortOrder
+    correspondente?: SortOrderInput | SortOrder
     local?: SortOrderInput | SortOrder
     link?: SortOrderInput | SortOrder
     trtId?: SortOrder
@@ -15758,9 +15866,15 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Audiencia"> | string
     numeroProcesso?: StringWithAggregatesFilter<"Audiencia"> | string
     reclamante?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
+    reclamada?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
+    tipoAudiencia?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
     data?: DateTimeWithAggregatesFilter<"Audiencia"> | Date | string
     hora?: StringWithAggregatesFilter<"Audiencia"> | string
     modalidade?: EnumModalidadeWithAggregatesFilter<"Audiencia"> | $Enums.Modalidade
+    comarca?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
+    advogado?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
+    contatoAdvogado?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
+    correspondente?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
     local?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
     link?: StringNullableWithAggregatesFilter<"Audiencia"> | string | null
     trtId?: StringWithAggregatesFilter<"Audiencia"> | string
@@ -16559,9 +16673,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -16583,9 +16703,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -16607,9 +16733,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16631,9 +16763,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -16655,9 +16793,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -16675,9 +16819,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16691,9 +16841,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -17549,9 +17705,15 @@ export namespace Prisma {
     id?: SortOrder
     numeroProcesso?: SortOrder
     reclamante?: SortOrder
+    reclamada?: SortOrder
+    tipoAudiencia?: SortOrder
     data?: SortOrder
     hora?: SortOrder
     modalidade?: SortOrder
+    comarca?: SortOrder
+    advogado?: SortOrder
+    contatoAdvogado?: SortOrder
+    correspondente?: SortOrder
     local?: SortOrder
     link?: SortOrder
     trtId?: SortOrder
@@ -17569,9 +17731,15 @@ export namespace Prisma {
     id?: SortOrder
     numeroProcesso?: SortOrder
     reclamante?: SortOrder
+    reclamada?: SortOrder
+    tipoAudiencia?: SortOrder
     data?: SortOrder
     hora?: SortOrder
     modalidade?: SortOrder
+    comarca?: SortOrder
+    advogado?: SortOrder
+    contatoAdvogado?: SortOrder
+    correspondente?: SortOrder
     local?: SortOrder
     link?: SortOrder
     trtId?: SortOrder
@@ -17589,9 +17757,15 @@ export namespace Prisma {
     id?: SortOrder
     numeroProcesso?: SortOrder
     reclamante?: SortOrder
+    reclamada?: SortOrder
+    tipoAudiencia?: SortOrder
     data?: SortOrder
     hora?: SortOrder
     modalidade?: SortOrder
+    comarca?: SortOrder
+    advogado?: SortOrder
+    contatoAdvogado?: SortOrder
+    correspondente?: SortOrder
     local?: SortOrder
     link?: SortOrder
     trtId?: SortOrder
@@ -19106,9 +19280,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -19129,9 +19309,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -19181,9 +19367,15 @@ export namespace Prisma {
     id?: StringFilter<"Audiencia"> | string
     numeroProcesso?: StringFilter<"Audiencia"> | string
     reclamante?: StringNullableFilter<"Audiencia"> | string | null
+    reclamada?: StringNullableFilter<"Audiencia"> | string | null
+    tipoAudiencia?: StringNullableFilter<"Audiencia"> | string | null
     data?: DateTimeFilter<"Audiencia"> | Date | string
     hora?: StringFilter<"Audiencia"> | string
     modalidade?: EnumModalidadeFilter<"Audiencia"> | $Enums.Modalidade
+    comarca?: StringNullableFilter<"Audiencia"> | string | null
+    advogado?: StringNullableFilter<"Audiencia"> | string | null
+    contatoAdvogado?: StringNullableFilter<"Audiencia"> | string | null
+    correspondente?: StringNullableFilter<"Audiencia"> | string | null
     local?: StringNullableFilter<"Audiencia"> | string | null
     link?: StringNullableFilter<"Audiencia"> | string | null
     trtId?: StringFilter<"Audiencia"> | string
@@ -19201,9 +19393,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -19224,9 +19422,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -19483,9 +19687,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -19506,9 +19716,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -19691,9 +19907,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -19714,9 +19936,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -20220,9 +20448,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -20243,9 +20477,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -20342,9 +20582,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20365,9 +20611,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -20460,9 +20712,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -20483,9 +20741,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -20522,9 +20786,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20545,9 +20815,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -20568,9 +20844,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -20591,9 +20873,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -20630,9 +20918,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20653,9 +20947,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -20676,9 +20976,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -20699,9 +21005,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -20804,9 +21116,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20827,9 +21145,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -20928,9 +21252,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     vara?: string | null
@@ -20947,9 +21277,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20970,9 +21306,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20993,9 +21335,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21012,9 +21360,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -21065,9 +21419,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21088,9 +21448,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -21111,9 +21477,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -21242,9 +21614,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -21293,9 +21671,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21316,9 +21700,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -21339,9 +21729,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -21414,9 +21810,15 @@ export namespace Prisma {
     id?: string
     numeroProcesso: string
     reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
     data: Date | string
     hora: string
     modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
     local?: string | null
     link?: string | null
     trtId: string
@@ -21433,9 +21835,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     vara?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21456,9 +21864,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string
@@ -21479,9 +21893,15 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     numeroProcesso?: StringFieldUpdateOperationsInput | string
     reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     data?: DateTimeFieldUpdateOperationsInput | Date | string
     hora?: StringFieldUpdateOperationsInput | string
     modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
     local?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     trtId?: StringFieldUpdateOperationsInput | string

@@ -6,6 +6,12 @@ import { env } from './config/env.js'
 import authPlugin from './plugins/auth.js'
 import authRoutes from './routes/auth.routes.js'
 import audienciasRoutes from './routes/audiencias.routes.js'
+import prepostosRoutes from './routes/prepostos.routes.js'
+import importacoesRoutes from './routes/importacoes.routes.js'
+import parceirosRoutes from './routes/parceiros.routes.js'
+import trtsRoutes from './routes/trts.routes.js'
+import webhooksRoutes from './routes/webhooks.routes.js'
+import usuariosRoutes from './routes/usuarios.routes.js'
 
 export async function buildApp() {
   const app = Fastify({
@@ -37,12 +43,12 @@ export async function buildApp() {
   // Rotas
   await app.register(authRoutes, { prefix: '/api/v1/auth' })
   await app.register(audienciasRoutes, { prefix: '/api/v1/audiencias' })
-  // await app.register(prepostoRoutes, { prefix: '/api/v1/prepostos' })
-  // await app.register(parceiroRoutes, { prefix: '/api/v1/parceiros' })
-  // await app.register(trtRoutes, { prefix: '/api/v1/trts' })
-  // await app.register(importacaoRoutes, { prefix: '/api/v1/importacoes' })
-  // await app.register(webhookRoutes, { prefix: '/api/v1/webhooks' })
-  // await app.register(usuarioRoutes, { prefix: '/api/v1/usuarios' })
+  await app.register(prepostosRoutes, { prefix: '/api/v1/prepostos' })
+  await app.register(parceirosRoutes, { prefix: '/api/v1/parceiros' })
+  await app.register(trtsRoutes, { prefix: '/api/v1/trts' })
+  await app.register(importacoesRoutes, { prefix: '/api/v1/importacoes' })
+  await app.register(webhooksRoutes, { prefix: '/api/v1/webhooks' })
+  await app.register(usuariosRoutes, { prefix: '/api/v1/usuarios' })
 
   return app
 }

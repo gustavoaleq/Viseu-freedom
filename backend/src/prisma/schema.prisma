@@ -177,9 +177,15 @@ model Audiencia {
   id              String           @id @default(uuid())
   numeroProcesso  String
   reclamante      String?
+  reclamada       String?
+  tipoAudiencia   String?
   data            DateTime
   hora            String
   modalidade      Modalidade
+  comarca         String?
+  advogado        String?
+  contatoAdvogado String?
+  correspondente  String?
   local           String?
   link            String?
   trtId           String

@@ -1,0 +1,1812 @@
+openapi: 3.0.3
+info:
+  title: Freedom.AI Operational Hub - API POC Viseu
+  version: 0.1.0-poc
+  description: >
+    Contrato formal da API da POC. Escopo fechado para producao da POC:
+    nao implementar alem do escopo contratado e nao deixar de implementar
+    nenhuma funcionalidade do escopo.
+servers:
+  - url: http://localhost:3001
+    description: Backend local
+tags:
+  - name: Health
+  - name: Auth
+  - name: Audiencias
+  - name: Prepostos
+  - name: Parceiros
+  - name: Importacoes
+  - name: TRTs
+  - name: Webhooks
+  - name: Usuarios
+paths:
+  /api/v1/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                required: [status, timestamp]
+
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthLoginRequest"
+      responses:
+        "200":
+          description: Autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthLoginResponse"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: Usuario autenticado
+      responses:
+        "200":
+          description: Usuario autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (POC client-side)
+      responses:
+        "200":
+          description: Logout realizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout realizado
+                required: [message]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/audiencias:
+    get:
+      tags: [Audiencias]
+      summary: Listar audiencias com filtros e paginacao
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/StatusAudiencia"
+        - in: query
+          name: trtId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: prepostoId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: parceiroId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: modalidade
+          schema:
+            $ref: "#/components/schemas/Modalidade"
+        - in: query
+          name: dataInicio
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: dataFim
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: busca
+          schema:
+            type: string
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Audiencia"
+                  paginacao:
+                    $ref: "#/components/schemas/Paginacao"
+                required: [dados, paginacao]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+    post:
+      tags: [Audiencias]
+      summary: Criar audiencia manualmente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AudienciaCreateRequest"
+      responses:
+        "201":
+          description: Audiencia criada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/audiencias/kanban:
+    get:
+      tags: [Audiencias]
+      summary: Kanban de audiencias por status
+      responses:
+        "200":
+          description: Agrupamento por status
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Audiencia"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/audiencias/dashboard:
+    get:
+      tags: [Audiencias]
+      summary: KPIs operacionais
+      responses:
+        "200":
+          description: Indicadores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/audiencias/export:
+    get:
+      tags: [Audiencias]
+      summary: Exportar audiencias em CSV/XLSX
+      parameters:
+        - in: query
+          name: formato
+          schema:
+            type: string
+            enum: [csv, xlsx]
+            default: csv
+      responses:
+        "200":
+          description: Arquivo exportado
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/audiencias/{id}:
+    get:
+      tags: [Audiencias]
+      summary: Detalhe da audiencia com timeline
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Detalhe completo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudienciaDetalhe"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+    patch:
+      tags: [Audiencias]
+      summary: Atualizar audiencia
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AudienciaUpdateRequest"
+      responses:
+        "200":
+          description: Audiencia atualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/trocar-preposto:
+    post:
+      tags: [Audiencias]
+      summary: Trocar preposto da audiencia
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prepostoNovoId:
+                  type: string
+                  format: uuid
+                motivo:
+                  type: string
+              required: [prepostoNovoId, motivo]
+      responses:
+        "200":
+          description: Preposto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/reenviar-confirmacao:
+    post:
+      tags: [Audiencias]
+      summary: Reenviar confirmacao para preposto
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Reenvio solicitado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  audienciaId:
+                    type: string
+                    format: uuid
+                required: [message, audienciaId]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/cancelar:
+    post:
+      tags: [Audiencias]
+      summary: Cancelar audiencia manualmente
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                motivo:
+                  type: string
+              required: [motivo]
+      responses:
+        "200":
+          description: Audiencia cancelada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/confirmar-telefone:
+    post:
+      tags: [Audiencias]
+      summary: Registrar confirmacao manual por telefone
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                observacao:
+                  type: string
+              required: [observacao]
+      responses:
+        "200":
+          description: Confirmacao manual registrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/check-in:
+    post:
+      tags: [Audiencias]
+      summary: Registrar check-in no dia da audiencia
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evento:
+                  type: string
+                  enum: [ESTOU_A_CAMINHO, JA_CHEGUEI, ESTOU_COM_PROBLEMA]
+                observacao:
+                  type: string
+              required: [evento]
+      responses:
+        "200":
+          description: Check-in registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/audiencias/{id}/relatorio:
+    post:
+      tags: [Audiencias]
+      summary: Registrar relatorio pos-audiencia
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RelatorioCreateRequest"
+      responses:
+        "200":
+          description: Relatorio salvo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RelatorioAudiencia"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/prepostos:
+    get:
+      tags: [Prepostos]
+      summary: Listar prepostos
+      parameters:
+        - in: query
+          name: busca
+          schema:
+            type: string
+        - in: query
+          name: ativo
+          schema:
+            type: boolean
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Preposto"
+                  paginacao:
+                    $ref: "#/components/schemas/Paginacao"
+                required: [dados, paginacao]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+    post:
+      tags: [Prepostos]
+      summary: Criar preposto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrepostoCreateRequest"
+      responses:
+        "201":
+          description: Preposto criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Preposto"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+
+  /api/v1/prepostos/{id}:
+    patch:
+      tags: [Prepostos]
+      summary: Atualizar preposto
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrepostoUpdateRequest"
+      responses:
+        "200":
+          description: Preposto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Preposto"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+    delete:
+      tags: [Prepostos]
+      summary: Remover preposto (soft delete)
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Preposto removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+                    format: uuid
+                required: [message, id]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/parceiros:
+    get:
+      tags: [Parceiros]
+      summary: Listar parceiros
+      parameters:
+        - in: query
+          name: busca
+          schema:
+            type: string
+        - in: query
+          name: ativo
+          schema:
+            type: boolean
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Parceiro"
+                  paginacao:
+                    $ref: "#/components/schemas/Paginacao"
+                required: [dados, paginacao]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+    post:
+      tags: [Parceiros]
+      summary: Criar parceiro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ParceiroCreateRequest"
+      responses:
+        "201":
+          description: Parceiro criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Parceiro"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+
+  /api/v1/parceiros/{id}:
+    patch:
+      tags: [Parceiros]
+      summary: Atualizar parceiro
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ParceiroUpdateRequest"
+      responses:
+        "200":
+          description: Parceiro atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Parceiro"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+
+  /api/v1/parceiros/{id}/contatos:
+    get:
+      tags: [Parceiros]
+      summary: Listar contatos do parceiro
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Lista de contatos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  parceiro:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      nome:
+                        type: string
+                    required: [id, nome]
+                  dados:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ContatoParceiro"
+                required: [parceiro, dados]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+    post:
+      tags: [Parceiros]
+      summary: Criar contato do parceiro
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContatoCreateRequest"
+      responses:
+        "201":
+          description: Contato criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContatoParceiro"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/importacoes:
+    get:
+      tags: [Importacoes]
+      summary: Historico de importacoes
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Importacao"
+                  paginacao:
+                    $ref: "#/components/schemas/Paginacao"
+                required: [dados, paginacao]
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/importacoes/upload:
+    post:
+      tags: [Importacoes]
+      summary: Upload de planilha
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required: [file]
+      responses:
+        "201":
+          description: Upload realizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportacaoUploadResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/importacoes/{id}/mapear:
+    post:
+      tags: [Importacoes]
+      summary: Mapear colunas da planilha
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImportacaoMapearRequest"
+      responses:
+        "200":
+          description: Mapeamento salvo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportacaoMapearResponse"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/importacoes/{id}/preview:
+    get:
+      tags: [Importacoes]
+      summary: Preview de validacao da importacao
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Preview da importacao
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportacaoPreviewResponse"
+        "400":
+          $ref: "#/components/responses/BadRequestResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/importacoes/{id}/confirmar:
+    post:
+      tags: [Importacoes]
+      summary: Confirmar e efetivar importacao
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      responses:
+        "200":
+          description: Importacao concluida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  importacaoId:
+                    type: string
+                    format: uuid
+                  status:
+                    $ref: "#/components/schemas/StatusImportacao"
+                  importadas:
+                    type: integer
+                  ignoradas:
+                    type: integer
+                  invalidas:
+                    type: integer
+                  ignoradasPorTrt:
+                    type: integer
+                  totalLinhas:
+                    type: integer
+                required:
+                  - importacaoId
+                  - status
+                  - importadas
+                  - ignoradas
+                  - invalidas
+                  - ignoradasPorTrt
+                  - totalLinhas
+        "400":
+          $ref: "#/components/responses/BadRequestResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+
+  /api/v1/trts:
+    get:
+      tags: [TRTs]
+      summary: Listar TRTs
+      responses:
+        "200":
+          description: Lista de TRTs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trt"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+
+  /api/v1/trts/{id}:
+    patch:
+      tags: [TRTs]
+      summary: Ativar ou desativar TRT
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ativo:
+                  type: boolean
+              required: [ativo]
+      responses:
+        "200":
+          description: TRT atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trt"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+  /api/v1/webhooks/whatsapp:
+    get:
+      tags: [Webhooks]
+      summary: Verificacao do webhook
+      security: []
+      parameters:
+        - in: query
+          name: hub.mode
+          schema:
+            type: string
+        - in: query
+          name: hub.verify_token
+          schema:
+            type: string
+        - in: query
+          name: hub.challenge
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Challenge validado
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: Token invalido
+    post:
+      tags: [Webhooks]
+      summary: Receber evento de resposta (n8n/WhatsApp simulado)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        "200":
+          description: Evento recebido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                required: [ok]
+
+  /api/v1/usuarios:
+    get:
+      tags: [Usuarios]
+      summary: Listar usuarios (admin)
+      responses:
+        "200":
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Usuario"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+    post:
+      tags: [Usuarios]
+      summary: Criar usuario (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsuarioCreateRequest"
+      responses:
+        "201":
+          description: Usuario criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+        "409":
+          $ref: "#/components/responses/ConflictResponse"
+
+  /api/v1/usuarios/{id}:
+    patch:
+      tags: [Usuarios]
+      summary: Atualizar usuario (admin)
+      parameters:
+        - $ref: "#/components/parameters/PathIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UsuarioUpdateRequest"
+      responses:
+        "200":
+          description: Usuario atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        "400":
+          $ref: "#/components/responses/ValidationErrorResponse"
+        "401":
+          $ref: "#/components/responses/UnauthorizedResponse"
+        "403":
+          $ref: "#/components/responses/ForbiddenResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PathIdParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PageParam:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 20
+
+  responses:
+    BadRequestResponse:
+      description: Requisicao invalida
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ValidationErrorResponse:
+      description: Erro de validacao
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ValidationErrorResponse"
+    UnauthorizedResponse:
+      description: Nao autenticado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ForbiddenResponse:
+      description: Sem permissao
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundResponse:
+      description: Recurso nao encontrado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ConflictResponse:
+      description: Conflito de dados
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    RoleUsuario:
+      type: string
+      enum: [ADMIN, OPERADOR, GESTOR]
+    Modalidade:
+      type: string
+      enum: [PRESENCIAL, ONLINE]
+    StatusAudiencia:
+      type: string
+      enum:
+        - IMPORTADA
+        - AGENDADA
+        - A_CONFIRMAR
+        - CONFIRMADA
+        - NAO_POSSO
+        - SEM_RESPOSTA
+        - SUBSTITUICAO_NECESSARIA
+        - EM_ANDAMENTO
+        - CHECK_IN_PENDENTE
+        - RELATORIO_PENDENTE
+        - CONCLUIDA
+        - CANCELADA
+    StatusImportacao:
+      type: string
+      enum: [PROCESSANDO, CONCLUIDA, ERRO]
+    OcorrenciaAudiencia:
+      type: string
+      enum: [SIM, NAO, REMARCADA]
+    ResultadoAudiencia:
+      type: string
+      enum: [ACORDO, SEM_ACORDO, AUSENCIA, REDESIGNADA]
+    DirecaoMensagem:
+      type: string
+      enum: [ENVIADA, RECEBIDA]
+    TipoMensagem:
+      type: string
+      enum:
+        - CONFIRMACAO_D1
+        - REITERACAO_H1H30
+        - CHECK_IN
+        - RELATORIO_POS
+        - SUBSTITUICAO_AVISO
+        - ESCALONAMENTO
+    StatusEnvioMensagem:
+      type: string
+      enum: [PENDENTE, ENVIADA, ENTREGUE, LIDA, FALHA]
+    StatusSubstituicao:
+      type: string
+      enum: [ABERTA, RESOLVIDA, CANCELADA]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    ValidationErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        detalhes:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required: [error]
+
+    Paginacao:
+      type: object
+      properties:
+        total:
+          type: integer
+        pagina:
+          type: integer
+        limite:
+          type: integer
+        totalPaginas:
+          type: integer
+      required: [total, pagina, limite, totalPaginas]
+
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          $ref: "#/components/schemas/RoleUsuario"
+        ativo:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, nome, email, role, ativo]
+    UsuarioCreateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+          minLength: 6
+        role:
+          $ref: "#/components/schemas/RoleUsuario"
+        ativo:
+          type: boolean
+      required: [nome, email, senha]
+    UsuarioUpdateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+          minLength: 6
+        role:
+          $ref: "#/components/schemas/RoleUsuario"
+        ativo:
+          type: boolean
+      additionalProperties: false
+
+    AuthLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+      required: [email, senha]
+    AuthLoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        usuario:
+          $ref: "#/components/schemas/Usuario"
+      required: [token, usuario]
+
+    Trt:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        nome:
+          type: string
+        ativo:
+          type: boolean
+      required: [id, numero, nome, ativo]
+
+    Preposto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        telefoneWhatsapp:
+          type: string
+        email:
+          type: string
+          nullable: true
+        cpf:
+          type: string
+          nullable: true
+        ativo:
+          type: boolean
+      required: [id, nome, telefoneWhatsapp, ativo]
+    PrepostoCreateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        telefoneWhatsapp:
+          type: string
+        email:
+          type: string
+          format: email
+        cpf:
+          type: string
+        ativo:
+          type: boolean
+      required: [nome, telefoneWhatsapp]
+    PrepostoUpdateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        telefoneWhatsapp:
+          type: string
+        email:
+          type: string
+          format: email
+        cpf:
+          type: string
+        ativo:
+          type: boolean
+      additionalProperties: false
+
+    Parceiro:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        ativo:
+          type: boolean
+      required: [id, nome, ativo]
+    ParceiroCreateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        ativo:
+          type: boolean
+      required: [nome]
+    ParceiroUpdateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        ativo:
+          type: boolean
+      additionalProperties: false
+
+    ContatoParceiro:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        parceiroId:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        telefoneWhatsapp:
+          type: string
+        email:
+          type: string
+          nullable: true
+        cargo:
+          type: string
+          nullable: true
+        ordemEscalonamento:
+          type: integer
+      required: [id, parceiroId, nome, telefoneWhatsapp, ordemEscalonamento]
+    ContatoCreateRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        telefoneWhatsapp:
+          type: string
+        email:
+          type: string
+          format: email
+        cargo:
+          type: string
+        ordemEscalonamento:
+          type: integer
+          minimum: 1
+      required: [nome, telefoneWhatsapp]
+
+    Audiencia:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        numeroProcesso:
+          type: string
+        reclamante:
+          type: string
+          nullable: true
+        data:
+          type: string
+          format: date-time
+        hora:
+          type: string
+          example: "14:30"
+        modalidade:
+          $ref: "#/components/schemas/Modalidade"
+        local:
+          type: string
+          nullable: true
+        link:
+          type: string
+          nullable: true
+        trtId:
+          type: string
+          format: uuid
+        vara:
+          type: string
+          nullable: true
+        status:
+          $ref: "#/components/schemas/StatusAudiencia"
+        prepostoId:
+          type: string
+          format: uuid
+        parceiroId:
+          type: string
+          format: uuid
+        importacaoId:
+          type: string
+          format: uuid
+          nullable: true
+        observacoes:
+          type: string
+          nullable: true
+        trt:
+          $ref: "#/components/schemas/Trt"
+        preposto:
+          $ref: "#/components/schemas/Preposto"
+        parceiro:
+          $ref: "#/components/schemas/Parceiro"
+      required:
+        - id
+        - numeroProcesso
+        - data
+        - hora
+        - modalidade
+        - trtId
+        - status
+        - prepostoId
+        - parceiroId
+    AudienciaCreateRequest:
+      type: object
+      properties:
+        numeroProcesso:
+          type: string
+        reclamante:
+          type: string
+        data:
+          type: string
+          format: date-time
+        hora:
+          type: string
+        modalidade:
+          $ref: "#/components/schemas/Modalidade"
+        local:
+          type: string
+        link:
+          type: string
+        trtId:
+          type: string
+          format: uuid
+        vara:
+          type: string
+        prepostoId:
+          type: string
+          format: uuid
+        parceiroId:
+          type: string
+          format: uuid
+        observacoes:
+          type: string
+      required:
+        - numeroProcesso
+        - data
+        - hora
+        - modalidade
+        - trtId
+        - prepostoId
+        - parceiroId
+    AudienciaUpdateRequest:
+      type: object
+      properties:
+        numeroProcesso:
+          type: string
+        reclamante:
+          type: string
+        data:
+          type: string
+          format: date-time
+        hora:
+          type: string
+        modalidade:
+          $ref: "#/components/schemas/Modalidade"
+        local:
+          type: string
+        link:
+          type: string
+        trtId:
+          type: string
+          format: uuid
+        vara:
+          type: string
+        prepostoId:
+          type: string
+          format: uuid
+        parceiroId:
+          type: string
+          format: uuid
+        observacoes:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusAudiencia"
+      additionalProperties: false
+
+    HistoricoStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        audienciaId:
+          type: string
+          format: uuid
+        statusAnterior:
+          $ref: "#/components/schemas/StatusAudiencia"
+        statusNovo:
+          $ref: "#/components/schemas/StatusAudiencia"
+        motivo:
+          type: string
+          nullable: true
+        atualizadoPor:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, audienciaId, statusAnterior, statusNovo, atualizadoPor, createdAt]
+
+    Mensagem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        audienciaId:
+          type: string
+          format: uuid
+        tipo:
+          $ref: "#/components/schemas/TipoMensagem"
+        direcao:
+          $ref: "#/components/schemas/DirecaoMensagem"
+        conteudo:
+          type: string
+        respostaBotao:
+          type: string
+          nullable: true
+        observacao:
+          type: string
+          nullable: true
+        statusEnvio:
+          $ref: "#/components/schemas/StatusEnvioMensagem"
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, audienciaId, tipo, direcao, conteudo, statusEnvio, createdAt]
+
+    Substituicao:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        audienciaId:
+          type: string
+          format: uuid
+        prepostoAnteriorId:
+          type: string
+          format: uuid
+        prepostoNovoId:
+          type: string
+          format: uuid
+          nullable: true
+        motivo:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusSubstituicao"
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - audienciaId
+        - prepostoAnteriorId
+        - motivo
+        - status
+        - createdAt
+
+    RelatorioAudiencia:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        audienciaId:
+          type: string
+          format: uuid
+        audienciaOcorreu:
+          $ref: "#/components/schemas/OcorrenciaAudiencia"
+        resultado:
+          $ref: "#/components/schemas/ResultadoAudiencia"
+        advogadoPresente:
+          type: boolean
+        advogadoDominioCaso:
+          type: boolean
+        problemaRelevante:
+          type: boolean
+        relato:
+          type: string
+          nullable: true
+      required: [id, audienciaId]
+    RelatorioCreateRequest:
+      type: object
+      properties:
+        audienciaOcorreu:
+          $ref: "#/components/schemas/OcorrenciaAudiencia"
+        resultado:
+          $ref: "#/components/schemas/ResultadoAudiencia"
+        advogadoPresente:
+          type: boolean
+        advogadoDominioCaso:
+          type: boolean
+        problemaRelevante:
+          type: boolean
+        relato:
+          type: string
+      required:
+        - audienciaOcorreu
+        - resultado
+        - advogadoPresente
+        - advogadoDominioCaso
+        - problemaRelevante
+
+    AudienciaDetalhe:
+      allOf:
+        - $ref: "#/components/schemas/Audiencia"
+        - type: object
+          properties:
+            historicoStatus:
+              type: array
+              items:
+                $ref: "#/components/schemas/HistoricoStatus"
+            mensagens:
+              type: array
+              items:
+                $ref: "#/components/schemas/Mensagem"
+            substituicoes:
+              type: array
+              items:
+                $ref: "#/components/schemas/Substituicao"
+            relatorio:
+              $ref: "#/components/schemas/RelatorioAudiencia"
+
+    DashboardResponse:
+      type: object
+      properties:
+        totalAtivas:
+          type: integer
+        audienciasHoje:
+          type: integer
+        audienciasSemana:
+          type: integer
+        aguardandoConfirmacao:
+          type: integer
+        semResposta:
+          type: integer
+        porStatus:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                $ref: "#/components/schemas/StatusAudiencia"
+              total:
+                type: integer
+            required: [status, total]
+      required:
+        - totalAtivas
+        - audienciasHoje
+        - audienciasSemana
+        - aguardandoConfirmacao
+        - semResposta
+        - porStatus
+
+    Importacao:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nomeArquivo:
+          type: string
+        totalRegistros:
+          type: integer
+        registrosImportados:
+          type: integer
+        registrosIgnorados:
+          type: integer
+        status:
+          $ref: "#/components/schemas/StatusImportacao"
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - nomeArquivo
+        - totalRegistros
+        - registrosImportados
+        - registrosIgnorados
+        - status
+        - createdAt
+
+    ImportacaoUploadResponse:
+      type: object
+      properties:
+        importacaoId:
+          type: string
+          format: uuid
+        nomeArquivo:
+          type: string
+        totalRegistros:
+          type: integer
+        colunasDetectadas:
+          type: array
+          items:
+            type: string
+        previewLinhas:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+        - importacaoId
+        - nomeArquivo
+        - totalRegistros
+        - colunasDetectadas
+        - previewLinhas
+
+    ImportacaoMapearRequest:
+      type: object
+      properties:
+        mapeamentoColunas:
+          type: object
+          additionalProperties:
+            type: string
+          description: >
+            Campos de dominio mapeados para colunas reais da planilha.
+            Campos obrigatorios: numeroProcesso, data, trt, prepostoNome, parceiroNome.
+      required: [mapeamentoColunas]
+
+    ImportacaoMapearResponse:
+      type: object
+      properties:
+        sucesso:
+          type: boolean
+        importacaoId:
+          type: string
+          format: uuid
+        mapeamentoColunas:
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          $ref: "#/components/schemas/StatusImportacao"
+        camposFaltantes:
+          type: array
+          items:
+            type: string
+      required: [sucesso]
+
+    ImportacaoPreviewResponse:
+      type: object
+      properties:
+        importacaoId:
+          type: string
+          format: uuid
+        nomeArquivo:
+          type: string
+        totalLinhas:
+          type: integer
+        validasParaImportacao:
+          type: integer
+        ignoradasPorTrt:
+          type: integer
+        invalidas:
+          type: integer
+        erros:
+          type: array
+          items:
+            type: object
+            properties:
+              linha:
+                type: integer
+              erros:
+                type: array
+                items:
+                  type: string
+            required: [linha, erros]
+        amostraValidas:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      required:
+        - importacaoId
+        - nomeArquivo
+        - totalLinhas
+        - validasParaImportacao
+        - ignoradasPorTrt
+        - invalidas
+        - erros
+        - amostraValidas
+
+security:
+  - bearerAuth: []

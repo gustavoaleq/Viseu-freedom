@@ -144,6 +144,8 @@ Ver `database.md` para modelagem completa com campos, tipos e enums.
 
 **Decisão:** API REST com prefixo `/api/v1/`. Autenticação básica com JWT.
 
+**Fonte formal do contrato:** `docs/openapi.yaml`
+
 **Auth:**
 | Método | Rota | Descrição |
 |--------|------|-----------|
