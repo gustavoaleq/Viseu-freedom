@@ -1,0 +1,284 @@
+### =====================================================================
+### Freedom.AI Hub — Roteiro de Teste: Substituicao Automatica
+### =====================================================================
+### Objetivo
+### Validar ponta a ponta:
+### 1) Entrada em SUBSTITUICAO_NECESSARIA dispara notificacoes automaticas
+###    para Viseu (todos contatos) + parceiro da audiencia (1o contato)
+### 2) Parceiro responde no WhatsApp em 2 etapas (nome, depois telefone)
+### 3) Sistema troca preposto, confirma substituicao e reenvia confirmacao ao novo preposto
+### =====================================================================
+
+@baseUrl = http://localhost:3001/api/v1
+@email = admin@freedom.ai
+@senha = admin123
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUwOGIwMGJmLThiMzMtNDg3Yy05OWJkLTRmZjZiOGNjMmJlMSIsImVtYWlsIjoiYWRtaW5AZnJlZWRvbS5haSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MTAxMzQ5NywiZXhwIjoxNzcxMDk5ODk3fQ.h3ELGPPZPeDboY2ZEumUc6CXbQIdt0fOj0vD_QghZA8
+
+### IDs e telefones (preencha conforme seu ambiente)
+@trtId =
+@prepostoId =
+@parceiroInternoId =
+@parceiroRiscoId =
+@audienciaRiscoId = d51026b3-17e8-4a29-af78-5c51b73ec2e2
+@audienciaRiscoManualId = d51026b3-17e8-4a29-af78-5c51b73ec2e2
+
+### Nome do parceiro interno (deve casar com PARCEIRO_INTERNO_NOME no backend)
+@parceiroInternoNome = Viseu Advogados
+
+### Telefones usados na simulacao do webhook
+### - telefonePreposto: numero do preposto da audiencia
+### - telefoneContatoParceiro: numero do contato principal do parceiro da audiencia
+@telefonePreposto =
+@telefoneContatoParceiro =
+
+### =====================================================================
+### 0) Login
+### =====================================================================
+
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "senha": "{{senha}}"
+}
+
+### Copie o token para @token se seu client nao preencher automaticamente.
+
+
+### =====================================================================
+### 1) Preparacao de base (TRT, preposto e parceiros)
+### =====================================================================
+
+### 1.1) Listar TRTs
+GET {{baseUrl}}/trts
+Authorization: Bearer {{token}}
+
+### 1.2) Listar prepostos
+GET {{baseUrl}}/prepostos?page=1&limit=100
+Authorization: Bearer {{token}}
+
+### 1.3) Listar parceiros
+GET {{baseUrl}}/parceiros?page=1&limit=100
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 2) Preparacao de contatos para substituicao
+### =====================================================================
+
+### 2.1) (Opcional) Criar parceiro interno Viseu Advogados
+### Se retornar 409, ja existe e pode seguir.
+POST {{baseUrl}}/parceiros
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "{{parceiroInternoNome}}"
+}
+
+### 2.2) Buscar parceiro interno para pegar ID
+GET {{baseUrl}}/parceiros?page=1&limit=20&busca=Viseu
+Authorization: Bearer {{token}}
+
+### 2.3) (Opcional) Criar contato no Viseu (recebe alerta de substituicao)
+### Preencha @parceiroInternoId com o ID retornado no passo 2.2.
+POST {{baseUrl}}/parceiros/{{parceiroInternoId}}/contatos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "Contato Viseu",
+  "telefoneWhatsapp": "5511999991111",
+  "email": "viseu@exemplo.com",
+  "cargo": "Operacoes",
+  "ordemEscalonamento": 1
+}
+
+### 2.4) Verificar contatos do parceiro da audiencia (parceiroRiscoId)
+GET {{baseUrl}}/parceiros/{{parceiroRiscoId}}/contatos
+Authorization: Bearer {{token}}
+
+### 2.5) (Opcional) Criar contato principal no parceiro da audiencia
+### Use se a resposta de 2.4 vier vazia.
+POST {{baseUrl}}/parceiros/{{parceiroRiscoId}}/contatos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "Contato Parceiro",
+  "telefoneWhatsapp": "{{telefoneContatoParceiro}}",
+  "email": "parceiro@exemplo.com",
+  "cargo": "Coordenador",
+  "ordemEscalonamento": 1
+}
+
+
+### =====================================================================
+### 3) Cenario A — Gatilho automatico via CHECK-IN problema
+### =====================================================================
+
+### 3.1) Criar audiencia de risco (se ainda nao tiver @audienciaRiscoId)
+# @name criar_audiencia_risco_checkin
+POST {{baseUrl}}/audiencias
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "numeroProcesso": "DEMO-SUBS-CHECKIN-001",
+  "reclamante": "Reclamante Demo Substituicao",
+  "data": "2026-02-20",
+  "hora": "16:00",
+  "modalidade": "ONLINE",
+  "trtId": "{{trtId}}",
+  "prepostoId": "{{prepostoId}}",
+  "parceiroId": "{{parceiroRiscoId}}"
+}
+
+### 3.2) Disparar check-in para abrir contexto de resposta
+POST {{baseUrl}}/audiencias/{{audienciaRiscoId}}/disparos/check-in
+Authorization: Bearer {{token}}
+
+### 3.3) Simular resposta do preposto: ESTOU_COM_PROBLEMA
+### Esperado: status -> SUBSTITUICAO_NECESSARIA + disparo de escalonamento automatico.
+POST {{baseUrl}}/webhooks/whatsapp
+Content-Type: application/json
+
+{
+  "phone": "{{telefonePreposto}}",
+  "fromMe": false,
+  "type": "ReceivedCallback",
+  "messageId": "DEMO-SUBS-CHECKIN-PROBLEMA-001",
+  "buttonsResponseMessage": {
+    "buttonId": "ESTOU_COM_PROBLEMA",
+    "message": "Nao conseguirei ir"
+  }
+}
+
+### 3.4) Validar detalhe da audiencia apos gatilho
+### Esperado no detalhe:
+### - status SUBSTITUICAO_NECESSARIA
+### - historico e mensagens de SUBSTITUICAO_AVISO/ESCALONAMENTO
+GET {{baseUrl}}/audiencias/{{audienciaRiscoId}}
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 4) Cenario B — Gatilho automatico via mudanca manual de status
+### =====================================================================
+
+### 4.1) Criar segunda audiencia para testar gatilho manual (opcional)
+# @name criar_audiencia_risco_manual
+POST {{baseUrl}}/audiencias
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "numeroProcesso": "DEMO-SUBS-MANUAL-001",
+  "reclamante": "Reclamante Demo Substituicao Manual",
+  "data": "2026-02-20",
+  "hora": "17:00",
+  "modalidade": "ONLINE",
+  "trtId": "{{trtId}}",
+  "prepostoId": "{{prepostoId}}",
+  "parceiroId": "{{parceiroRiscoId}}"
+}
+
+### 4.2) Mudar status manualmente para SUBSTITUICAO_NECESSARIA
+### Esperado: cria substituicao aberta (se nao houver) + dispara escalonamento automatico.
+PATCH {{baseUrl}}/audiencias/{{audienciaRiscoManualId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "SUBSTITUICAO_NECESSARIA"
+}
+
+### 4.3) Validar detalhe apos gatilho manual
+GET {{baseUrl}}/audiencias/{{audienciaRiscoManualId}}
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 5) Parceiro responde e indica novo preposto (WhatsApp inbound)
+### =====================================================================
+
+### 5.1) Clique do parceiro no botao "Indicar novo preposto"
+POST {{baseUrl}}/webhooks/whatsapp
+Content-Type: application/json
+
+{
+  "phone": "{{telefoneContatoParceiro}}",
+  "fromMe": false,
+  "type": "ReceivedCallback",
+  "messageId": "DEMO-PARCEIRO-BOTAO-001",
+  "buttonsResponseMessage": {
+    "buttonId": "INDICAR_NOVO_PREPOSTO",
+    "message": "Indicar novo preposto"
+  }
+}
+
+### 5.2) Parceiro envia o nome completo do substituto
+### Esperado: sistema solicita telefone no formato (DDD) numero.
+POST {{baseUrl}}/webhooks/whatsapp
+Content-Type: application/json
+
+{
+  "phone": "{{telefoneContatoParceiro}}",
+  "fromMe": false,
+  "type": "ReceivedCallback",
+  "messageId": "DEMO-PARCEIRO-NOME-001",
+  "text": {
+    "message": "Maria Carolina Souza"
+  }
+}
+
+### 5.3) Parceiro envia o telefone do substituto
+### Esperado: sistema resolve substituicao e troca preposto da audiencia.
+POST {{baseUrl}}/webhooks/whatsapp
+Content-Type: application/json
+
+{
+  "phone": "{{telefoneContatoParceiro}}",
+  "fromMe": false,
+  "type": "ReceivedCallback",
+  "messageId": "DEMO-PARCEIRO-TELEFONE-001",
+  "text": {
+    "message": "(11) 99888-7777"
+  }
+}
+
+### 5.4) Validar audiencia apos substituicao concluida
+### Esperado:
+### - status sai de SUBSTITUICAO_NECESSARIA
+### - novo preposto vinculado
+### - mensagem de substituicao realizada registrada
+GET {{baseUrl}}/audiencias/{{audienciaRiscoId}}
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 6) Validacoes finais de operacao
+### =====================================================================
+
+### 6.1) Dashboard (contadores de automacao)
+GET {{baseUrl}}/audiencias/dashboard
+Authorization: Bearer {{token}}
+
+### 6.2) Kanban
+GET {{baseUrl}}/audiencias/kanban
+Authorization: Bearer {{token}}
+
+### 6.3) Status do worker/fila
+GET {{baseUrl}}/webhooks/workers/status
+
+
+### =====================================================================
+### Notas
+### =====================================================================
+### - Sempre altere messageId nas simulacoes para evitar "MENSAGEM_DUPLICADA".
+### - Se parceiro da audiencia nao tiver contato, somente Viseu recebe o escalonamento.
+### - O contato do parceiro deve ser o de ordemEscalonamento=1 para receber a solicitacao.
+### - O parceiro interno Viseu deve ter nome exatamente igual ao PARCEIRO_INTERNO_NOME do backend.
+### =====================================================================

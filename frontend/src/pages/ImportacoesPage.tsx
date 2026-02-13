@@ -279,7 +279,7 @@ export function ImportacoesPage() {
             { n: 4, label: 'Conclusao', ativo: !!confirmar.data },
           ].map((item) => (
             <div key={item.n} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${item.ativo ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
+              <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${item.ativo ? 'bg-primary-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
                 {item.n}
               </span>
               <span className="text-sm font-medium text-slate-700">{item.label}</span>
@@ -301,7 +301,7 @@ export function ImportacoesPage() {
             <button
               type="submit"
               disabled={upload.isPending || !arquivo}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
             >
               {upload.isPending ? 'Enviando...' : 'Enviar planilha'}
             </button>
@@ -333,7 +333,7 @@ export function ImportacoesPage() {
                 <button
                   type="button"
                   onClick={aplicarAutoMapeamento}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-primary-300 hover:text-primary-700"
                 >
                   Auto-mapear novamente
                 </button>
@@ -352,14 +352,14 @@ export function ImportacoesPage() {
                     <div>
                       <p className="text-sm font-semibold text-slate-900">
                         {campo.label}
-                        {campo.obrigatorio ? <span className="ml-1 text-[10px] font-bold text-emerald-600">*</span> : null}
+                        {campo.obrigatorio ? <span className="ml-1 text-[10px] font-bold text-primary-600">*</span> : null}
                       </p>
                       <p className="mt-0.5 text-[11px] text-slate-500">{campo.key}</p>
                     </div>
 
                     <div className="flex md:justify-center">
                       {mapeamento[campo.key] ? (
-                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+                        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">
                           ✓
                         </span>
                       ) : campo.obrigatorio ? (
@@ -381,7 +381,7 @@ export function ImportacoesPage() {
                           [campo.key]: event.target.value,
                         }))
                       }
-                      className={`w-full rounded-lg border px-3 py-2 outline-none ring-emerald-200 focus:ring ${
+                      className={`w-full rounded-lg border px-3 py-2 outline-none ring-primary-200 focus:ring ${
                         campo.obrigatorio && !mapeamento[campo.key]
                           ? 'border-amber-300 bg-white'
                           : 'border-slate-200 bg-white'
@@ -414,14 +414,14 @@ export function ImportacoesPage() {
               <button
                 type="submit"
                 disabled={mapear.isPending || !importacaoId || obrigatoriosPendentes.length > 0}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-700 disabled:opacity-60"
+                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-primary-300 hover:text-primary-700 disabled:opacity-60"
               >
                 {mapear.isPending ? 'Salvando mapeamento...' : 'Salvar mapeamento'}
               </button>
 
               {mapear.data ? (
                 mapear.data.sucesso ? (
-                  <p className="text-sm text-emerald-700">Mapeamento salvo com sucesso.</p>
+                  <p className="text-sm text-primary-700">Mapeamento salvo com sucesso.</p>
                 ) : (
                   <p className="text-sm text-rose-700">
                     Campos obrigatorios faltando: {mapear.data.camposFaltantes?.join(', ') || 'nao informados'}
@@ -441,7 +441,7 @@ export function ImportacoesPage() {
                 </div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs text-slate-500">Validas</p>
-                  <p className="mt-1 text-2xl font-semibold text-emerald-700">{preview.data.validasParaImportacao}</p>
+                  <p className="mt-1 text-2xl font-semibold text-primary-700">{preview.data.validasParaImportacao}</p>
                 </div>
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
                   <p className="text-xs text-slate-500">Ignoradas TRT</p>
@@ -469,13 +469,13 @@ export function ImportacoesPage() {
               <button
                 onClick={() => confirmar.mutate()}
                 disabled={confirmar.isPending}
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+                className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
               >
                 {confirmar.isPending ? 'Confirmando importacao...' : '4. Confirmar e importar'}
               </button>
 
               {confirmar.data ? (
-                <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+                <div className="rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 text-sm text-primary-800">
                   Importacao concluida: {confirmar.data.importadas} importadas, {confirmar.data.ignoradas} ignoradas.
                 </div>
               ) : null}

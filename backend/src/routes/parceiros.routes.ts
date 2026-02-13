@@ -6,6 +6,8 @@ import {
   atualizarParceiro,
   listarContatosParceiro,
   criarContatoParceiro,
+  atualizarContatoParceiro,
+  removerContatoParceiro,
 } from '../services/parceiros.service.js'
 
 const criarParceiroSchema = z.object({
@@ -29,6 +31,18 @@ const criarContatoSchema = z.object({
   cargo: z.string().optional(),
   ordemEscalonamento: z.number().int().positive().optional(),
 })
+
+const atualizarContatoSchema = z
+  .object({
+    nome: z.string().min(2, 'Nome invalido').optional(),
+    telefoneWhatsapp: z.string().min(10, 'Telefone invalido').optional(),
+    email: z.email('E-mail invalido').optional(),
+    cargo: z.string().optional(),
+    ordemEscalonamento: z.number().int().positive().optional(),
+  })
+  .refine((dados) => Object.keys(dados).length > 0, {
+    message: 'Informe ao menos um campo para atualizar',
+  })
 
 export default async function parceirosRoutes(app: FastifyInstance) {
   app.addHook('onRequest', app.autenticar)
@@ -139,6 +153,62 @@ export default async function parceirosRoutes(app: FastifyInstance) {
 
       app.log.error(error)
       return reply.status(500).send({ error: 'Falha ao criar contato' })
+    }
+  })
+
+  // PATCH /api/v1/parceiros/:id/contatos/:contatoId
+  app.patch('/:id/contatos/:contatoId', async (request, reply) => {
+    const { id, contatoId } = request.params as { id: string; contatoId: string }
+    const parse = atualizarContatoSchema.safeParse(request.body)
+
+    if (!parse.success) {
+      return reply.status(400).send({
+        error: 'Dados invalidos',
+        detalhes: parse.error.issues,
+      })
+    }
+
+    try {
+      const contato = await atualizarContatoParceiro(id, contatoId, parse.data)
+      if (!contato) {
+        return reply.status(404).send({ error: 'Parceiro nao encontrado' })
+      }
+
+      return reply.send(contato)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'TELEFONE_INVALIDO') {
+        return reply.status(400).send({ error: 'Telefone invalido' })
+      }
+      if (error instanceof Error && error.message === 'CONTATO_NAO_ENCONTRADO') {
+        return reply.status(404).send({ error: 'Contato nao encontrado para este parceiro' })
+      }
+
+      app.log.error(error)
+      return reply.status(500).send({ error: 'Falha ao atualizar contato' })
+    }
+  })
+
+  // DELETE /api/v1/parceiros/:id/contatos/:contatoId
+  app.delete('/:id/contatos/:contatoId', async (request, reply) => {
+    const { id, contatoId } = request.params as { id: string; contatoId: string }
+
+    try {
+      const contato = await removerContatoParceiro(id, contatoId)
+      if (!contato) {
+        return reply.status(404).send({ error: 'Parceiro nao encontrado' })
+      }
+
+      return reply.send({
+        message: 'Contato removido com sucesso',
+        id: contato.id,
+      })
+    } catch (error) {
+      if (error instanceof Error && error.message === 'CONTATO_NAO_ENCONTRADO') {
+        return reply.status(404).send({ error: 'Contato nao encontrado para este parceiro' })
+      }
+
+      app.log.error(error)
+      return reply.status(500).send({ error: 'Falha ao remover contato' })
     }
   })
 }

@@ -153,7 +153,7 @@ export function UsuariosPage() {
             value={novoUsuario.nome}
             onChange={(event) => setNovoUsuario((atual) => ({ ...atual, nome: event.target.value }))}
             placeholder="Nome"
-            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-emerald-200 focus:ring"
+            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-primary-200 focus:ring"
           />
           <input
             required
@@ -161,7 +161,7 @@ export function UsuariosPage() {
             value={novoUsuario.email}
             onChange={(event) => setNovoUsuario((atual) => ({ ...atual, email: event.target.value }))}
             placeholder="E-mail"
-            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-emerald-200 focus:ring"
+            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-primary-200 focus:ring"
           />
           <input
             required
@@ -169,7 +169,7 @@ export function UsuariosPage() {
             value={novoUsuario.senha}
             onChange={(event) => setNovoUsuario((atual) => ({ ...atual, senha: event.target.value }))}
             placeholder="Senha inicial (min. 6)"
-            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-emerald-200 focus:ring"
+            className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-primary-200 focus:ring"
           />
           <div className="grid grid-cols-2 gap-3">
             <select
@@ -177,7 +177,7 @@ export function UsuariosPage() {
               onChange={(event) =>
                 setNovoUsuario((atual) => ({ ...atual, role: event.target.value as RoleUsuario }))
               }
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-emerald-200 focus:ring"
+              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none ring-primary-200 focus:ring"
             >
               {ROLES.map((role) => (
                 <option key={role} value={role}>
@@ -199,7 +199,7 @@ export function UsuariosPage() {
             <button
               type="submit"
               disabled={criar.isPending}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 disabled:opacity-60"
             >
               {criar.isPending ? 'Criando...' : 'Criar usuario'}
             </button>
@@ -318,7 +318,7 @@ export function UsuariosPage() {
                             <button
                               type="submit"
                               disabled={atualizar.isPending}
-                              className="rounded border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700"
+                              className="rounded border border-primary-300 bg-primary-50 px-2 py-1 text-xs font-semibold text-primary-700"
                             >
                               Salvar
                             </button>
@@ -334,7 +334,7 @@ export function UsuariosPage() {
                           <button
                             type="button"
                             onClick={() => iniciarEdicao(usuario)}
-                            className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-emerald-300 hover:text-emerald-700"
+                            className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 hover:border-primary-300 hover:text-primary-700"
                           >
                             Editar
                           </button>

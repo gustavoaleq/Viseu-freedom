@@ -68,6 +68,11 @@ export type HistoricoStatus = $Result.DefaultSelection<Prisma.$HistoricoStatusPa
  * 
  */
 export type Substituicao = $Result.DefaultSelection<Prisma.$SubstituicaoPayload>
+/**
+ * Model LogAutomacao
+ * 
+ */
+export type LogAutomacao = $Result.DefaultSelection<Prisma.$LogAutomacaoPayload>
 
 /**
  * Enums
@@ -443,6 +448,16 @@ export class PrismaClient<
     * ```
     */
   get substituicao(): Prisma.SubstituicaoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.logAutomacao`: Exposes CRUD operations for the **LogAutomacao** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LogAutomacaos
+    * const logAutomacaos = await prisma.logAutomacao.findMany()
+    * ```
+    */
+  get logAutomacao(): Prisma.LogAutomacaoDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -887,7 +902,8 @@ export namespace Prisma {
     Mensagem: 'Mensagem',
     RelatorioAudiencia: 'RelatorioAudiencia',
     HistoricoStatus: 'HistoricoStatus',
-    Substituicao: 'Substituicao'
+    Substituicao: 'Substituicao',
+    LogAutomacao: 'LogAutomacao'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -903,7 +919,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "trt" | "preposto" | "parceiro" | "contatoParceiro" | "importacao" | "audiencia" | "mensagem" | "relatorioAudiencia" | "historicoStatus" | "substituicao"
+      modelProps: "usuario" | "trt" | "preposto" | "parceiro" | "contatoParceiro" | "importacao" | "audiencia" | "mensagem" | "relatorioAudiencia" | "historicoStatus" | "substituicao" | "logAutomacao"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1721,6 +1737,80 @@ export namespace Prisma {
           }
         }
       }
+      LogAutomacao: {
+        payload: Prisma.$LogAutomacaoPayload<ExtArgs>
+        fields: Prisma.LogAutomacaoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LogAutomacaoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LogAutomacaoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          findFirst: {
+            args: Prisma.LogAutomacaoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LogAutomacaoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          findMany: {
+            args: Prisma.LogAutomacaoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>[]
+          }
+          create: {
+            args: Prisma.LogAutomacaoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          createMany: {
+            args: Prisma.LogAutomacaoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LogAutomacaoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>[]
+          }
+          delete: {
+            args: Prisma.LogAutomacaoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          update: {
+            args: Prisma.LogAutomacaoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          deleteMany: {
+            args: Prisma.LogAutomacaoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LogAutomacaoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LogAutomacaoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>[]
+          }
+          upsert: {
+            args: Prisma.LogAutomacaoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LogAutomacaoPayload>
+          }
+          aggregate: {
+            args: Prisma.LogAutomacaoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLogAutomacao>
+          }
+          groupBy: {
+            args: Prisma.LogAutomacaoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LogAutomacaoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LogAutomacaoCountArgs<ExtArgs>
+            result: $Utils.Optional<LogAutomacaoCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1840,6 +1930,7 @@ export namespace Prisma {
     relatorioAudiencia?: RelatorioAudienciaOmit
     historicoStatus?: HistoricoStatusOmit
     substituicao?: SubstituicaoOmit
+    logAutomacao?: LogAutomacaoOmit
   }
 
   /* Types for Logging */
@@ -2114,12 +2205,14 @@ export namespace Prisma {
     mensagens: number
     historicoStatus: number
     substituicoes: number
+    logsAutomacao: number
   }
 
   export type AudienciaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     mensagens?: boolean | AudienciaCountOutputTypeCountMensagensArgs
     historicoStatus?: boolean | AudienciaCountOutputTypeCountHistoricoStatusArgs
     substituicoes?: boolean | AudienciaCountOutputTypeCountSubstituicoesArgs
+    logsAutomacao?: boolean | AudienciaCountOutputTypeCountLogsAutomacaoArgs
   }
 
   // Custom InputTypes
@@ -2152,6 +2245,13 @@ export namespace Prisma {
    */
   export type AudienciaCountOutputTypeCountSubstituicoesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SubstituicaoWhereInput
+  }
+
+  /**
+   * AudienciaCountOutputType without action
+   */
+  export type AudienciaCountOutputTypeCountLogsAutomacaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LogAutomacaoWhereInput
   }
 
 
@@ -9200,6 +9300,7 @@ export namespace Prisma {
     historicoStatus?: boolean | Audiencia$historicoStatusArgs<ExtArgs>
     relatorio?: boolean | Audiencia$relatorioArgs<ExtArgs>
     substituicoes?: boolean | Audiencia$substituicoesArgs<ExtArgs>
+    logsAutomacao?: boolean | Audiencia$logsAutomacaoArgs<ExtArgs>
     _count?: boolean | AudienciaCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["audiencia"]>
 
@@ -9299,6 +9400,7 @@ export namespace Prisma {
     historicoStatus?: boolean | Audiencia$historicoStatusArgs<ExtArgs>
     relatorio?: boolean | Audiencia$relatorioArgs<ExtArgs>
     substituicoes?: boolean | Audiencia$substituicoesArgs<ExtArgs>
+    logsAutomacao?: boolean | Audiencia$logsAutomacaoArgs<ExtArgs>
     _count?: boolean | AudienciaCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AudienciaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9325,6 +9427,7 @@ export namespace Prisma {
       historicoStatus: Prisma.$HistoricoStatusPayload<ExtArgs>[]
       relatorio: Prisma.$RelatorioAudienciaPayload<ExtArgs> | null
       substituicoes: Prisma.$SubstituicaoPayload<ExtArgs>[]
+      logsAutomacao: Prisma.$LogAutomacaoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9752,6 +9855,7 @@ export namespace Prisma {
     historicoStatus<T extends Audiencia$historicoStatusArgs<ExtArgs> = {}>(args?: Subset<T, Audiencia$historicoStatusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HistoricoStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     relatorio<T extends Audiencia$relatorioArgs<ExtArgs> = {}>(args?: Subset<T, Audiencia$relatorioArgs<ExtArgs>>): Prisma__RelatorioAudienciaClient<$Result.GetResult<Prisma.$RelatorioAudienciaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     substituicoes<T extends Audiencia$substituicoesArgs<ExtArgs> = {}>(args?: Subset<T, Audiencia$substituicoesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubstituicaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    logsAutomacao<T extends Audiencia$logsAutomacaoArgs<ExtArgs> = {}>(args?: Subset<T, Audiencia$logsAutomacaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10307,6 +10411,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SubstituicaoScalarFieldEnum | SubstituicaoScalarFieldEnum[]
+  }
+
+  /**
+   * Audiencia.logsAutomacao
+   */
+  export type Audiencia$logsAutomacaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    where?: LogAutomacaoWhereInput
+    orderBy?: LogAutomacaoOrderByWithRelationInput | LogAutomacaoOrderByWithRelationInput[]
+    cursor?: LogAutomacaoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LogAutomacaoScalarFieldEnum | LogAutomacaoScalarFieldEnum[]
   }
 
   /**
@@ -14858,6 +14986,1112 @@ export namespace Prisma {
 
 
   /**
+   * Model LogAutomacao
+   */
+
+  export type AggregateLogAutomacao = {
+    _count: LogAutomacaoCountAggregateOutputType | null
+    _min: LogAutomacaoMinAggregateOutputType | null
+    _max: LogAutomacaoMaxAggregateOutputType | null
+  }
+
+  export type LogAutomacaoMinAggregateOutputType = {
+    id: string | null
+    audienciaId: string | null
+    origem: string | null
+    evento: string | null
+    etapa: string | null
+    status: string | null
+    mensagem: string | null
+    createdAt: Date | null
+  }
+
+  export type LogAutomacaoMaxAggregateOutputType = {
+    id: string | null
+    audienciaId: string | null
+    origem: string | null
+    evento: string | null
+    etapa: string | null
+    status: string | null
+    mensagem: string | null
+    createdAt: Date | null
+  }
+
+  export type LogAutomacaoCountAggregateOutputType = {
+    id: number
+    audienciaId: number
+    origem: number
+    evento: number
+    etapa: number
+    status: number
+    mensagem: number
+    metadados: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LogAutomacaoMinAggregateInputType = {
+    id?: true
+    audienciaId?: true
+    origem?: true
+    evento?: true
+    etapa?: true
+    status?: true
+    mensagem?: true
+    createdAt?: true
+  }
+
+  export type LogAutomacaoMaxAggregateInputType = {
+    id?: true
+    audienciaId?: true
+    origem?: true
+    evento?: true
+    etapa?: true
+    status?: true
+    mensagem?: true
+    createdAt?: true
+  }
+
+  export type LogAutomacaoCountAggregateInputType = {
+    id?: true
+    audienciaId?: true
+    origem?: true
+    evento?: true
+    etapa?: true
+    status?: true
+    mensagem?: true
+    metadados?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LogAutomacaoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LogAutomacao to aggregate.
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LogAutomacaos to fetch.
+     */
+    orderBy?: LogAutomacaoOrderByWithRelationInput | LogAutomacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LogAutomacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LogAutomacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LogAutomacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LogAutomacaos
+    **/
+    _count?: true | LogAutomacaoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LogAutomacaoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LogAutomacaoMaxAggregateInputType
+  }
+
+  export type GetLogAutomacaoAggregateType<T extends LogAutomacaoAggregateArgs> = {
+        [P in keyof T & keyof AggregateLogAutomacao]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLogAutomacao[P]>
+      : GetScalarType<T[P], AggregateLogAutomacao[P]>
+  }
+
+
+
+
+  export type LogAutomacaoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LogAutomacaoWhereInput
+    orderBy?: LogAutomacaoOrderByWithAggregationInput | LogAutomacaoOrderByWithAggregationInput[]
+    by: LogAutomacaoScalarFieldEnum[] | LogAutomacaoScalarFieldEnum
+    having?: LogAutomacaoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LogAutomacaoCountAggregateInputType | true
+    _min?: LogAutomacaoMinAggregateInputType
+    _max?: LogAutomacaoMaxAggregateInputType
+  }
+
+  export type LogAutomacaoGroupByOutputType = {
+    id: string
+    audienciaId: string
+    origem: string
+    evento: string
+    etapa: string | null
+    status: string | null
+    mensagem: string
+    metadados: JsonValue | null
+    createdAt: Date
+    _count: LogAutomacaoCountAggregateOutputType | null
+    _min: LogAutomacaoMinAggregateOutputType | null
+    _max: LogAutomacaoMaxAggregateOutputType | null
+  }
+
+  type GetLogAutomacaoGroupByPayload<T extends LogAutomacaoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LogAutomacaoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LogAutomacaoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LogAutomacaoGroupByOutputType[P]>
+            : GetScalarType<T[P], LogAutomacaoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LogAutomacaoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    audienciaId?: boolean
+    origem?: boolean
+    evento?: boolean
+    etapa?: boolean
+    status?: boolean
+    mensagem?: boolean
+    metadados?: boolean
+    createdAt?: boolean
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["logAutomacao"]>
+
+  export type LogAutomacaoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    audienciaId?: boolean
+    origem?: boolean
+    evento?: boolean
+    etapa?: boolean
+    status?: boolean
+    mensagem?: boolean
+    metadados?: boolean
+    createdAt?: boolean
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["logAutomacao"]>
+
+  export type LogAutomacaoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    audienciaId?: boolean
+    origem?: boolean
+    evento?: boolean
+    etapa?: boolean
+    status?: boolean
+    mensagem?: boolean
+    metadados?: boolean
+    createdAt?: boolean
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["logAutomacao"]>
+
+  export type LogAutomacaoSelectScalar = {
+    id?: boolean
+    audienciaId?: boolean
+    origem?: boolean
+    evento?: boolean
+    etapa?: boolean
+    status?: boolean
+    mensagem?: boolean
+    metadados?: boolean
+    createdAt?: boolean
+  }
+
+  export type LogAutomacaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "audienciaId" | "origem" | "evento" | "etapa" | "status" | "mensagem" | "metadados" | "createdAt", ExtArgs["result"]["logAutomacao"]>
+  export type LogAutomacaoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }
+  export type LogAutomacaoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }
+  export type LogAutomacaoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
+  }
+
+  export type $LogAutomacaoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LogAutomacao"
+    objects: {
+      audiencia: Prisma.$AudienciaPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      audienciaId: string
+      origem: string
+      evento: string
+      etapa: string | null
+      status: string | null
+      mensagem: string
+      metadados: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["logAutomacao"]>
+    composites: {}
+  }
+
+  type LogAutomacaoGetPayload<S extends boolean | null | undefined | LogAutomacaoDefaultArgs> = $Result.GetResult<Prisma.$LogAutomacaoPayload, S>
+
+  type LogAutomacaoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LogAutomacaoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LogAutomacaoCountAggregateInputType | true
+    }
+
+  export interface LogAutomacaoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LogAutomacao'], meta: { name: 'LogAutomacao' } }
+    /**
+     * Find zero or one LogAutomacao that matches the filter.
+     * @param {LogAutomacaoFindUniqueArgs} args - Arguments to find a LogAutomacao
+     * @example
+     * // Get one LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LogAutomacaoFindUniqueArgs>(args: SelectSubset<T, LogAutomacaoFindUniqueArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LogAutomacao that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LogAutomacaoFindUniqueOrThrowArgs} args - Arguments to find a LogAutomacao
+     * @example
+     * // Get one LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LogAutomacaoFindUniqueOrThrowArgs>(args: SelectSubset<T, LogAutomacaoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LogAutomacao that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoFindFirstArgs} args - Arguments to find a LogAutomacao
+     * @example
+     * // Get one LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LogAutomacaoFindFirstArgs>(args?: SelectSubset<T, LogAutomacaoFindFirstArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LogAutomacao that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoFindFirstOrThrowArgs} args - Arguments to find a LogAutomacao
+     * @example
+     * // Get one LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LogAutomacaoFindFirstOrThrowArgs>(args?: SelectSubset<T, LogAutomacaoFindFirstOrThrowArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LogAutomacaos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LogAutomacaos
+     * const logAutomacaos = await prisma.logAutomacao.findMany()
+     * 
+     * // Get first 10 LogAutomacaos
+     * const logAutomacaos = await prisma.logAutomacao.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const logAutomacaoWithIdOnly = await prisma.logAutomacao.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LogAutomacaoFindManyArgs>(args?: SelectSubset<T, LogAutomacaoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LogAutomacao.
+     * @param {LogAutomacaoCreateArgs} args - Arguments to create a LogAutomacao.
+     * @example
+     * // Create one LogAutomacao
+     * const LogAutomacao = await prisma.logAutomacao.create({
+     *   data: {
+     *     // ... data to create a LogAutomacao
+     *   }
+     * })
+     * 
+     */
+    create<T extends LogAutomacaoCreateArgs>(args: SelectSubset<T, LogAutomacaoCreateArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LogAutomacaos.
+     * @param {LogAutomacaoCreateManyArgs} args - Arguments to create many LogAutomacaos.
+     * @example
+     * // Create many LogAutomacaos
+     * const logAutomacao = await prisma.logAutomacao.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LogAutomacaoCreateManyArgs>(args?: SelectSubset<T, LogAutomacaoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LogAutomacaos and returns the data saved in the database.
+     * @param {LogAutomacaoCreateManyAndReturnArgs} args - Arguments to create many LogAutomacaos.
+     * @example
+     * // Create many LogAutomacaos
+     * const logAutomacao = await prisma.logAutomacao.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LogAutomacaos and only return the `id`
+     * const logAutomacaoWithIdOnly = await prisma.logAutomacao.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LogAutomacaoCreateManyAndReturnArgs>(args?: SelectSubset<T, LogAutomacaoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LogAutomacao.
+     * @param {LogAutomacaoDeleteArgs} args - Arguments to delete one LogAutomacao.
+     * @example
+     * // Delete one LogAutomacao
+     * const LogAutomacao = await prisma.logAutomacao.delete({
+     *   where: {
+     *     // ... filter to delete one LogAutomacao
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LogAutomacaoDeleteArgs>(args: SelectSubset<T, LogAutomacaoDeleteArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LogAutomacao.
+     * @param {LogAutomacaoUpdateArgs} args - Arguments to update one LogAutomacao.
+     * @example
+     * // Update one LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LogAutomacaoUpdateArgs>(args: SelectSubset<T, LogAutomacaoUpdateArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LogAutomacaos.
+     * @param {LogAutomacaoDeleteManyArgs} args - Arguments to filter LogAutomacaos to delete.
+     * @example
+     * // Delete a few LogAutomacaos
+     * const { count } = await prisma.logAutomacao.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LogAutomacaoDeleteManyArgs>(args?: SelectSubset<T, LogAutomacaoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LogAutomacaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LogAutomacaos
+     * const logAutomacao = await prisma.logAutomacao.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LogAutomacaoUpdateManyArgs>(args: SelectSubset<T, LogAutomacaoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LogAutomacaos and returns the data updated in the database.
+     * @param {LogAutomacaoUpdateManyAndReturnArgs} args - Arguments to update many LogAutomacaos.
+     * @example
+     * // Update many LogAutomacaos
+     * const logAutomacao = await prisma.logAutomacao.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LogAutomacaos and only return the `id`
+     * const logAutomacaoWithIdOnly = await prisma.logAutomacao.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LogAutomacaoUpdateManyAndReturnArgs>(args: SelectSubset<T, LogAutomacaoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LogAutomacao.
+     * @param {LogAutomacaoUpsertArgs} args - Arguments to update or create a LogAutomacao.
+     * @example
+     * // Update or create a LogAutomacao
+     * const logAutomacao = await prisma.logAutomacao.upsert({
+     *   create: {
+     *     // ... data to create a LogAutomacao
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LogAutomacao we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LogAutomacaoUpsertArgs>(args: SelectSubset<T, LogAutomacaoUpsertArgs<ExtArgs>>): Prisma__LogAutomacaoClient<$Result.GetResult<Prisma.$LogAutomacaoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LogAutomacaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoCountArgs} args - Arguments to filter LogAutomacaos to count.
+     * @example
+     * // Count the number of LogAutomacaos
+     * const count = await prisma.logAutomacao.count({
+     *   where: {
+     *     // ... the filter for the LogAutomacaos we want to count
+     *   }
+     * })
+    **/
+    count<T extends LogAutomacaoCountArgs>(
+      args?: Subset<T, LogAutomacaoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LogAutomacaoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LogAutomacao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LogAutomacaoAggregateArgs>(args: Subset<T, LogAutomacaoAggregateArgs>): Prisma.PrismaPromise<GetLogAutomacaoAggregateType<T>>
+
+    /**
+     * Group by LogAutomacao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LogAutomacaoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LogAutomacaoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LogAutomacaoGroupByArgs['orderBy'] }
+        : { orderBy?: LogAutomacaoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LogAutomacaoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLogAutomacaoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LogAutomacao model
+   */
+  readonly fields: LogAutomacaoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LogAutomacao.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LogAutomacaoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    audiencia<T extends AudienciaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AudienciaDefaultArgs<ExtArgs>>): Prisma__AudienciaClient<$Result.GetResult<Prisma.$AudienciaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LogAutomacao model
+   */
+  interface LogAutomacaoFieldRefs {
+    readonly id: FieldRef<"LogAutomacao", 'String'>
+    readonly audienciaId: FieldRef<"LogAutomacao", 'String'>
+    readonly origem: FieldRef<"LogAutomacao", 'String'>
+    readonly evento: FieldRef<"LogAutomacao", 'String'>
+    readonly etapa: FieldRef<"LogAutomacao", 'String'>
+    readonly status: FieldRef<"LogAutomacao", 'String'>
+    readonly mensagem: FieldRef<"LogAutomacao", 'String'>
+    readonly metadados: FieldRef<"LogAutomacao", 'Json'>
+    readonly createdAt: FieldRef<"LogAutomacao", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LogAutomacao findUnique
+   */
+  export type LogAutomacaoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which LogAutomacao to fetch.
+     */
+    where: LogAutomacaoWhereUniqueInput
+  }
+
+  /**
+   * LogAutomacao findUniqueOrThrow
+   */
+  export type LogAutomacaoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which LogAutomacao to fetch.
+     */
+    where: LogAutomacaoWhereUniqueInput
+  }
+
+  /**
+   * LogAutomacao findFirst
+   */
+  export type LogAutomacaoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which LogAutomacao to fetch.
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LogAutomacaos to fetch.
+     */
+    orderBy?: LogAutomacaoOrderByWithRelationInput | LogAutomacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LogAutomacaos.
+     */
+    cursor?: LogAutomacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LogAutomacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LogAutomacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LogAutomacaos.
+     */
+    distinct?: LogAutomacaoScalarFieldEnum | LogAutomacaoScalarFieldEnum[]
+  }
+
+  /**
+   * LogAutomacao findFirstOrThrow
+   */
+  export type LogAutomacaoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which LogAutomacao to fetch.
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LogAutomacaos to fetch.
+     */
+    orderBy?: LogAutomacaoOrderByWithRelationInput | LogAutomacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LogAutomacaos.
+     */
+    cursor?: LogAutomacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LogAutomacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LogAutomacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LogAutomacaos.
+     */
+    distinct?: LogAutomacaoScalarFieldEnum | LogAutomacaoScalarFieldEnum[]
+  }
+
+  /**
+   * LogAutomacao findMany
+   */
+  export type LogAutomacaoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which LogAutomacaos to fetch.
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LogAutomacaos to fetch.
+     */
+    orderBy?: LogAutomacaoOrderByWithRelationInput | LogAutomacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LogAutomacaos.
+     */
+    cursor?: LogAutomacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LogAutomacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LogAutomacaos.
+     */
+    skip?: number
+    distinct?: LogAutomacaoScalarFieldEnum | LogAutomacaoScalarFieldEnum[]
+  }
+
+  /**
+   * LogAutomacao create
+   */
+  export type LogAutomacaoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LogAutomacao.
+     */
+    data: XOR<LogAutomacaoCreateInput, LogAutomacaoUncheckedCreateInput>
+  }
+
+  /**
+   * LogAutomacao createMany
+   */
+  export type LogAutomacaoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LogAutomacaos.
+     */
+    data: LogAutomacaoCreateManyInput | LogAutomacaoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LogAutomacao createManyAndReturn
+   */
+  export type LogAutomacaoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * The data used to create many LogAutomacaos.
+     */
+    data: LogAutomacaoCreateManyInput | LogAutomacaoCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LogAutomacao update
+   */
+  export type LogAutomacaoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LogAutomacao.
+     */
+    data: XOR<LogAutomacaoUpdateInput, LogAutomacaoUncheckedUpdateInput>
+    /**
+     * Choose, which LogAutomacao to update.
+     */
+    where: LogAutomacaoWhereUniqueInput
+  }
+
+  /**
+   * LogAutomacao updateMany
+   */
+  export type LogAutomacaoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LogAutomacaos.
+     */
+    data: XOR<LogAutomacaoUpdateManyMutationInput, LogAutomacaoUncheckedUpdateManyInput>
+    /**
+     * Filter which LogAutomacaos to update
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * Limit how many LogAutomacaos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LogAutomacao updateManyAndReturn
+   */
+  export type LogAutomacaoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * The data used to update LogAutomacaos.
+     */
+    data: XOR<LogAutomacaoUpdateManyMutationInput, LogAutomacaoUncheckedUpdateManyInput>
+    /**
+     * Filter which LogAutomacaos to update
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * Limit how many LogAutomacaos to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LogAutomacao upsert
+   */
+  export type LogAutomacaoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LogAutomacao to update in case it exists.
+     */
+    where: LogAutomacaoWhereUniqueInput
+    /**
+     * In case the LogAutomacao found by the `where` argument doesn't exist, create a new LogAutomacao with this data.
+     */
+    create: XOR<LogAutomacaoCreateInput, LogAutomacaoUncheckedCreateInput>
+    /**
+     * In case the LogAutomacao was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LogAutomacaoUpdateInput, LogAutomacaoUncheckedUpdateInput>
+  }
+
+  /**
+   * LogAutomacao delete
+   */
+  export type LogAutomacaoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+    /**
+     * Filter which LogAutomacao to delete.
+     */
+    where: LogAutomacaoWhereUniqueInput
+  }
+
+  /**
+   * LogAutomacao deleteMany
+   */
+  export type LogAutomacaoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LogAutomacaos to delete
+     */
+    where?: LogAutomacaoWhereInput
+    /**
+     * Limit how many LogAutomacaos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LogAutomacao without action
+   */
+  export type LogAutomacaoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LogAutomacao
+     */
+    select?: LogAutomacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LogAutomacao
+     */
+    omit?: LogAutomacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LogAutomacaoInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15038,6 +16272,21 @@ export namespace Prisma {
   };
 
   export type SubstituicaoScalarFieldEnum = (typeof SubstituicaoScalarFieldEnum)[keyof typeof SubstituicaoScalarFieldEnum]
+
+
+  export const LogAutomacaoScalarFieldEnum: {
+    id: 'id',
+    audienciaId: 'audienciaId',
+    origem: 'origem',
+    evento: 'evento',
+    etapa: 'etapa',
+    status: 'status',
+    mensagem: 'mensagem',
+    metadados: 'metadados',
+    createdAt: 'createdAt'
+  };
+
+  export type LogAutomacaoScalarFieldEnum = (typeof LogAutomacaoScalarFieldEnum)[keyof typeof LogAutomacaoScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15757,6 +17006,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusListRelationFilter
     relatorio?: XOR<RelatorioAudienciaNullableScalarRelationFilter, RelatorioAudienciaWhereInput> | null
     substituicoes?: SubstituicaoListRelationFilter
+    logsAutomacao?: LogAutomacaoListRelationFilter
   }
 
   export type AudienciaOrderByWithRelationInput = {
@@ -15791,6 +17041,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusOrderByRelationAggregateInput
     relatorio?: RelatorioAudienciaOrderByWithRelationInput
     substituicoes?: SubstituicaoOrderByRelationAggregateInput
+    logsAutomacao?: LogAutomacaoOrderByRelationAggregateInput
   }
 
   export type AudienciaWhereUniqueInput = Prisma.AtLeast<{
@@ -15828,6 +17079,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusListRelationFilter
     relatorio?: XOR<RelatorioAudienciaNullableScalarRelationFilter, RelatorioAudienciaWhereInput> | null
     substituicoes?: SubstituicaoListRelationFilter
+    logsAutomacao?: LogAutomacaoListRelationFilter
   }, "id">
 
   export type AudienciaOrderByWithAggregationInput = {
@@ -16198,6 +17450,81 @@ export namespace Prisma {
     status?: EnumStatusSubstituicaoWithAggregatesFilter<"Substituicao"> | $Enums.StatusSubstituicao
     createdAt?: DateTimeWithAggregatesFilter<"Substituicao"> | Date | string
     resolvidoEm?: DateTimeNullableWithAggregatesFilter<"Substituicao"> | Date | string | null
+  }
+
+  export type LogAutomacaoWhereInput = {
+    AND?: LogAutomacaoWhereInput | LogAutomacaoWhereInput[]
+    OR?: LogAutomacaoWhereInput[]
+    NOT?: LogAutomacaoWhereInput | LogAutomacaoWhereInput[]
+    id?: StringFilter<"LogAutomacao"> | string
+    audienciaId?: StringFilter<"LogAutomacao"> | string
+    origem?: StringFilter<"LogAutomacao"> | string
+    evento?: StringFilter<"LogAutomacao"> | string
+    etapa?: StringNullableFilter<"LogAutomacao"> | string | null
+    status?: StringNullableFilter<"LogAutomacao"> | string | null
+    mensagem?: StringFilter<"LogAutomacao"> | string
+    metadados?: JsonNullableFilter<"LogAutomacao">
+    createdAt?: DateTimeFilter<"LogAutomacao"> | Date | string
+    audiencia?: XOR<AudienciaScalarRelationFilter, AudienciaWhereInput>
+  }
+
+  export type LogAutomacaoOrderByWithRelationInput = {
+    id?: SortOrder
+    audienciaId?: SortOrder
+    origem?: SortOrder
+    evento?: SortOrder
+    etapa?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    mensagem?: SortOrder
+    metadados?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    audiencia?: AudienciaOrderByWithRelationInput
+  }
+
+  export type LogAutomacaoWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LogAutomacaoWhereInput | LogAutomacaoWhereInput[]
+    OR?: LogAutomacaoWhereInput[]
+    NOT?: LogAutomacaoWhereInput | LogAutomacaoWhereInput[]
+    audienciaId?: StringFilter<"LogAutomacao"> | string
+    origem?: StringFilter<"LogAutomacao"> | string
+    evento?: StringFilter<"LogAutomacao"> | string
+    etapa?: StringNullableFilter<"LogAutomacao"> | string | null
+    status?: StringNullableFilter<"LogAutomacao"> | string | null
+    mensagem?: StringFilter<"LogAutomacao"> | string
+    metadados?: JsonNullableFilter<"LogAutomacao">
+    createdAt?: DateTimeFilter<"LogAutomacao"> | Date | string
+    audiencia?: XOR<AudienciaScalarRelationFilter, AudienciaWhereInput>
+  }, "id">
+
+  export type LogAutomacaoOrderByWithAggregationInput = {
+    id?: SortOrder
+    audienciaId?: SortOrder
+    origem?: SortOrder
+    evento?: SortOrder
+    etapa?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    mensagem?: SortOrder
+    metadados?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: LogAutomacaoCountOrderByAggregateInput
+    _max?: LogAutomacaoMaxOrderByAggregateInput
+    _min?: LogAutomacaoMinOrderByAggregateInput
+  }
+
+  export type LogAutomacaoScalarWhereWithAggregatesInput = {
+    AND?: LogAutomacaoScalarWhereWithAggregatesInput | LogAutomacaoScalarWhereWithAggregatesInput[]
+    OR?: LogAutomacaoScalarWhereWithAggregatesInput[]
+    NOT?: LogAutomacaoScalarWhereWithAggregatesInput | LogAutomacaoScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LogAutomacao"> | string
+    audienciaId?: StringWithAggregatesFilter<"LogAutomacao"> | string
+    origem?: StringWithAggregatesFilter<"LogAutomacao"> | string
+    evento?: StringWithAggregatesFilter<"LogAutomacao"> | string
+    etapa?: StringNullableWithAggregatesFilter<"LogAutomacao"> | string | null
+    status?: StringNullableWithAggregatesFilter<"LogAutomacao"> | string | null
+    mensagem?: StringWithAggregatesFilter<"LogAutomacao"> | string
+    metadados?: JsonNullableWithAggregatesFilter<"LogAutomacao">
+    createdAt?: DateTimeWithAggregatesFilter<"LogAutomacao"> | Date | string
   }
 
   export type UsuarioCreateInput = {
@@ -16697,6 +18024,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateInput = {
@@ -16727,6 +18055,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUpdateInput = {
@@ -16757,6 +18086,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateInput = {
@@ -16787,6 +18117,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaCreateManyInput = {
@@ -17189,6 +18520,89 @@ export namespace Prisma {
     status?: EnumStatusSubstituicaoFieldUpdateOperationsInput | $Enums.StatusSubstituicao
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resolvidoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type LogAutomacaoCreateInput = {
+    id?: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    audiencia: AudienciaCreateNestedOneWithoutLogsAutomacaoInput
+  }
+
+  export type LogAutomacaoUncheckedCreateInput = {
+    id?: string
+    audienciaId: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type LogAutomacaoUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    audiencia?: AudienciaUpdateOneRequiredWithoutLogsAutomacaoNestedInput
+  }
+
+  export type LogAutomacaoUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    audienciaId?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LogAutomacaoCreateManyInput = {
+    id?: string
+    audienciaId: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type LogAutomacaoUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LogAutomacaoUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    audienciaId?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -17697,7 +19111,17 @@ export namespace Prisma {
     isNot?: RelatorioAudienciaWhereInput | null
   }
 
+  export type LogAutomacaoListRelationFilter = {
+    every?: LogAutomacaoWhereInput
+    some?: LogAutomacaoWhereInput
+    none?: LogAutomacaoWhereInput
+  }
+
   export type HistoricoStatusOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LogAutomacaoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18096,6 +19520,40 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type LogAutomacaoCountOrderByAggregateInput = {
+    id?: SortOrder
+    audienciaId?: SortOrder
+    origem?: SortOrder
+    evento?: SortOrder
+    etapa?: SortOrder
+    status?: SortOrder
+    mensagem?: SortOrder
+    metadados?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LogAutomacaoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    audienciaId?: SortOrder
+    origem?: SortOrder
+    evento?: SortOrder
+    etapa?: SortOrder
+    status?: SortOrder
+    mensagem?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LogAutomacaoMinOrderByAggregateInput = {
+    id?: SortOrder
+    audienciaId?: SortOrder
+    origem?: SortOrder
+    evento?: SortOrder
+    etapa?: SortOrder
+    status?: SortOrder
+    mensagem?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18573,6 +20031,13 @@ export namespace Prisma {
     connect?: SubstituicaoWhereUniqueInput | SubstituicaoWhereUniqueInput[]
   }
 
+  export type LogAutomacaoCreateNestedManyWithoutAudienciaInput = {
+    create?: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput> | LogAutomacaoCreateWithoutAudienciaInput[] | LogAutomacaoUncheckedCreateWithoutAudienciaInput[]
+    connectOrCreate?: LogAutomacaoCreateOrConnectWithoutAudienciaInput | LogAutomacaoCreateOrConnectWithoutAudienciaInput[]
+    createMany?: LogAutomacaoCreateManyAudienciaInputEnvelope
+    connect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+  }
+
   export type MensagemUncheckedCreateNestedManyWithoutAudienciaInput = {
     create?: XOR<MensagemCreateWithoutAudienciaInput, MensagemUncheckedCreateWithoutAudienciaInput> | MensagemCreateWithoutAudienciaInput[] | MensagemUncheckedCreateWithoutAudienciaInput[]
     connectOrCreate?: MensagemCreateOrConnectWithoutAudienciaInput | MensagemCreateOrConnectWithoutAudienciaInput[]
@@ -18598,6 +20063,13 @@ export namespace Prisma {
     connectOrCreate?: SubstituicaoCreateOrConnectWithoutAudienciaInput | SubstituicaoCreateOrConnectWithoutAudienciaInput[]
     createMany?: SubstituicaoCreateManyAudienciaInputEnvelope
     connect?: SubstituicaoWhereUniqueInput | SubstituicaoWhereUniqueInput[]
+  }
+
+  export type LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput = {
+    create?: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput> | LogAutomacaoCreateWithoutAudienciaInput[] | LogAutomacaoUncheckedCreateWithoutAudienciaInput[]
+    connectOrCreate?: LogAutomacaoCreateOrConnectWithoutAudienciaInput | LogAutomacaoCreateOrConnectWithoutAudienciaInput[]
+    createMany?: LogAutomacaoCreateManyAudienciaInputEnvelope
+    connect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
   }
 
   export type EnumModalidadeFieldUpdateOperationsInput = {
@@ -18694,6 +20166,20 @@ export namespace Prisma {
     deleteMany?: SubstituicaoScalarWhereInput | SubstituicaoScalarWhereInput[]
   }
 
+  export type LogAutomacaoUpdateManyWithoutAudienciaNestedInput = {
+    create?: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput> | LogAutomacaoCreateWithoutAudienciaInput[] | LogAutomacaoUncheckedCreateWithoutAudienciaInput[]
+    connectOrCreate?: LogAutomacaoCreateOrConnectWithoutAudienciaInput | LogAutomacaoCreateOrConnectWithoutAudienciaInput[]
+    upsert?: LogAutomacaoUpsertWithWhereUniqueWithoutAudienciaInput | LogAutomacaoUpsertWithWhereUniqueWithoutAudienciaInput[]
+    createMany?: LogAutomacaoCreateManyAudienciaInputEnvelope
+    set?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    disconnect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    delete?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    connect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    update?: LogAutomacaoUpdateWithWhereUniqueWithoutAudienciaInput | LogAutomacaoUpdateWithWhereUniqueWithoutAudienciaInput[]
+    updateMany?: LogAutomacaoUpdateManyWithWhereWithoutAudienciaInput | LogAutomacaoUpdateManyWithWhereWithoutAudienciaInput[]
+    deleteMany?: LogAutomacaoScalarWhereInput | LogAutomacaoScalarWhereInput[]
+  }
+
   export type MensagemUncheckedUpdateManyWithoutAudienciaNestedInput = {
     create?: XOR<MensagemCreateWithoutAudienciaInput, MensagemUncheckedCreateWithoutAudienciaInput> | MensagemCreateWithoutAudienciaInput[] | MensagemUncheckedCreateWithoutAudienciaInput[]
     connectOrCreate?: MensagemCreateOrConnectWithoutAudienciaInput | MensagemCreateOrConnectWithoutAudienciaInput[]
@@ -18744,6 +20230,20 @@ export namespace Prisma {
     update?: SubstituicaoUpdateWithWhereUniqueWithoutAudienciaInput | SubstituicaoUpdateWithWhereUniqueWithoutAudienciaInput[]
     updateMany?: SubstituicaoUpdateManyWithWhereWithoutAudienciaInput | SubstituicaoUpdateManyWithWhereWithoutAudienciaInput[]
     deleteMany?: SubstituicaoScalarWhereInput | SubstituicaoScalarWhereInput[]
+  }
+
+  export type LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput = {
+    create?: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput> | LogAutomacaoCreateWithoutAudienciaInput[] | LogAutomacaoUncheckedCreateWithoutAudienciaInput[]
+    connectOrCreate?: LogAutomacaoCreateOrConnectWithoutAudienciaInput | LogAutomacaoCreateOrConnectWithoutAudienciaInput[]
+    upsert?: LogAutomacaoUpsertWithWhereUniqueWithoutAudienciaInput | LogAutomacaoUpsertWithWhereUniqueWithoutAudienciaInput[]
+    createMany?: LogAutomacaoCreateManyAudienciaInputEnvelope
+    set?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    disconnect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    delete?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    connect?: LogAutomacaoWhereUniqueInput | LogAutomacaoWhereUniqueInput[]
+    update?: LogAutomacaoUpdateWithWhereUniqueWithoutAudienciaInput | LogAutomacaoUpdateWithWhereUniqueWithoutAudienciaInput[]
+    updateMany?: LogAutomacaoUpdateManyWithWhereWithoutAudienciaInput | LogAutomacaoUpdateManyWithWhereWithoutAudienciaInput[]
+    deleteMany?: LogAutomacaoScalarWhereInput | LogAutomacaoScalarWhereInput[]
   }
 
   export type AudienciaCreateNestedOneWithoutMensagensInput = {
@@ -18894,6 +20394,20 @@ export namespace Prisma {
     delete?: PrepostoWhereInput | boolean
     connect?: PrepostoWhereUniqueInput
     update?: XOR<XOR<PrepostoUpdateToOneWithWhereWithoutSubstituicoesNovoInput, PrepostoUpdateWithoutSubstituicoesNovoInput>, PrepostoUncheckedUpdateWithoutSubstituicoesNovoInput>
+  }
+
+  export type AudienciaCreateNestedOneWithoutLogsAutomacaoInput = {
+    create?: XOR<AudienciaCreateWithoutLogsAutomacaoInput, AudienciaUncheckedCreateWithoutLogsAutomacaoInput>
+    connectOrCreate?: AudienciaCreateOrConnectWithoutLogsAutomacaoInput
+    connect?: AudienciaWhereUniqueInput
+  }
+
+  export type AudienciaUpdateOneRequiredWithoutLogsAutomacaoNestedInput = {
+    create?: XOR<AudienciaCreateWithoutLogsAutomacaoInput, AudienciaUncheckedCreateWithoutLogsAutomacaoInput>
+    connectOrCreate?: AudienciaCreateOrConnectWithoutLogsAutomacaoInput
+    upsert?: AudienciaUpsertWithoutLogsAutomacaoInput
+    connect?: AudienciaWhereUniqueInput
+    update?: XOR<XOR<AudienciaUpdateToOneWithWhereWithoutLogsAutomacaoInput, AudienciaUpdateWithoutLogsAutomacaoInput>, AudienciaUncheckedUpdateWithoutLogsAutomacaoInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -19303,6 +20817,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutTrtInput = {
@@ -19332,6 +20847,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutTrtInput = {
@@ -19416,6 +20932,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutPrepostoInput = {
@@ -19445,6 +20962,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutPrepostoInput = {
@@ -19710,6 +21228,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutParceiroInput = {
@@ -19739,6 +21258,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutParceiroInput = {
@@ -19930,6 +21450,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutImportacaoInput = {
@@ -19959,6 +21480,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutImportacaoInput = {
@@ -20218,6 +21740,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LogAutomacaoCreateWithoutAudienciaInput = {
+    id?: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type LogAutomacaoUncheckedCreateWithoutAudienciaInput = {
+    id?: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type LogAutomacaoCreateOrConnectWithoutAudienciaInput = {
+    where: LogAutomacaoWhereUniqueInput
+    create: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput>
+  }
+
+  export type LogAutomacaoCreateManyAudienciaInputEnvelope = {
+    data: LogAutomacaoCreateManyAudienciaInput | LogAutomacaoCreateManyAudienciaInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TrtUpsertWithoutAudienciasInput = {
     update: XOR<TrtUpdateWithoutAudienciasInput, TrtUncheckedUpdateWithoutAudienciasInput>
     create: XOR<TrtCreateWithoutAudienciasInput, TrtUncheckedCreateWithoutAudienciasInput>
@@ -20444,6 +21998,37 @@ export namespace Prisma {
     data: XOR<SubstituicaoUpdateManyMutationInput, SubstituicaoUncheckedUpdateManyWithoutAudienciaInput>
   }
 
+  export type LogAutomacaoUpsertWithWhereUniqueWithoutAudienciaInput = {
+    where: LogAutomacaoWhereUniqueInput
+    update: XOR<LogAutomacaoUpdateWithoutAudienciaInput, LogAutomacaoUncheckedUpdateWithoutAudienciaInput>
+    create: XOR<LogAutomacaoCreateWithoutAudienciaInput, LogAutomacaoUncheckedCreateWithoutAudienciaInput>
+  }
+
+  export type LogAutomacaoUpdateWithWhereUniqueWithoutAudienciaInput = {
+    where: LogAutomacaoWhereUniqueInput
+    data: XOR<LogAutomacaoUpdateWithoutAudienciaInput, LogAutomacaoUncheckedUpdateWithoutAudienciaInput>
+  }
+
+  export type LogAutomacaoUpdateManyWithWhereWithoutAudienciaInput = {
+    where: LogAutomacaoScalarWhereInput
+    data: XOR<LogAutomacaoUpdateManyMutationInput, LogAutomacaoUncheckedUpdateManyWithoutAudienciaInput>
+  }
+
+  export type LogAutomacaoScalarWhereInput = {
+    AND?: LogAutomacaoScalarWhereInput | LogAutomacaoScalarWhereInput[]
+    OR?: LogAutomacaoScalarWhereInput[]
+    NOT?: LogAutomacaoScalarWhereInput | LogAutomacaoScalarWhereInput[]
+    id?: StringFilter<"LogAutomacao"> | string
+    audienciaId?: StringFilter<"LogAutomacao"> | string
+    origem?: StringFilter<"LogAutomacao"> | string
+    evento?: StringFilter<"LogAutomacao"> | string
+    etapa?: StringNullableFilter<"LogAutomacao"> | string | null
+    status?: StringNullableFilter<"LogAutomacao"> | string | null
+    mensagem?: StringFilter<"LogAutomacao"> | string
+    metadados?: JsonNullableFilter<"LogAutomacao">
+    createdAt?: DateTimeFilter<"LogAutomacao"> | Date | string
+  }
+
   export type AudienciaCreateWithoutMensagensInput = {
     id?: string
     numeroProcesso: string
@@ -20471,6 +22056,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutMensagensInput = {
@@ -20500,6 +22086,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutMensagensInput = {
@@ -20605,6 +22192,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutMensagensInput = {
@@ -20634,6 +22222,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type PrepostoUpsertWithoutMensagensInput = {
@@ -20735,6 +22324,7 @@ export namespace Prisma {
     mensagens?: MensagemCreateNestedManyWithoutAudienciaInput
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutRelatorioInput = {
@@ -20764,6 +22354,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedCreateNestedManyWithoutAudienciaInput
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutRelatorioInput = {
@@ -20809,6 +22400,7 @@ export namespace Prisma {
     mensagens?: MensagemUpdateManyWithoutAudienciaNestedInput
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutRelatorioInput = {
@@ -20838,6 +22430,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedUpdateManyWithoutAudienciaNestedInput
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaCreateWithoutHistoricoStatusInput = {
@@ -20867,6 +22460,7 @@ export namespace Prisma {
     mensagens?: MensagemCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutHistoricoStatusInput = {
@@ -20896,6 +22490,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
     substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutHistoricoStatusInput = {
@@ -20941,6 +22536,7 @@ export namespace Prisma {
     mensagens?: MensagemUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutHistoricoStatusInput = {
@@ -20970,6 +22566,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaCreateWithoutSubstituicoesInput = {
@@ -20999,6 +22596,7 @@ export namespace Prisma {
     mensagens?: MensagemCreateNestedManyWithoutAudienciaInput
     historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaUncheckedCreateWithoutSubstituicoesInput = {
@@ -21028,6 +22626,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedCreateNestedManyWithoutAudienciaInput
     historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
     relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
+    logsAutomacao?: LogAutomacaoUncheckedCreateNestedManyWithoutAudienciaInput
   }
 
   export type AudienciaCreateOrConnectWithoutSubstituicoesInput = {
@@ -21139,6 +22738,7 @@ export namespace Prisma {
     mensagens?: MensagemUpdateManyWithoutAudienciaNestedInput
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutSubstituicoesInput = {
@@ -21168,6 +22768,7 @@ export namespace Prisma {
     mensagens?: MensagemUncheckedUpdateManyWithoutAudienciaNestedInput
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type PrepostoUpsertWithoutSubstituicoesAnteriorInput = {
@@ -21248,6 +22849,142 @@ export namespace Prisma {
     substituicoesAnterior?: SubstituicaoUncheckedUpdateManyWithoutPrepostoAnteriorNestedInput
   }
 
+  export type AudienciaCreateWithoutLogsAutomacaoInput = {
+    id?: string
+    numeroProcesso: string
+    reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
+    data: Date | string
+    hora: string
+    modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
+    local?: string | null
+    link?: string | null
+    vara?: string | null
+    status?: $Enums.StatusAudiencia
+    observacoes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    trt: TrtCreateNestedOneWithoutAudienciasInput
+    preposto: PrepostoCreateNestedOneWithoutAudienciasInput
+    parceiro: ParceiroCreateNestedOneWithoutAudienciasInput
+    importacao?: ImportacaoCreateNestedOneWithoutAudienciasInput
+    mensagens?: MensagemCreateNestedManyWithoutAudienciaInput
+    historicoStatus?: HistoricoStatusCreateNestedManyWithoutAudienciaInput
+    relatorio?: RelatorioAudienciaCreateNestedOneWithoutAudienciaInput
+    substituicoes?: SubstituicaoCreateNestedManyWithoutAudienciaInput
+  }
+
+  export type AudienciaUncheckedCreateWithoutLogsAutomacaoInput = {
+    id?: string
+    numeroProcesso: string
+    reclamante?: string | null
+    reclamada?: string | null
+    tipoAudiencia?: string | null
+    data: Date | string
+    hora: string
+    modalidade: $Enums.Modalidade
+    comarca?: string | null
+    advogado?: string | null
+    contatoAdvogado?: string | null
+    correspondente?: string | null
+    local?: string | null
+    link?: string | null
+    trtId: string
+    vara?: string | null
+    status?: $Enums.StatusAudiencia
+    prepostoId: string
+    parceiroId: string
+    importacaoId?: string | null
+    observacoes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mensagens?: MensagemUncheckedCreateNestedManyWithoutAudienciaInput
+    historicoStatus?: HistoricoStatusUncheckedCreateNestedManyWithoutAudienciaInput
+    relatorio?: RelatorioAudienciaUncheckedCreateNestedOneWithoutAudienciaInput
+    substituicoes?: SubstituicaoUncheckedCreateNestedManyWithoutAudienciaInput
+  }
+
+  export type AudienciaCreateOrConnectWithoutLogsAutomacaoInput = {
+    where: AudienciaWhereUniqueInput
+    create: XOR<AudienciaCreateWithoutLogsAutomacaoInput, AudienciaUncheckedCreateWithoutLogsAutomacaoInput>
+  }
+
+  export type AudienciaUpsertWithoutLogsAutomacaoInput = {
+    update: XOR<AudienciaUpdateWithoutLogsAutomacaoInput, AudienciaUncheckedUpdateWithoutLogsAutomacaoInput>
+    create: XOR<AudienciaCreateWithoutLogsAutomacaoInput, AudienciaUncheckedCreateWithoutLogsAutomacaoInput>
+    where?: AudienciaWhereInput
+  }
+
+  export type AudienciaUpdateToOneWithWhereWithoutLogsAutomacaoInput = {
+    where?: AudienciaWhereInput
+    data: XOR<AudienciaUpdateWithoutLogsAutomacaoInput, AudienciaUncheckedUpdateWithoutLogsAutomacaoInput>
+  }
+
+  export type AudienciaUpdateWithoutLogsAutomacaoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numeroProcesso?: StringFieldUpdateOperationsInput | string
+    reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora?: StringFieldUpdateOperationsInput | string
+    modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
+    local?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    vara?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusAudienciaFieldUpdateOperationsInput | $Enums.StatusAudiencia
+    observacoes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trt?: TrtUpdateOneRequiredWithoutAudienciasNestedInput
+    preposto?: PrepostoUpdateOneRequiredWithoutAudienciasNestedInput
+    parceiro?: ParceiroUpdateOneRequiredWithoutAudienciasNestedInput
+    importacao?: ImportacaoUpdateOneWithoutAudienciasNestedInput
+    mensagens?: MensagemUpdateManyWithoutAudienciaNestedInput
+    historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
+    relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
+    substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+  }
+
+  export type AudienciaUncheckedUpdateWithoutLogsAutomacaoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numeroProcesso?: StringFieldUpdateOperationsInput | string
+    reclamante?: NullableStringFieldUpdateOperationsInput | string | null
+    reclamada?: NullableStringFieldUpdateOperationsInput | string | null
+    tipoAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora?: StringFieldUpdateOperationsInput | string
+    modalidade?: EnumModalidadeFieldUpdateOperationsInput | $Enums.Modalidade
+    comarca?: NullableStringFieldUpdateOperationsInput | string | null
+    advogado?: NullableStringFieldUpdateOperationsInput | string | null
+    contatoAdvogado?: NullableStringFieldUpdateOperationsInput | string | null
+    correspondente?: NullableStringFieldUpdateOperationsInput | string | null
+    local?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    trtId?: StringFieldUpdateOperationsInput | string
+    vara?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusAudienciaFieldUpdateOperationsInput | $Enums.StatusAudiencia
+    prepostoId?: StringFieldUpdateOperationsInput | string
+    parceiroId?: StringFieldUpdateOperationsInput | string
+    importacaoId?: NullableStringFieldUpdateOperationsInput | string | null
+    observacoes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mensagens?: MensagemUncheckedUpdateManyWithoutAudienciaNestedInput
+    historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
+    relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
+    substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+  }
+
   export type AudienciaCreateManyTrtInput = {
     id?: string
     numeroProcesso: string
@@ -21300,6 +23037,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutTrtInput = {
@@ -21329,6 +23067,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateManyWithoutTrtInput = {
@@ -21442,6 +23181,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutPrepostoInput = {
@@ -21471,6 +23211,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateManyWithoutPrepostoInput = {
@@ -21694,6 +23435,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutParceiroInput = {
@@ -21723,6 +23465,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateManyWithoutParceiroInput = {
@@ -21858,6 +23601,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateWithoutImportacaoInput = {
@@ -21887,6 +23631,7 @@ export namespace Prisma {
     historicoStatus?: HistoricoStatusUncheckedUpdateManyWithoutAudienciaNestedInput
     relatorio?: RelatorioAudienciaUncheckedUpdateOneWithoutAudienciaNestedInput
     substituicoes?: SubstituicaoUncheckedUpdateManyWithoutAudienciaNestedInput
+    logsAutomacao?: LogAutomacaoUncheckedUpdateManyWithoutAudienciaNestedInput
   }
 
   export type AudienciaUncheckedUpdateManyWithoutImportacaoInput = {
@@ -21945,6 +23690,17 @@ export namespace Prisma {
     status?: $Enums.StatusSubstituicao
     createdAt?: Date | string
     resolvidoEm?: Date | string | null
+  }
+
+  export type LogAutomacaoCreateManyAudienciaInput = {
+    id?: string
+    origem: string
+    evento: string
+    etapa?: string | null
+    status?: string | null
+    mensagem: string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type MensagemUpdateWithoutAudienciaInput = {
@@ -22044,6 +23800,39 @@ export namespace Prisma {
     status?: EnumStatusSubstituicaoFieldUpdateOperationsInput | $Enums.StatusSubstituicao
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resolvidoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type LogAutomacaoUpdateWithoutAudienciaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LogAutomacaoUncheckedUpdateWithoutAudienciaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LogAutomacaoUncheckedUpdateManyWithoutAudienciaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    origem?: StringFieldUpdateOperationsInput | string
+    evento?: StringFieldUpdateOperationsInput | string
+    etapa?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagem?: StringFieldUpdateOperationsInput | string
+    metadados?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

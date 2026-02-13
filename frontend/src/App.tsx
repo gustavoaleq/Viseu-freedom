@@ -9,7 +9,9 @@ import { DashboardPage } from './pages/DashboardPage'
 import { ImportacoesPage } from './pages/ImportacoesPage'
 import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { ParceirosPage } from './pages/ParceirosPage'
 import { PrepostosPage } from './pages/PrepostosPage'
+import { TrtsPage } from './pages/TrtsPage'
 import { UsuariosPage } from './pages/UsuariosPage'
 
 const queryClient = new QueryClient({
@@ -36,6 +38,8 @@ function App() {
               <Route path="/audiencias/kanban" element={<AudienciasKanbanPage />} />
               <Route path="/audiencias/:id" element={<AudienciaDetalhePage />} />
               <Route path="/prepostos" element={<PrepostosPage />} />
+              <Route path="/parceiros" element={<ParceirosPage />} />
+              <Route path="/trts" element={<TrtsPage />} />
               <Route path="/importacoes" element={<ImportacoesPage />} />
               <Route path="/usuarios" element={<UsuariosPage />} />
               <Route path="*" element={<NotFoundPage />} />

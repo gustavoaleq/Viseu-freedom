@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { formatarData } from '../lib/format'
 import { audienciasApi } from '../services/hub'
 import type { Audiencia, StatusAudiencia } from '../types'
@@ -61,7 +61,7 @@ function classeStatusTabela(status: StatusAudiencia) {
     case 'SEM_RESPOSTA':
       return 'bg-orange-100 text-orange-700 border-orange-200'
     default:
-      return 'bg-emerald-100 text-emerald-800 border-emerald-200'
+      return 'bg-primary-100 text-primary-800 border-primary-200'
   }
 }
 
@@ -87,35 +87,12 @@ function dataCurta(audiencia: Audiencia) {
 }
 
 export function DashboardPage() {
+  const navigate = useNavigate()
   const dashboard = useQuery({ queryKey: ['dashboard'], queryFn: audienciasApi.dashboard })
 
   const audienciasOperacao = useQuery({
     queryKey: ['dashboard-audiencias-operacao'],
     queryFn: () => audienciasApi.listar({ limit: 60, page: 1 }),
-  })
-
-  const amanhaCount = useQuery({
-    queryKey: ['dashboard-amanha-count'],
-    queryFn: async () => {
-      const agora = new Date()
-      const amanha = new Date(agora)
-      amanha.setDate(agora.getDate() + 1)
-
-      const inicio = new Date(amanha)
-      inicio.setHours(0, 0, 0, 0)
-
-      const fim = new Date(amanha)
-      fim.setHours(23, 59, 59, 999)
-
-      const resposta = await audienciasApi.listar({
-        page: 1,
-        limit: 200,
-        dataInicio: inicio.toISOString(),
-        dataFim: fim.toISOString(),
-      })
-
-      return resposta.paginacao.total
-    },
   })
 
   if (dashboard.isLoading) {
@@ -130,17 +107,23 @@ export function DashboardPage() {
     )
   }
 
+  const statusOperacionais = dashboard.data.porStatus.filter((item) => item.status !== 'CANCELADA')
+
   const statusMap = new Map<StatusAudiencia, number>()
-  for (const item of dashboard.data.porStatus) {
+  for (const item of statusOperacionais) {
     statusMap.set(item.status, item.total)
   }
 
   const substituicaoNecessaria = statusMap.get('SUBSTITUICAO_NECESSARIA') ?? 0
   const checkInPendente = statusMap.get('CHECK_IN_PENDENTE') ?? 0
   const hoje = dashboard.data.audienciasHoje
-  const amanha = amanhaCount.data ?? 0
+  const automacao = dashboard.data.automacao ?? {
+    reiteracoesDisparadas24h: 0,
+    respostasWhatsapp24h: 0,
+    substituicoesPorAutomacao24h: 0,
+  }
 
-  const totalStatus = dashboard.data.porStatus.reduce((acc, item) => acc + item.total, 0)
+  const totalStatus = statusOperacionais.reduce((acc, item) => acc + item.total, 0)
   const realizadas = statusMap.get('CONCLUIDA') ?? 0
   const pendentes =
     (statusMap.get('IMPORTADA') ?? 0) +
@@ -180,30 +163,58 @@ export function DashboardPage() {
     })
 
   const prioridades = cardsBase.slice(0, 6)
+  const proximasAudiencias = (audienciasOperacao.data?.dados ?? [])
+    .filter((item) => item.status !== 'CONCLUIDA' && item.status !== 'CANCELADA')
+    .slice()
+    .sort((a, b) => combinarDataHora(a).getTime() - combinarDataHora(b).getTime())
+    .slice(0, 6)
 
   const lembretes = [
-    {
-      titulo: 'Relatorio mensal',
-      detalhe: 'Consolidar indicadores de audiencias para revisao dos socios.',
-      badge: 'Operacional',
-      badgeClass: 'bg-blue-100 text-blue-700 border-blue-200',
-    },
-    {
-      titulo: 'Substituicoes criticas',
-      detalhe: `${substituicaoNecessaria} audiencia(s) com risco operacional imediato.`,
-      badge: substituicaoNecessaria > 0 ? 'Urgente' : 'Controlado',
-      badgeClass:
-        substituicaoNecessaria > 0
-          ? 'bg-red-100 text-red-700 border-red-200'
-          : 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    },
-    {
-      titulo: 'Check-in pendente',
-      detalhe: `${checkInPendente} audiencia(s) aguardando confirmacao de deslocamento.`,
-      badge: 'Hoje',
-      badgeClass: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    },
+    ...(substituicaoNecessaria > 0
+      ? [
+          {
+            titulo: 'Substituicoes criticas',
+            detalhe: `${substituicaoNecessaria} audiencia(s) com risco operacional imediato.`,
+            badge: 'Urgente',
+            badgeClass: 'bg-red-100 text-red-700 border-red-200',
+          },
+        ]
+      : []),
+    ...(checkInPendente > 0
+      ? [
+          {
+            titulo: 'Check-in pendente',
+            detalhe: `${checkInPendente} audiencia(s) aguardando confirmacao de deslocamento.`,
+            badge: 'Hoje',
+            badgeClass: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          },
+        ]
+      : []),
+    ...(dashboard.data.aguardandoConfirmacao > 0
+      ? [
+          {
+            titulo: 'A confirmar (D-1)',
+            detalhe: `${dashboard.data.aguardandoConfirmacao} audiencia(s) aguardando retorno do preposto.`,
+            badge: 'D-1',
+            badgeClass: 'bg-blue-100 text-blue-700 border-blue-200',
+          },
+        ]
+      : []),
+    ...(dashboard.data.semResposta > 0
+      ? [
+          {
+            titulo: 'Sem resposta',
+            detalhe: `${dashboard.data.semResposta} audiencia(s) sem retorno no fluxo atual.`,
+            badge: 'Atencao',
+            badgeClass: 'bg-amber-100 text-amber-700 border-amber-200',
+          },
+        ]
+      : []),
   ]
+
+  function abrirSubstituicoesNecessarias() {
+    navigate('/audiencias?status=SUBSTITUICAO_NECESSARIA')
+  }
 
   return (
     <div className="space-y-6">
@@ -216,7 +227,7 @@ export function DashboardPage() {
           <span className="text-sm text-slate-500">Ultima atualizacao: agora</span>
           <Link
             to="/audiencias"
-            className="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700"
+            className="inline-flex items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-700"
           >
             Abrir operacao
           </Link>
@@ -226,68 +237,64 @@ export function DashboardPage() {
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500">Audiencias Hoje / Amanha</p>
-              <h3 className="mt-2 text-3xl font-bold text-slate-900">
-                {hoje} <span className="text-lg font-normal text-slate-500">/ {amanha}</span>
-              </h3>
-            </div>
-            <div className="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">HOJE</div>
+            <p className="text-sm font-medium text-slate-500">Audiencias hoje</p>
+            <div className="rounded-lg bg-primary-50 px-2 py-1 text-xs font-semibold text-primary-700">HOJE</div>
           </div>
-          <p className="mt-4 text-xs text-emerald-600">Monitoramento diario da agenda juridica.</p>
+          <h3 className="mt-5 text-center text-4xl font-bold text-slate-900">{hoje}</h3>
+          <p className="mt-3 text-center text-[11px] text-slate-500">Audiencias previstas para o dia atual.</p>
         </article>
 
         <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500">A confirmar (D-1)</p>
-              <h3 className="mt-2 text-3xl font-bold text-slate-900">{dashboard.data.aguardandoConfirmacao}</h3>
-            </div>
+            <p className="text-sm font-medium text-slate-500">A confirmar (D-1)</p>
             <div className="rounded-lg bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700">D-1</div>
           </div>
-          <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-            <div className="h-1.5 w-full rounded-full bg-slate-200">
-              <div
-                className="h-1.5 rounded-full bg-blue-500"
-                style={{
-                  width: `${Math.min(
-                    100,
-                    dashboard.data.totalAtivas > 0
-                      ? (dashboard.data.aguardandoConfirmacao / dashboard.data.totalAtivas) * 100
-                      : 0,
-                  )}%`,
-                }}
-              />
-            </div>
-            <span className="font-semibold text-slate-700">
-              {dashboard.data.totalAtivas > 0
-                ? Math.round((dashboard.data.aguardandoConfirmacao / dashboard.data.totalAtivas) * 100)
-                : 0}
-              %
-            </span>
-          </div>
-        </article>
-
-        <article className="rounded-xl border border-red-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-red-600">Substituicao Necessaria</p>
-              <h3 className="mt-2 text-3xl font-bold text-red-600">{substituicaoNecessaria}</h3>
-            </div>
-            <div className="rounded-lg bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">RISCO</div>
-          </div>
-          <p className="mt-4 text-xs font-medium text-red-600">Encaminhar acao imediata com parceiro/preposto.</p>
+          <h3 className="mt-5 text-center text-4xl font-bold text-slate-900">{dashboard.data.aguardandoConfirmacao}</h3>
+          <p className="mt-3 text-center text-[11px] text-slate-500">Aguardando retorno do preposto na confirmacao D-1.</p>
         </article>
 
         <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500">Check-in Pendente</p>
-              <h3 className="mt-2 text-3xl font-bold text-slate-900">{checkInPendente}</h3>
-            </div>
+            <p className="text-sm font-medium text-slate-500">Check-in Pendente</p>
             <div className="rounded-lg bg-yellow-50 px-2 py-1 text-xs font-semibold text-yellow-700">CHECK-IN</div>
           </div>
-          <p className="mt-4 text-xs text-slate-500">Audiencias do dia aguardando sinalizacao de chegada.</p>
+          <h3 className="mt-5 text-center text-4xl font-bold text-slate-900">{checkInPendente}</h3>
+          <p className="mt-3 text-center text-[11px] text-slate-500">Audiencias do dia aguardando sinalizacao de chegada.</p>
+        </article>
+
+        <article
+          role="button"
+          tabIndex={0}
+          onClick={abrirSubstituicoesNecessarias}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              abrirSubstituicoesNecessarias()
+            }
+          }}
+          className="cursor-pointer rounded-xl border border-red-200 bg-white p-5 shadow-sm transition hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-200"
+        >
+          <div className="flex items-start justify-between">
+            <p className="text-sm font-medium text-slate-500">Substituicao Necessaria</p>
+            <div className="rounded-lg bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">RISCO</div>
+          </div>
+          <h3 className="mt-5 text-center text-4xl font-bold text-slate-900">{substituicaoNecessaria}</h3>
+          <p className="mt-3 text-center text-[11px] text-slate-500">Clique para abrir audiencias filtradas com substituicao necessaria.</p>
+        </article>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <article className="rounded-xl border border-slate-200 bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Reiteracoes (24h)</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{automacao.reiteracoesDisparadas24h}</p>
+        </article>
+        <article className="rounded-xl border border-slate-200 bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Respostas WhatsApp (24h)</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{automacao.respostasWhatsapp24h}</p>
+        </article>
+        <article className="rounded-xl border border-slate-200 bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Substituicoes por automacao (24h)</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{automacao.substituicoesPorAutomacao24h}</p>
         </article>
       </section>
 
@@ -295,7 +302,7 @@ export function DashboardPage() {
         <article className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-100 p-5">
             <h2 className="text-lg font-bold text-slate-900">Prioridades do Dia</h2>
-            <Link to="/audiencias" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+            <Link to="/audiencias" className="text-sm font-medium text-primary-600 hover:text-primary-700">
               Ver todas
             </Link>
           </div>
@@ -346,7 +353,7 @@ export function DashboardPage() {
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                      <Link to={`/audiencias/${audiencia.id}`} className="text-emerald-600 hover:text-emerald-700">
+                      <Link to={`/audiencias/${audiencia.id}`} className="text-primary-600 hover:text-primary-700">
                         {classeAcaoTabela(audiencia.status)}
                       </Link>
                     </td>
@@ -363,50 +370,66 @@ export function DashboardPage() {
             <div className="relative mx-auto flex aspect-square w-full max-w-64 items-center justify-center">
               <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="40" fill="transparent" strokeWidth="12" className="stroke-slate-100" />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeWidth="12"
-                  strokeLinecap="round"
-                  className="stroke-emerald-500"
-                  strokeDasharray={`${dashLen.realizadas} ${CIRCULO}`}
-                  transform="rotate(-90 50 50)"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeWidth="12"
-                  strokeLinecap="round"
-                  className="stroke-yellow-400"
-                  strokeDasharray={`${dashLen.pendentes} ${CIRCULO}`}
-                  transform={`rotate(${(dashLen.realizadas / CIRCULO) * 360 - 90} 50 50)`}
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeWidth="12"
-                  strokeLinecap="round"
-                  className="stroke-red-500"
-                  strokeDasharray={`${dashLen.problemas} ${CIRCULO}`}
-                  transform={`rotate(${((dashLen.realizadas + dashLen.pendentes) / CIRCULO) * 360 - 90} 50 50)`}
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="transparent"
-                  strokeWidth="12"
-                  strokeLinecap="round"
-                  className="stroke-slate-300"
-                  strokeDasharray={`${dashLen.aguardando} ${CIRCULO}`}
-                  transform={`rotate(${((dashLen.realizadas + dashLen.pendentes + dashLen.problemas) / CIRCULO) * 360 - 90} 50 50)`}
-                />
+                {realizadas > 0 ? (
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    className="stroke-emerald-500"
+                    strokeDasharray={`${dashLen.realizadas} ${CIRCULO}`}
+                    transform="rotate(-90 50 50)"
+                  >
+                    <title>{`Realizadas: ${Math.round(pct.realizadas)}% (${realizadas} de ${totalStatus})`}</title>
+                  </circle>
+                ) : null}
+                {pendentes > 0 ? (
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    className="stroke-orange-500"
+                    strokeDasharray={`${dashLen.pendentes} ${CIRCULO}`}
+                    transform={`rotate(${(dashLen.realizadas / CIRCULO) * 360 - 90} 50 50)`}
+                  >
+                    <title>{`Pendentes: ${Math.round(pct.pendentes)}% (${pendentes} de ${totalStatus})`}</title>
+                  </circle>
+                ) : null}
+                {problemas > 0 ? (
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    className="stroke-red-500"
+                    strokeDasharray={`${dashLen.problemas} ${CIRCULO}`}
+                    transform={`rotate(${((dashLen.realizadas + dashLen.pendentes) / CIRCULO) * 360 - 90} 50 50)`}
+                  >
+                    <title>{`Problemas: ${Math.round(pct.problemas)}% (${problemas} de ${totalStatus})`}</title>
+                  </circle>
+                ) : null}
+                {aguardando > 0 ? (
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="transparent"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    className="stroke-yellow-400"
+                    strokeDasharray={`${dashLen.aguardando} ${CIRCULO}`}
+                    transform={`rotate(${((dashLen.realizadas + dashLen.pendentes + dashLen.problemas) / CIRCULO) * 360 - 90} 50 50)`}
+                  >
+                  <title>{`Aguardando: ${Math.round(pct.aguardando)}% (${aguardando} de ${totalStatus})`}</title>
+                  </circle>
+                ) : null}
               </svg>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-3xl font-bold text-slate-900">{totalStatus}</span>
@@ -415,30 +438,42 @@ export function DashboardPage() {
             </div>
 
             <div className="mt-6 space-y-3">
-              <div className="flex items-center justify-between text-sm">
+              <div
+                className="flex items-center justify-between text-sm"
+                title={`Realizadas: ${Math.round(pct.realizadas)}% (${realizadas} de ${totalStatus})`}
+              >
                 <div className="flex items-center">
                   <span className="mr-2 h-3 w-3 rounded-full bg-emerald-500" />
                   <span className="text-slate-500">Realizadas</span>
                 </div>
                 <span className="font-semibold text-slate-900">{Math.round(pct.realizadas)}%</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div
+                className="flex items-center justify-between text-sm"
+                title={`Pendentes: ${Math.round(pct.pendentes)}% (${pendentes} de ${totalStatus})`}
+              >
                 <div className="flex items-center">
-                  <span className="mr-2 h-3 w-3 rounded-full bg-yellow-400" />
+                  <span className="mr-2 h-3 w-3 rounded-full bg-orange-500" />
                   <span className="text-slate-500">Pendentes</span>
                 </div>
                 <span className="font-semibold text-slate-900">{Math.round(pct.pendentes)}%</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div
+                className="flex items-center justify-between text-sm"
+                title={`Problemas: ${Math.round(pct.problemas)}% (${problemas} de ${totalStatus})`}
+              >
                 <div className="flex items-center">
                   <span className="mr-2 h-3 w-3 rounded-full bg-red-500" />
                   <span className="text-slate-500">Problemas</span>
                 </div>
                 <span className="font-semibold text-slate-900">{Math.round(pct.problemas)}%</span>
               </div>
-              <div className="flex items-center justify-between text-sm">
+              <div
+                className="flex items-center justify-between text-sm"
+                title={`Aguardando: ${Math.round(pct.aguardando)}% (${aguardando} de ${totalStatus})`}
+              >
                 <div className="flex items-center">
-                  <span className="mr-2 h-3 w-3 rounded-full bg-slate-300" />
+                  <span className="mr-2 h-3 w-3 rounded-full bg-yellow-400" />
                   <span className="text-slate-500">Aguardando</span>
                 </div>
                 <span className="font-semibold text-slate-900">{Math.round(pct.aguardando)}%</span>
@@ -448,35 +483,65 @@ export function DashboardPage() {
 
           <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900">Lembretes</h3>
-              <span className="rounded bg-emerald-50 px-2 py-1 text-xs font-mono text-emerald-700">
+              <h3 className="text-sm font-bold text-slate-900">Alertas operacionais</h3>
+              <span className="rounded bg-primary-50 px-2 py-1 text-xs font-mono text-primary-700">
                 {lembretes.length} ativos
               </span>
             </div>
 
             <div className="space-y-3">
-              {lembretes.map((item) => (
-                <div key={item.titulo} className="rounded-lg bg-slate-50 p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-semibold text-slate-900">{item.titulo}</p>
-                    <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${item.badgeClass}`}>
-                      {item.badge}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs text-slate-500">{item.detalhe}</p>
+              {lembretes.length === 0 ? (
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
+                  Nenhum alerta operacional ativo no momento.
                 </div>
-              ))}
+              ) : (
+                lembretes.map((item) => (
+                  <div key={item.titulo} className="rounded-lg bg-slate-50 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs font-semibold text-slate-900">{item.titulo}</p>
+                      <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${item.badgeClass}`}>
+                        {item.badge}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500">{item.detalhe}</p>
+                  </div>
+                ))
+              )}
             </div>
 
             <Link
               to="/audiencias"
-              className="mt-4 block w-full rounded-lg border border-emerald-200 py-2 text-center text-xs font-medium text-emerald-600 transition-colors hover:border-emerald-300 hover:text-emerald-700"
+              className="mt-4 block w-full rounded-lg border border-primary-200 py-2 text-center text-xs font-medium text-primary-600 transition-colors hover:border-primary-300 hover:text-primary-700"
             >
-              Ver todos os lembretes
+              Abrir operacao
             </Link>
           </article>
         </div>
       </section>
+
+      {proximasAudiencias.length > 0 ? (
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-900">Proximas audiencias</h3>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            {proximasAudiencias.map((audiencia) => (
+              <Link
+                key={audiencia.id}
+                to={`/audiencias/${audiencia.id}`}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-3 transition hover:border-primary-300"
+              >
+                <p className="font-mono text-xs text-slate-700">{audiencia.numeroProcesso}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">
+                  {audiencia.preposto?.nome ?? 'Preposto nao definido'}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {formatarData(audiencia.data)} as {audiencia.hora}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">{labelCurtaStatus(audiencia.status)}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -496,28 +561,6 @@ export function DashboardPage() {
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
             Substituicoes abertas: <strong>{substituicaoNecessaria}</strong>
           </div>
-        </div>
-      </section>
-
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="text-sm font-semibold text-slate-900">Proximas audiencias</h3>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          {(audienciasOperacao.data?.dados ?? []).slice(0, 6).map((audiencia) => (
-            <Link
-              key={audiencia.id}
-              to={`/audiencias/${audiencia.id}`}
-              className="rounded-lg border border-slate-200 bg-slate-50 p-3 transition hover:border-emerald-300"
-            >
-              <p className="font-mono text-xs text-slate-700">{audiencia.numeroProcesso}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-900">
-                {audiencia.preposto?.nome ?? 'Preposto nao definido'}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                {formatarData(audiencia.data)} as {audiencia.hora}
-              </p>
-              <p className="mt-1 text-xs text-slate-500">{labelCurtaStatus(audiencia.status)}</p>
-            </Link>
-          ))}
         </div>
       </section>
     </div>

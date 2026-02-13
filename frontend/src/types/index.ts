@@ -88,6 +88,14 @@ export interface ContatoParceiro {
   ordemEscalonamento: number
 }
 
+export interface ParceiroContatosResponse {
+  parceiro: {
+    id: string
+    nome: string
+  }
+  dados: ContatoParceiro[]
+}
+
 export interface Audiencia {
   id: string
   numeroProcesso: string
@@ -139,6 +147,18 @@ export interface MensagemAudiencia {
   createdAt: string
 }
 
+export interface LogAutomacaoAudiencia {
+  id: string
+  audienciaId: string
+  origem: 'SCHEDULER' | 'WORKER' | 'WEBHOOK' | 'MANUAL'
+  evento: string
+  etapa?: string | null
+  status?: 'PENDENTE' | 'SUCESSO' | 'IGNORADO' | 'ERRO' | null
+  mensagem: string
+  metadados?: Record<string, unknown> | null
+  createdAt: string
+}
+
 export interface SubstituicaoAudiencia {
   id: string
   audienciaId: string
@@ -172,6 +192,7 @@ export interface RelatorioAudiencia {
 export interface AudienciaDetalhe extends Audiencia {
   historicoStatus: HistoricoStatus[]
   mensagens: MensagemAudiencia[]
+  logsAutomacao: LogAutomacaoAudiencia[]
   substituicoes: SubstituicaoAudiencia[]
   relatorio?: RelatorioAudiencia | null
 }
@@ -186,6 +207,11 @@ export interface DashboardResponse {
     status: StatusAudiencia
     total: number
   }>
+  automacao?: {
+    reiteracoesDisparadas24h: number
+    respostasWhatsapp24h: number
+    substituicoesPorAutomacao24h: number
+  }
 }
 
 export interface Importacao {

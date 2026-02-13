@@ -18,23 +18,23 @@ const COLUNAS: ColunaKanban[] = [
   {
     id: 'a_confirmar',
     label: 'A confirmar (D-1)',
-    descricao: 'Importada, agendada e pendente de confirmacao',
+    descricao: 'Importada, agendada e pendente de confirmacao (inclui indisponibilidade inicial)',
     colorClass: 'bg-amber-400',
-    statuses: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR'],
+    statuses: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'NAO_POSSO'],
   },
   {
     id: 'confirmada',
     label: 'Confirmada',
     descricao: 'Preposto confirmou disponibilidade',
-    colorClass: 'bg-emerald-500',
+    colorClass: 'bg-primary-500',
     statuses: ['CONFIRMADA'],
   },
   {
     id: 'substituicao',
     label: 'Substituicao necessaria',
-    descricao: 'Sem resposta ou indisponibilidade do preposto',
+    descricao: 'Casos criticos que exigem acao imediata',
     colorClass: 'bg-rose-500',
-    statuses: ['SEM_RESPOSTA', 'NAO_POSSO', 'SUBSTITUICAO_NECESSARIA'],
+    statuses: ['SEM_RESPOSTA', 'SUBSTITUICAO_NECESSARIA'],
   },
   {
     id: 'andamento',
@@ -54,7 +54,7 @@ const COLUNAS: ColunaKanban[] = [
     id: 'concluida',
     label: 'Concluida',
     descricao: 'Fluxo operacional finalizado',
-    colorClass: 'bg-emerald-700',
+    colorClass: 'bg-primary-700',
     statuses: ['CONCLUIDA'],
   },
   {
@@ -96,7 +96,7 @@ export function AudienciasKanbanPage() {
           </div>
           <Link
             to="/audiencias"
-            className="inline-flex w-fit items-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+            className="inline-flex w-fit items-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:border-primary-300 hover:text-primary-700"
           >
             Ver lista tabular
           </Link>
@@ -140,15 +140,20 @@ export function AudienciasKanbanPage() {
                         <Link
                           key={audiencia.id}
                           to={`/audiencias/${audiencia.id}`}
-                          className="block rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition hover:border-emerald-300"
+                          className="block rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition hover:border-primary-300"
                         >
                           <div className="flex items-start justify-between gap-2">
                             <p className="font-mono text-xs text-slate-600">{audiencia.numeroProcesso}</p>
-                            {audiencia.status === 'SUBSTITUICAO_NECESSARIA' ||
-                            audiencia.status === 'NAO_POSSO' ||
-                            audiencia.status === 'SEM_RESPOSTA' ? (
+                            {audiencia.status === 'SUBSTITUICAO_NECESSARIA' || audiencia.status === 'SEM_RESPOSTA' ? (
                               <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
                                 URGENTE
+                              </span>
+                            ) : audiencia.status === 'NAO_POSSO' ? (
+                              <span
+                                className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-amber-300 bg-amber-100 text-[11px] font-bold text-amber-700"
+                                title="Preposto sinalizou indisponibilidade no primeiro contato. Reiteracao pendente."
+                              >
+                                !
                               </span>
                             ) : null}
                           </div>

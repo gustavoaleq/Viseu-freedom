@@ -25,6 +25,14 @@ interface DadosCriarContato {
   ordemEscalonamento?: number
 }
 
+interface DadosAtualizarContato {
+  nome?: string
+  telefoneWhatsapp?: string
+  email?: string
+  cargo?: string
+  ordemEscalonamento?: number
+}
+
 export async function listarParceiros(filtros: FiltrosParceiro) {
   const { page = 1, limit = 20 } = filtros
   const skip = (page - 1) * limit
@@ -169,6 +177,83 @@ export async function criarContatoParceiro(parceiroId: string, dados: DadosCriar
       cargo: dados.cargo?.trim() || null,
       ordemEscalonamento,
     },
+  })
+}
+
+export async function atualizarContatoParceiro(
+  parceiroId: string,
+  contatoId: string,
+  dados: DadosAtualizarContato,
+) {
+  const parceiro = await prisma.parceiro.findUnique({
+    where: { id: parceiroId },
+    select: { id: true },
+  })
+  if (!parceiro) return null
+
+  const contatoAtual = await prisma.contatoParceiro.findFirst({
+    where: { id: contatoId, parceiroId },
+    select: { id: true },
+  })
+  if (!contatoAtual) {
+    throw new Error('CONTATO_NAO_ENCONTRADO')
+  }
+
+  const data: {
+    nome?: string
+    telefoneWhatsapp?: string
+    email?: string | null
+    cargo?: string | null
+    ordemEscalonamento?: number
+  } = {}
+
+  if (typeof dados.nome === 'string') {
+    data.nome = dados.nome.trim()
+  }
+
+  if (typeof dados.telefoneWhatsapp === 'string') {
+    const telefoneWhatsapp = normalizarTelefone(dados.telefoneWhatsapp)
+    if (telefoneWhatsapp.length < 10) {
+      throw new Error('TELEFONE_INVALIDO')
+    }
+    data.telefoneWhatsapp = telefoneWhatsapp
+  }
+
+  if (typeof dados.email === 'string') {
+    data.email = dados.email.trim() || null
+  }
+
+  if (typeof dados.cargo === 'string') {
+    data.cargo = dados.cargo.trim() || null
+  }
+
+  if (typeof dados.ordemEscalonamento === 'number') {
+    data.ordemEscalonamento = dados.ordemEscalonamento
+  }
+
+  return prisma.contatoParceiro.update({
+    where: { id: contatoId },
+    data,
+  })
+}
+
+export async function removerContatoParceiro(parceiroId: string, contatoId: string) {
+  const parceiro = await prisma.parceiro.findUnique({
+    where: { id: parceiroId },
+    select: { id: true },
+  })
+  if (!parceiro) return null
+
+  const contatoAtual = await prisma.contatoParceiro.findFirst({
+    where: { id: contatoId, parceiroId },
+    select: { id: true },
+  })
+  if (!contatoAtual) {
+    throw new Error('CONTATO_NAO_ENCONTRADO')
+  }
+
+  return prisma.contatoParceiro.delete({
+    where: { id: contatoId },
   })
 }
 

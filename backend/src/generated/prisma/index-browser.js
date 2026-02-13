@@ -256,6 +256,18 @@ exports.Prisma.SubstituicaoScalarFieldEnum = {
   resolvidoEm: 'resolvidoEm'
 };
 
+exports.Prisma.LogAutomacaoScalarFieldEnum = {
+  id: 'id',
+  audienciaId: 'audienciaId',
+  origem: 'origem',
+  evento: 'evento',
+  etapa: 'etapa',
+  status: 'status',
+  mensagem: 'mensagem',
+  metadados: 'metadados',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -365,7 +377,8 @@ exports.Prisma.ModelName = {
   Mensagem: 'Mensagem',
   RelatorioAudiencia: 'RelatorioAudiencia',
   HistoricoStatus: 'HistoricoStatus',
-  Substituicao: 'Substituicao'
+  Substituicao: 'Substituicao',
+  LogAutomacao: 'LogAutomacao'
 };
 
 /**

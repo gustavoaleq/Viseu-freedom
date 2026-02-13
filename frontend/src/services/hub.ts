@@ -3,6 +3,8 @@ import type {
   AuthLoginResponse,
   Audiencia,
   AudienciaDetalhe,
+  ContatoParceiro,
+  ParceiroContatosResponse,
   DashboardResponse,
   Importacao,
   ImportacaoMapearRequest,
@@ -176,6 +178,30 @@ export const audienciasApi = {
     const { data } = await api.post(`/audiencias/${id}/relatorio`, payload)
     return data
   },
+  async dispararD1(id: string) {
+    const { data } = await api.post<{ ok: boolean; audienciaId: string; tipo: string; providerMessageId?: string }>(
+      `/audiencias/${id}/disparos/d1`,
+    )
+    return data
+  },
+  async dispararCheckIn(id: string) {
+    const { data } = await api.post<{ ok: boolean; audienciaId: string; tipo: string; providerMessageId?: string }>(
+      `/audiencias/${id}/disparos/check-in`,
+    )
+    return data
+  },
+  async dispararReiteracao6h(id: string) {
+    const { data } = await api.post<{ ok: boolean; audienciaId: string; tipo: string; providerMessageId?: string }>(
+      `/audiencias/${id}/disparos/reiteracao-6h`,
+    )
+    return data
+  },
+  async dispararPosAudiencia(id: string) {
+    const { data } = await api.post<{ ok: boolean; audienciaId: string; tipo: string; providerMessageId?: string }>(
+      `/audiencias/${id}/disparos/pos-audiencia`,
+    )
+    return data
+  },
   async exportar(formato: 'csv' | 'xlsx', filtros: FiltrosAudiencias = {}) {
     const response = await api.get<Blob>('/audiencias/export', {
       params: { formato, ...filtros },
@@ -183,6 +209,20 @@ export const audienciasApi = {
     })
 
     return response.data
+  },
+  async baixarRelatorioPos(id: string) {
+    const response = await api.get<Blob>(`/audiencias/${id}/relatorio/download`, {
+      responseType: 'blob',
+    })
+    const contentDisposition = response.headers['content-disposition'] as string | undefined
+    const nomeArquivo =
+      contentDisposition?.match(/filename="?([^"]+)"?/)?.[1] ??
+      `relatorio-pos-audiencia-${id}.html`
+
+    return {
+      blob: response.data,
+      nomeArquivo,
+    }
   },
 }
 
@@ -219,9 +259,63 @@ export interface FiltrosParceiros {
   ativo?: boolean
 }
 
+export interface CriarParceiroPayload {
+  nome: string
+}
+
+export interface AtualizarParceiroPayload {
+  nome?: string
+  ativo?: boolean
+}
+
+export interface CriarContatoPayload {
+  nome: string
+  telefoneWhatsapp: string
+  email?: string
+  cargo?: string
+  ordemEscalonamento?: number
+}
+
+export interface AtualizarContatoPayload {
+  nome?: string
+  telefoneWhatsapp?: string
+  email?: string
+  cargo?: string
+  ordemEscalonamento?: number
+}
+
 export const parceirosApi = {
   async listar(filtros: FiltrosParceiros = {}) {
     const { data } = await api.get<RespostaPaginada<Parceiro>>('/parceiros', { params: filtros })
+    return data
+  },
+  async criar(payload: CriarParceiroPayload) {
+    const { data } = await api.post<Parceiro>('/parceiros', payload)
+    return data
+  },
+  async atualizar(id: string, payload: AtualizarParceiroPayload) {
+    const { data } = await api.patch<Parceiro>(`/parceiros/${id}`, payload)
+    return data
+  },
+  async listarContatos(parceiroId: string) {
+    const { data } = await api.get<ParceiroContatosResponse>(`/parceiros/${parceiroId}/contatos`)
+    return data
+  },
+  async criarContato(parceiroId: string, payload: CriarContatoPayload) {
+    const { data } = await api.post<ContatoParceiro>(`/parceiros/${parceiroId}/contatos`, payload)
+    return data
+  },
+  async atualizarContato(parceiroId: string, contatoId: string, payload: AtualizarContatoPayload) {
+    const { data } = await api.patch<ContatoParceiro>(
+      `/parceiros/${parceiroId}/contatos/${contatoId}`,
+      payload,
+    )
+    return data
+  },
+  async removerContato(parceiroId: string, contatoId: string) {
+    const { data } = await api.delete<{ message: string; id: string }>(
+      `/parceiros/${parceiroId}/contatos/${contatoId}`,
+    )
     return data
   },
 }

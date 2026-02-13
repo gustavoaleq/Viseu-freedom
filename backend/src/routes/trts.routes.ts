@@ -27,11 +27,22 @@ export default async function trtsRoutes(app: FastifyInstance) {
       })
     }
 
-    const trt = await atualizarTrt(id, parse.data.ativo)
-    if (!trt) {
-      return reply.status(404).send({ error: 'TRT nao encontrado' })
-    }
+    try {
+      const trt = await atualizarTrt(id, parse.data.ativo)
+      if (!trt) {
+        return reply.status(404).send({ error: 'TRT nao encontrado' })
+      }
 
-    return reply.send(trt)
+      return reply.send(trt)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'TRT_TRAVADO_POC') {
+        return reply
+          .status(400)
+          .send({ error: 'Configuracao travada da POC: apenas TRT 2 e TRT 15 podem ficar ativos' })
+      }
+
+      app.log.error(error)
+      return reply.status(500).send({ error: 'Falha ao atualizar TRT' })
+    }
   })
 }

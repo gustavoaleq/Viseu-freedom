@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod/v4'
 import {
   listarAudiencias,
@@ -14,7 +14,9 @@ import {
   confirmarAudienciaPorTelefone,
   registrarCheckInAudiencia,
   registrarRelatorioAudiencia,
+  exportarRelatorioPosAudiencia,
 } from '../services/audiencias.service.js'
+import { processarOrquestracaoAudiencia } from '../jobs/orquestracao.processor.js'
 
 const STATUS_VALIDOS = [
   'IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CONFIRMADA', 'NAO_POSSO',
@@ -167,8 +169,21 @@ export default async function audienciasRoutes(app: FastifyInstance) {
       })
     }
 
-    const audiencia = await criarAudiencia(parse.data, request.user.id)
-    return reply.status(201).send(audiencia)
+    try {
+      const audiencia = await criarAudiencia(parse.data, request.user.id)
+      return reply.status(201).send(audiencia)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'TRT_NAO_ENCONTRADO') {
+        return reply.status(400).send({ error: 'TRT informado nao existe' })
+      }
+
+      if (error instanceof Error && error.message === 'TRT_INATIVO') {
+        return reply.status(400).send({ error: 'TRT inativo nao pode ser selecionado' })
+      }
+
+      app.log.error(error)
+      return reply.status(500).send({ error: 'Falha ao criar audiencia' })
+    }
   })
 
   // POST /api/v1/audiencias/:id/trocar-preposto
@@ -207,6 +222,26 @@ export default async function audienciasRoutes(app: FastifyInstance) {
     }
 
     return reply.send(resultado)
+  })
+
+  // POST /api/v1/audiencias/:id/disparos/d1
+  app.post('/:id/disparos/d1', async (request, reply) => {
+    return dispararOrquestracaoManual('CONFIRMACAO_D1', request, reply)
+  })
+
+  // POST /api/v1/audiencias/:id/disparos/check-in
+  app.post('/:id/disparos/check-in', async (request, reply) => {
+    return dispararOrquestracaoManual('CHECKIN_DIA', request, reply)
+  })
+
+  // POST /api/v1/audiencias/:id/disparos/reiteracao-6h
+  app.post('/:id/disparos/reiteracao-6h', async (request, reply) => {
+    return dispararOrquestracaoManual('REITERACAO_6H', request, reply, { forcar: true })
+  })
+
+  // POST /api/v1/audiencias/:id/disparos/pos-audiencia
+  app.post('/:id/disparos/pos-audiencia', async (request, reply) => {
+    return dispararOrquestracaoManual('RELATORIO_POS', request, reply)
   })
 
   // POST /api/v1/audiencias/:id/cancelar
@@ -296,6 +331,25 @@ export default async function audienciasRoutes(app: FastifyInstance) {
     return reply.send(relatorio)
   })
 
+  // GET /api/v1/audiencias/:id/relatorio/download
+  app.get('/:id/relatorio/download', async (request, reply) => {
+    const { id } = request.params as { id: string }
+    const arquivo = await exportarRelatorioPosAudiencia(id)
+
+    if (!arquivo) {
+      return reply.status(404).send({ error: 'Audiencia nao encontrada' })
+    }
+
+    if ('error' in arquivo && arquivo.error === 'RELATORIO_NAO_ENCONTRADO') {
+      return reply.status(409).send({ error: 'Relatorio pos-audiencia ainda nao preenchido' })
+    }
+
+    return reply
+      .header('Content-Type', arquivo.contentType)
+      .header('Content-Disposition', `attachment; filename="${arquivo.filename}"`)
+      .send(arquivo.buffer)
+  })
+
   // GET /api/v1/audiencias/:id
   app.get('/:id', async (request, reply) => {
     const { id } = request.params as { id: string }
@@ -320,11 +374,77 @@ export default async function audienciasRoutes(app: FastifyInstance) {
       })
     }
 
-    const audiencia = await atualizarAudiencia(id, parse.data, request.user.id)
-    if (!audiencia) {
-      return reply.status(404).send({ error: 'Audiencia nao encontrada' })
-    }
+    try {
+      const audiencia = await atualizarAudiencia(id, parse.data, request.user.id)
+      if (!audiencia) {
+        return reply.status(404).send({ error: 'Audiencia nao encontrada' })
+      }
 
-    return reply.send(audiencia)
+      return reply.send(audiencia)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'TRT_NAO_ENCONTRADO') {
+        return reply.status(400).send({ error: 'TRT informado nao existe' })
+      }
+
+      if (error instanceof Error && error.message === 'TRT_INATIVO') {
+        return reply.status(400).send({ error: 'TRT inativo nao pode ser selecionado' })
+      }
+
+      app.log.error(error)
+      return reply.status(500).send({ error: 'Falha ao atualizar audiencia' })
+    }
   })
+
+  async function dispararOrquestracaoManual(
+    tipo: 'CONFIRMACAO_D1' | 'REITERACAO_6H' | 'CHECKIN_DIA' | 'RELATORIO_POS',
+    request: FastifyRequest,
+    reply: FastifyReply,
+    opcoes: { forcar?: boolean } = {},
+  ) {
+    const { id } = request.params as { id: string }
+
+    try {
+      const resultado = await processarOrquestracaoAudiencia(tipo, id, `manual:${request.user.id}`, {
+        origem: 'MANUAL',
+        forcar: opcoes.forcar,
+      })
+
+      if (!resultado.ok) {
+        if (resultado.reason === 'AUDIENCIA_NAO_ENCONTRADA') {
+          return reply.status(404).send({ error: 'Audiencia nao encontrada' })
+        }
+
+        if (resultado.reason === 'REITERACAO_NAO_APLICAVEL') {
+          return reply.status(409).send({
+            error: 'Reiteracao nao aplicavel para o estado atual da audiencia',
+          })
+        }
+
+        if (resultado.reason === 'STATUS_FINAL') {
+          return reply
+            .status(409)
+            .send({ error: 'Audiencia ja finalizada/cancelada. Disparo manual bloqueado.' })
+        }
+
+        return reply.status(400).send({ error: 'Audiencia sem preposto para disparo' })
+      }
+
+      return reply.send({
+        ok: true,
+        audienciaId: resultado.audienciaId,
+        tipo: resultado.tipo,
+        providerMessageId: resultado.providerMessageId,
+      })
+    } catch (error) {
+      app.log.error(error)
+      if (error instanceof Error) {
+        return reply.status(502).send({
+          error: 'Falha no disparo manual de WhatsApp',
+          detalhe: error.message,
+        })
+      }
+
+      return reply.status(500).send({ error: 'Falha no disparo manual de WhatsApp' })
+    }
+  }
 }

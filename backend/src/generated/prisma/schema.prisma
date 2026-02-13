@@ -207,6 +207,7 @@ model Audiencia {
   historicoStatus HistoricoStatus[]
   relatorio       RelatorioAudiencia?
   substituicoes   Substituicao[]
+  logsAutomacao   LogAutomacao[]
 
   @@index([data])
   @@index([status])
@@ -285,4 +286,22 @@ model Substituicao {
   prepostoNovo     Preposto? @relation("PrepostoNovo", fields: [prepostoNovoId], references: [id])
 
   @@map("substituicoes")
+}
+
+model LogAutomacao {
+  id          String   @id @default(uuid())
+  audienciaId String
+  origem      String
+  evento      String
+  etapa       String?
+  status      String?
+  mensagem    String
+  metadados   Json?
+  createdAt   DateTime @default(now())
+
+  audiencia Audiencia @relation(fields: [audienciaId], references: [id])
+
+  @@index([audienciaId, createdAt])
+  @@index([evento])
+  @@map("logs_automacao")
 }

@@ -119,3 +119,356 @@ Entregar a POC do Freedom.AI Operational Hub com qualidade de producao, mantendo
 - 18:39 - Ajuste fino no auto-mapeamento: reforco da heuristica para colunas de `local` contendo termos de link (`url/meet/zoom/teams`) para convergir o mapeamento no campo `local`.
 - 18:39 - Frontend revalidado e republicado (`npm run lint`, `npm run build`, `docker-compose up -d --build --no-deps frontend`), com `localhost:3000/login` respondendo `200`.
 - 18:40 - Contexto consolidado no `CODEX.md` com checkpoint das ultimas alteracoes e nova ordem de trabalho: fechamento funcional (validacoes/melhorias) antes da orquestracao de mensageria (`BullMQ + n8n`).
+- 20:54 - Padronizacao visual do frontend iniciada com base no Freedom Design System informado pelo usuario (sem alterar rotas/funcionalidades): tokens globais atualizados em `frontend/src/index.css` para paleta `primary yellow`, neutros e semanticas (`success/warning/danger/info`), tipografia Inter com escala (`text-display` a `text-kpi`), raios (`10/12/16/20`) e sombras (`shadow-1/2/3`).
+- 20:54 - Aplicado remapeamento de classes de cor `emerald-* -> primary-*` no frontend para convergir identidade visual da marca sem mexer na logica das telas.
+- 20:54 - Ajustados componentes estruturais para o design system: `AppShell` (container max `1280px`, surfaces/border tokens, menu ativo e avatar) e `LoginPage` (surface/background/ring/estados de erro com semantica danger).
+- 20:54 - `StatusBadge` alinhado a cores semanticas do design system em `frontend/src/lib/status.ts`.
+- 20:54 - Validacao tecnica e publicacao: `frontend npm run lint`, `frontend npm run build`, `docker-compose up -d --build --no-deps frontend`; `localhost:3000/login = 200`.
+- 21:09 - Cor de fundo global corrigida para o token de UI solicitado (`#FAFBFB`) em `frontend/src/index.css` e reduzido o tint amarelado residual no background image da aplicacao para neutralidade visual.
+- 21:09 - Frontend revalidado e republicado (`npm run lint`, `npm run build`, `docker-compose up -d --build --no-deps frontend`), com `localhost:3000/login = 200`.
+- 10:28 - Contexto completo revisado: leitura integral de `CLAUDE.md`, `CODEX.md`, `README.md`, `arquitetura.md`, `database.md`, `frontend/README.md` e do escopo oficial em `docs/ESCOPO POC VIZEU (1).docx`.
+- 10:28 - Diagnostico sincronizado com o codigo atual: `Parceiros + contatos`, `export csv/xlsx` e `relatorio pos-audiencia` ja estao implementados no frontend (status anterior estava desatualizado no `CODEX.md`).
+- 10:28 - Gaps reais do frontend antes da orquestracao: filtros de `modalidade` e `periodo` na lista de audiencias (escopo exige), e captura opcional de `observacao` no check-in do dia.
+- 10:32 - Frontend finalizado para aderencia ao escopo: adicionados filtros de `modalidade`, `periodo de` e `periodo ate` em `frontend/src/pages/AudienciasListPage.tsx`.
+- 10:32 - Fluxo de check-in no detalhe da audiencia atualizado com `observacao` opcional (textarea) enviada ao backend junto ao evento (`ESTOU_A_CAMINHO`, `JA_CHEGUEI`, `ESTOU_COM_PROBLEMA`) em `frontend/src/pages/AudienciaDetalhePage.tsx`.
+- 10:32 - Validacao tecnica concluida apos os ajustes: `frontend npm run lint` e `frontend npm run build` com sucesso.
+- 10:44 - Corrigido bug de tela branca em `Parceiros > Contatos`: frontend ajustado para o contrato real do backend em `GET /parceiros/:id/contatos` (`{ parceiro, dados }`) com correcoes em `frontend/src/services/hub.ts`, `frontend/src/types/index.ts` e `frontend/src/pages/ParceirosPage.tsx`.
+- 10:44 - Entregue tela de TRTs no frontend (`frontend/src/pages/TrtsPage.tsx`) com regra visual travada da POC: TRT 2 e 15 ativos, demais visiveis e inativos/bloqueados.
+- 10:44 - Rota/menu de TRTs adicionados no frontend (`frontend/src/App.tsx`, `frontend/src/components/AppShell.tsx`).
+- 10:44 - Selecao de TRT no cadastro manual de audiencia travada para inativos (opcoes inativas aparecem desabilitadas em `frontend/src/pages/AudienciasListPage.tsx`).
+- 10:44 - Blindagem backend da regra POC: `backend/src/services/trts.service.ts` e `backend/src/routes/trts.routes.ts` agora rejeitam alteracoes fora da configuracao fixa (somente 2 e 15 ativos).
+- 10:44 - Blindagem backend de audiencia: criacao/edicao manual agora validam TRT ativo em `backend/src/services/audiencias.service.ts`, com tratamento de erro amigavel em `backend/src/routes/audiencias.routes.ts`.
+- 10:44 - Validacoes tecnicas concluidas: `frontend npm run lint`, `frontend npm run build`, `backend npm run build`.
+- 10:59 - Refino da tela `TRTs`: removida coluna `Regra` e ajustados `colSpan` da tabela para 3 colunas em `frontend/src/pages/TrtsPage.tsx`.
+- 10:59 - Texto de cabecalho da tela `TRTs` atualizado para descricao institucional (`Centro de gestao dos Tribunais Regionais do Trabalho utilizados na operacao`) mantendo apenas o aviso `Regra fixa da POC`.
+- 10:59 - Validacao tecnica apos ajuste visual: `frontend npm run build` com sucesso.
+- 11:08 - Dashboard ajustado em `frontend/src/pages/DashboardPage.tsx`: categoria `Aguardando` no grafico de status trocada de cinza para laranja forte para melhor contraste visual.
+- 11:08 - Adicionados tooltips no hover das faixas do donut (SVG `<title>`) e na legenda de `Status das Audiencias`, exibindo percentual e total absoluto no formato `X% (N de total)`.
+- 11:08 - Validacao tecnica apos ajuste de dashboard: `frontend npm run build` com sucesso.
+- 11:21 - Iniciada orquestracao de mensageria WhatsApp no backend com BullMQ: criados `backend/src/jobs/orquestracao.queue.ts`, `backend/src/jobs/orquestracao.scheduler.ts` e `backend/src/jobs/orquestracao.worker.ts`.
+- 11:21 - Worker de orquestracao integrado ao boot da API em `backend/src/server.ts`, processando disparos D-1, check-in no dia e pos-audiencia com registro em `mensagens` e mudanca automatica de status.
+- 11:21 - Adapter de envio WhatsApp criado em `backend/src/services/whatsapp.adapter.ts` com suporte inicial a provider `webhook` (padrao) e `cloud` (Meta), via variaveis de ambiente novas em `backend/src/config/env.ts`.
+- 11:21 - Agendamento automatico conectado a criacao/atualizacao/cancelamento de audiencia em `backend/src/services/audiencias.service.ts` e ao fluxo de importacao confirmada em `backend/src/services/importacoes.service.ts`.
+- 11:21 - Validacao tecnica da etapa de orquestracao: `backend npm run build` com sucesso.
+- 13:11 - Credenciais de teste configuradas no `backend/.env` para envio WhatsApp via Z-API em modo `webhook` (`WHATSAPP_PROVIDER=webhook` e `WHATSAPP_OUTBOUND_WEBHOOK_URL` apontando para `send-text` da instancia).
+- 13:13 - Adapter WhatsApp atualizado para provider `zapi` em `backend/src/services/whatsapp.adapter.ts`, com payload compativel ao endpoint `send-text` (`phone`, `message`) e normalizacao automatica para DDI `55`.
+- 13:13 - Ambiente ajustado para Z-API em `backend/.env` (`WHATSAPP_PROVIDER=zapi` + `WHATSAPP_ZAPI_SEND_TEXT_URL`) e template documentado em `backend/.env.example`.
+- 13:13 - Validacao tecnica apos ajuste Z-API: `backend npm run build` com sucesso.
+- 13:18 - Criados endpoints manuais para disparo WhatsApp por audiencia em `backend/src/routes/audiencias.routes.ts`: `POST /audiencias/:id/disparos/d1`, `POST /audiencias/:id/disparos/check-in`, `POST /audiencias/:id/disparos/pos-audiencia`.
+- 13:18 - Fluxo de processamento de disparos extraido para `backend/src/jobs/orquestracao.processor.ts` e reutilizado pelo worker, com trilha de auditoria (`mensagens` + `historico_status`) tambem em disparos manuais.
+- 13:18 - Mensagens de orquestracao evoluidas para botoes clicaveis (quando provider suportar) no adapter `zapi/cloud`: D-1 (`Sim, confirmo`/`Nao, nao posso`), check-in (`Estou a caminho`/`Ja cheguei`/`Nao conseguirei ir`) e pos-audiencia (`Sim, ocorreu`/`Nao ocorreu`/`Foi remarcada`).
+- 13:18 - Arquivo de testes criado em `docs/testes-whatsapp.http` com sequencia completa de requisicoes (login, listar audiencia, disparos manuais, verificar timeline).
+- 13:18 - Configurada URL de botoes Z-API no ambiente (`WHATSAPP_ZAPI_SEND_BUTTON_LIST_URL`) e validacao tecnica final com `backend npm run build`.
+- 13:27 - Corrigido identificador de job BullMQ em `backend/src/jobs/orquestracao.queue.ts` para evitar erro `Custom Id cannot contain :` (novo padrao `TIPO--audienciaId`).
+- 13:27 - Endpoint de disparo manual passou a retornar detalhe tecnico do erro upstream em `backend/src/routes/audiencias.routes.ts` (status `502` com campo `detalhe`) para acelerar diagnostico operacional.
+- 13:27 - Validacao tecnica apos correcoes: `backend npm run build` com sucesso.
+- 13:27 - Credencial `WHATSAPP_ZAPI_CLIENT_TOKEN` configurada em `backend/.env` para atender exigencia da Z-API no envio de mensagens.
+- 13:40 - Diagnostico de entrega WhatsApp apos retorno `200 OK` da Z-API: consulta operacional confirmou que a audiencia `daae571c-b247-4cb4-8117-23bee86dc290` esta vinculada ao telefone de preposto `11939214731`, diferente do numero de teste informado (`11970960252`); proximo teste deve validar/ajustar o telefone do preposto na audiencia antes do disparo manual.
+- 13:45 - Validacao da documentacao oficial Z-API: fluxo atual usa `send-text` para texto e `send-button-list` para botoes (payload `buttonList.buttons`), enquanto a doc referenciada para acoes (`send-button-actions`) exige payload diferente (`buttonActions` com `type=REPLY`), indicando necessidade de alinhamento de endpoint/payload caso o padrao adotado para a POC seja a API de acoes.
+- 13:49 - Arquivo `docs/testes-whatsapp.http` atualizado com teste direto de envio Z-API sem botoes (`send-text`), incluindo variaveis de instancia/token/client-token e payload simples (`phone` + `message`) para isolamento rapido de entrega no WhatsApp.
+- 13:54 - Confirmacao tecnica na doc Z-API: `send-button-actions` e o endpoint recomendado para botoes de acao (`buttonActions`) e suporta `REPLY`, `URL` e `CALL`; fluxo atual da POC ainda usa `send-button-list`, portanto proximo ajuste planejado e migrar o adapter para `send-button-actions` com fallback de resiliencia.
+- 13:56 - Migracao implementada no adapter Z-API (`backend/src/services/whatsapp.adapter.ts`): envio com botoes agora prioriza `send-button-actions` com `buttonActions` tipo `REPLY`; em falha do endpoint de botoes, executa fallback automatico para `send-text` com opcoes numeradas no corpo da mensagem para nao perder notificacao.
+- 13:56 - Variaveis de ambiente alinhadas para novo endpoint: adicionado `WHATSAPP_ZAPI_SEND_BUTTON_ACTIONS_URL` em `backend/src/config/env.ts`, `backend/.env.example` e `backend/.env`.
+- 13:56 - Arquivo `docs/testes-whatsapp.http` expandido com teste direto `0.1` para `send-button-actions` (titulo, rodape e botoes `REPLY`).
+- 13:56 - Validacao tecnica concluida apos migracao: `backend npm run build` com sucesso.
+- 14:30 - **Causa raiz identificada**: botoes nativos da Z-API (`send-button-list` e `send-button-actions`) retornavam 200 OK mas o WhatsApp descartava silenciosamente. O problema era que o **modo botao estava desativado no painel Z-API** da instancia (Instancia > Configuracoes > ativar botoes). Apos ativacao, botoes entregam normalmente.
+- 14:30 - Payload correto para botoes de resposta via Z-API:
+  - **send-button-list** (primario): `{ phone, message, buttonList: { buttons: [{ id: "CONFIRMO", label: "Sim, confirmo" }] } }`
+  - **send-button-actions** (fallback): `{ phone, message, buttonActions: [{ id: "CONFIRMO", type: "REPLY", label: "Sim, confirmo" }] }`
+  - **send-text** (fallback final): texto com opcoes numeradas
+- 14:30 - Adapter Z-API finalizado com cadeia de fallback: `send-button-list` -> `send-button-actions` -> `send-text`.
+- 14:30 - Frontend: secao "Disparos WhatsApp" na tela de detalhe com 3 botoes (D-1, check-in, pos-audiencia) e feedback visual.
+- 14:30 - Validacao tecnica: `backend npm run build`, `frontend npm run build` e `frontend npm run lint` com sucesso.
+- 15:01 - Webhook WhatsApp implementado de ponta a ponta: `POST /api/v1/webhooks/whatsapp` agora processa resposta recebida (nao apenas log), com parser de `buttonId` e fallback por texto numerico (`1/2/3`) em `backend/src/services/whatsapp-inbound.service.ts`.
+- 15:01 - Workflow automatico fechado para respostas do preposto: cria `mensagem` RECEBIDA com timestamp, atualiza `status` da audiencia e registra `historico_status` com `atualizadoPor=webhook-whatsapp`.
+- 15:01 - Mapeamentos ativos no webhook: `CONFIRMO -> CONFIRMADA`, `NAO_POSSO -> NAO_POSSO`, `ESTOU_A_CAMINHO/JA_CHEGUEI -> EM_ANDAMENTO`, `ESTOU_COM_PROBLEMA -> SUBSTITUICAO_NECESSARIA`, `AUDIENCIA_SIM/AUDIENCIA_NAO -> CONCLUIDA`, `AUDIENCIA_REMARCADA -> AGENDADA`.
+- 15:01 - Indisponibilidade automatizada: respostas `NAO_POSSO` e `ESTOU_COM_PROBLEMA` passam a abrir `substituicao` com status `ABERTA` quando nao houver uma aberta para a audiencia.
+- 15:01 - Protecoes operacionais adicionadas no webhook: deduplicacao por `messageId` recebido e resolucao da audiencia-alvo por contexto da ultima mensagem enviada ao preposto.
+- 15:01 - Controle de fila reforcado: respostas que encerram/interrompem fluxo removem jobs pendentes da audiencia (`NAO_POSSO`, `ESTOU_COM_PROBLEMA`, `AUDIENCIA_SIM`, `AUDIENCIA_NAO`, `AUDIENCIA_REMARCADA`).
+- 15:01 - Observabilidade entregue para operacao: novo endpoint `GET /api/v1/webhooks/workers/status` com contadores da fila BullMQ (`waiting/active/delayed/completed/failed/paused`).
+- 15:01 - Documentacao de teste/arquitetura atualizada: `docs/testes-whatsapp.http` (simulacoes de webhook + status worker) e `workers.md` (fluxo real implementado).
+- 15:01 - Validacao tecnica da etapa: `backend npm run build` com sucesso.
+- 15:37 - Diagnostico de resposta nao refletindo no sistema: parser atual do webhook prioriza campo `phone` antes de `senderPhone` em `backend/src/services/whatsapp-inbound.service.ts`; em payloads Z-API onde `phone` representa numero da instancia e `senderPhone` representa o preposto, o evento pode ser ignorado como `PREPOSTO_NAO_ENCONTRADO`.
+- 15:43 - Correcao aplicada no parser de telefone do webhook: `backend/src/services/whatsapp-inbound.service.ts` agora extrai multiplos campos de telefone (`senderPhone`, `sender.phone`, `sender.id`, `phone`, `from`, `chatId`, `chatLid`) e tenta casar com preposto por prioridade, evitando descarte de respostas reais por divergencia entre numero da instancia e numero do remetente.
+- 15:43 - Telemetria de diagnostico melhorada para erro `PREPOSTO_NAO_ENCONTRADO`: retorno inclui lista resumida de candidatos de telefone testados.
+- 15:43 - Validacao tecnica apos correcao de webhook: `backend npm run build` com sucesso.
+- 15:46 - Correcao de idempotencia no webhook: deduplicacao deixou de usar somente `messageId` e passou a usar combinacao `messageId + respostaBotao` (`backend/src/services/whatsapp-inbound.service.ts`), evitando bloquear respostas validas quando a Z-API reutiliza o mesmo identificador para eventos distintos.
+- 15:46 - Validacao tecnica apos ajuste de deduplicacao: `backend npm run build` com sucesso.
+- 15:56 - Ambiente de testes resetado para fluxo real end-to-end: limpeza executada no banco das tabelas de dominio de audiencia (`audiencias`, `mensagens`, `historico_status`, `substituicoes`, `relatorios_audiencia`) preservando cadastros base (`prepostos`, `parceiros`, `trts`, `usuarios`).
+- 15:56 - Validacao de limpeza no banco: contagens finais zeradas (`audiencias=0`, `mensagens=0`, `historico=0`, `substituicoes=0`, `relatorios=0`).
+- 16:10 - Diagnostico de delay na confirmacao WhatsApp concluido por evidencias de log+banco: backend processou webhook em ~40ms no instante de chegada (`Webhook WhatsApp processado`), mas o callback chegou ~6m40s apos o disparo D-1; timestamps UTC da audiencia `ac75aed9-2537-45e3-9d51-1aef596e0ecf`: envio D-1 `19:00:56.870`, resposta recebida `19:07:37.484`, transicao `A_CONFIRMAR -> CONFIRMADA` em `19:07:37.489`.
+- 16:10 - Conclusao tecnica: atraso nao ocorreu no processamento interno do backend/worker; ocorreu antes, na entrega do callback para o endpoint webhook (provedor/rede/tunel).
+- 16:17 - Verificacao de check-in em tempo real: disparo de check-in registrado no banco (`CHECK_IN` ENVIADA em `2026-02-12 19:13:11.284 UTC`, status atual `CHECK_IN_PENDENTE`), sem mensagem `CHECK_IN` RECEBIDA ate o momento.
+- 16:17 - Logs do backend confirmam ausencia de novo callback apos o check-in: ultimo `POST /api/v1/webhooks/whatsapp` processado foi `2026-02-12 19:07:37 UTC` (evento `CONFIRMO`), indicando que a resposta de check-in ainda nao chegou ao endpoint do sistema.
+- 16:23 - Evidencia consolidada de origem do callback: mensagem de resposta registrada no banco possui `whatsappMessageId=SIMULACAO-CONFIRMO-001`, confirmando que o unico webhook recebido foi o de simulacao manual (`docs/testes-whatsapp.http`), nao um callback real da Z-API.
+- 16:23 - Estado atual do fluxo real: check-in permanece pendente porque nao houve nenhum `POST /api/v1/webhooks/whatsapp` real apos o disparo (`whatsappMessageId` enviado no provider: `CF89920D03410801C321`).
+- 16:26 - Validacao de configuracao Z-API: tela `Configure webhooks` e o ponto correto para resolver callback atrasado/ausente; configuracao minima recomendada para a POC: URL publica HTTPS apontando para `/api/v1/webhooks/whatsapp`, evento `Ao receber` habilitado, opcionalmente `Receber status da mensagem` para observabilidade, e `Notificar as enviadas por mim tambem` desabilitado para reduzir ruido no webhook.
+- 16:29 - Orientacao operacional ao usuario para URL publica: quando backend roda local (`localhost:3001`), e necessario tunel HTTPS publico (ex.: ngrok/cloudflared) e usar `${PUBLIC_URL}/api/v1/webhooks/whatsapp` no evento `Ao receber`; `Ao enviar` deve permanecer desabilitado para evitar callbacks de ruido/duplicados.
+- 16:31 - Planejada orientacao pratica de exposicao publica para teste de webhook com duas opcoes: tunel na maquina local (mais rapido para POC) e alternativa com VPS Linux (proxy/tunel), mantendo endpoint final `${PUBLIC_URL}/api/v1/webhooks/whatsapp`.
+- 16:37 - Validacao de tunel Cloudflare Quick Tunnel: URL publica gerada (`https://features-eddie-airplane-cool.trycloudflare.com`) com conexao registrada, porem com erro posterior de DNS local resolver (`lookup region1.v2.argotunnel.com: i/o timeout`), indicando possivel instabilidade temporaria do tunel; necessario validar reachability (`/api/v1/health`) antes de configurar na Z-API.
+- 16:41 - Correcao de consistencia Kanban x Lista: `backend/src/services/audiencias.service.ts` (funcao `buscarKanban`) deixou de filtrar `CONCLUIDA/CANCELADA`, alinhando retorno do Kanban com colunas existentes no frontend e evitando tela vazia quando todas audiencias estao em concluida/cancelada.
+- 16:41 - Validacao tecnica apos ajuste de Kanban: `backend npm run build` com sucesso.
+- 17:13 - Diagnostico de disparo D-1 imediato confirmado por banco (audiencia `05744556-2fe6-46d9-92f7-e05eabe06f9e`): criada em `2026-02-12 20:00:04 UTC` e mensagem `CONFIRMACAO_D1` enviada em `2026-02-12 20:00:10 UTC`.
+- 17:13 - Causa raiz identificada: erro de fuso no agendamento (`backend/src/jobs/orquestracao.scheduler.ts`, `combinarDataHora`) por combinar data/hora em UTC (`Date.UTC` + `getUTC*`), antecipando o horario real local em ~3h; para audiencia `13/02/2026 17:10` local, o D-1 foi calculado como `12/02/2026 17:10 UTC` (ja passado no momento da criacao), disparando imediatamente.
+- 17:25 - Validacao de erro de data no banco concluida para os processos `100.300.500.600` e `100.300.500.700`: ambos estavam com `data=2026-02-13` e `createdAt=2026-02-12`, confirmando que a divergencia observada no frontend era de exibicao por fuso, nao de persistencia.
+- 17:25 - Correcao de orquestracao aplicada no backend: `backend/src/jobs/orquestracao.scheduler.ts` passou a combinar `data + hora` no fuso configuravel `ORQ_TIMEZONE` (default `America/Sao_Paulo`) e nao mais em UTC puro, evitando disparo antecipado de D-1/check-in/pos-audiencia.
+- 17:25 - Configuracao documentada para a correcao de fuso: novo `ORQ_TIMEZONE` em `backend/src/config/env.ts` e `backend/.env.example`.
+- 17:25 - Correcao de data no frontend: `frontend/src/lib/format.ts` passou a formatar data de audiencia em calendario UTC (sem deslocar para dia anterior no browser local) e `frontend/src/pages/AudienciasListPage.tsx` deixou de converter o campo de data manual para `T00:00:00.000Z`, enviando a data pura (`YYYY-MM-DD`).
+- 17:25 - Ajustes de UX na tela de detalhe (`frontend/src/pages/AudienciaDetalhePage.tsx`): `Trocar preposto` reposicionado logo abaixo de `Workflow`; `Acoes manuais (sistema)` agora inicia recolhida com expansao por seta; `Relatorio pos-audiencia` tambem inicia recolhido; removida a secao de `Confirmacao manual por telefone`.
+- 17:25 - Validacao tecnica final da rodada: `backend npm run build`, `frontend npm run lint` e `frontend npm run build` executados com sucesso.
+- 17:49 - Workflow da tela de detalhe evoluido para proxima etapa automatica no CTA principal: `D-1 -> Check-in H-1h30 -> Pos-audiencia`, com decisao baseada no historico de mensagens enviadas da audiencia (`frontend/src/pages/AudienciaDetalhePage.tsx`).
+- 17:49 - `Mensagens detalhadas` reposicionadas acima de `Relatorio pos-audiencia` e diferenciais visuais aplicados por direcao (`ENVIADA` vs `RECEBIDA`) com tons distintos de cinza para leitura operacional mais rapida.
+- 17:49 - Dashboard de status ajustado (`frontend/src/pages/DashboardPage.tsx`): `Realizadas` em verde, `Pendentes` em laranja e `Aguardando` com amarelo; calculo de status operacional passou a ignorar `CANCELADA` para evitar percentual residual incorreto de `Aguardando` quando nao ha itens ativos.
+- 17:49 - Validacao tecnica apos revisoes de UX/metricas: `frontend npm run lint` e `frontend npm run build` com sucesso.
+- 18:02 - Dashboard refinado para remover ruido visual de `Aguardando`: quando `aguardando = 0`, o segmento amarelo nao e renderizado no donut e a linha `Aguardando` nao aparece na legenda (`frontend/src/pages/DashboardPage.tsx`).
+- 18:02 - `Proximas audiencias` ajustado para fonte dinamica com apenas audiencias abertas (`!= CONCLUIDA/CANCELADA`), ordenadas estritamente por `data/hora`; se nao houver itens, a secao nao e exibida.
+- 18:02 - `Checklist rapido de operacao` reposicionado para abaixo da secao `Proximas audiencias`, conforme orientacao de layout.
+- 18:02 - Validacao tecnica apos ajustes finais de dashboard: `frontend npm run lint` e `frontend npm run build` com sucesso.
+- 18:06 - Ajuste de consistencia visual no donut de `Status das Audiencias`: segmentos agora so sao renderizados quando o total da categoria e maior que zero (`Realizadas`, `Pendentes`, `Problemas`, `Aguardando`), evitando aparicao de ponto/arco residual em status com `0%`.
+- 18:06 - Legenda mantida fixa com os 4 status mesmo em `0%`, conforme regra operacional solicitada.
+- 18:06 - Validacao tecnica apos ajuste: `frontend npm run lint` e `frontend npm run build` com sucesso.
+- 18:12 - Diagnostico de teste `RELATORIO_POS` sem disparo apos alteracao manual de hora no banco: confirmado que o job em Redis para audiencia `1d9fd0c9-a99a-4150-8ab9-ac00931d8683` permaneceu com `scheduledFor=2026-02-13T13:52:00.000Z` (10:52 local), portanto nao dispararia as 09:30.
+- 18:12 - Causa raiz confirmada: alteracao direta em `audiencias.hora` via SQL nao reexecuta `agendarOrquestracaoAudiencia` (reagendamento so ocorre pelas rotas/service da API). Resultado: fila BullMQ mantém horario previamente calculado.
+- 09:45 - Reagendamento forcado para teste do `RELATORIO_POS` na audiencia `1d9fd0c9-a99a-4150-8ab9-ac00931d8683` via service backend (equivalente ao `PATCH` da API), atualizando `hora=09:20` em `2026-02-13` e disparando novo agendamento BullMQ.
+- 09:45 - Confirmacao de fila apos reagendamento: job `RELATORIO_POS--1d9fd0c9-a99a-4150-8ab9-ac00931d8683` salvo com `scheduledFor=2026-02-13T12:50:00.000Z` (09:50 horario local `-03`), delay residual de ~5min no momento da verificacao.
+- 13:39 - Orquestracao expandida para reiteração automatica 6h: novo tipo de job `REITERACAO_6H` adicionado em `backend/src/jobs/orquestracao.queue.ts` e agendamento em `backend/src/jobs/orquestracao.scheduler.ts` com nova env `ORQ_REITERACAO_HORAS_ANTES` (default 6) em `backend/src/config/env.ts` e `backend/.env.example`.
+- 13:39 - Regras da reiteração implementadas em `backend/src/jobs/orquestracao.processor.ts`: dispara somente quando nao houve resposta ao fluxo de confirmacao ou quando a ultima resposta foi `NAO_POSSO`; caso contrario registra `DISPARO_IGNORADO` auditavel.
+- 13:39 - Webhook inbound evoluido em `backend/src/services/whatsapp-inbound.service.ts` para contexto de reiteração:
+  - `NAO_POSSO` no D-1 nao interrompe orquestracao nem abre substituicao imediata.
+  - `NAO_POSSO` em `REITERACAO_H1H30` transiciona para `SUBSTITUICAO_NECESSARIA`, abre substituicao `ABERTA` e interrompe jobs restantes.
+  - Toda resposta recebida agora gera mensagem automatica de retorno ao preposto e grava em `mensagens`.
+- 13:39 - Auditoria dedicada entregue com nova tabela `logs_automacao`:
+  - schema Prisma atualizado em `backend/src/prisma/schema.prisma`.
+  - migration criada em `backend/src/prisma/migrations/20260213103000_add_logs_automacao/migration.sql`.
+  - service de log centralizado em `backend/src/services/automacao-log.service.ts`.
+- 13:39 - Dashboard e detalhe de audiencia conectados a auditoria:
+  - `backend/src/services/audiencias.service.ts` agora retorna `automacao` (contadores 24h) no dashboard e `logsAutomacao` no detalhe.
+  - `frontend/src/pages/DashboardPage.tsx` exibe cards de automacao (reiterações, respostas WhatsApp e substituicoes por automacao em 24h).
+  - `frontend/src/pages/AudienciaDetalhePage.tsx` exibe bloco `Auditoria da automacao` e botao manual `Enviar reiteracao 6h`.
+- 13:39 - Rotas/API atualizadas: novo endpoint manual `POST /api/v1/audiencias/:id/disparos/reiteracao-6h` em `backend/src/routes/audiencias.routes.ts`; client frontend atualizado em `frontend/src/services/hub.ts`.
+- 13:39 - Documentacao operacional atualizada:
+  - `workers.md` revisado para incluir o job de reiteração 6h, regras de segundo `NAO_POSSO`, resposta automatica e auditoria em tabela.
+  - `docs/testes-whatsapp.http` atualizado com disparo manual de reiteração, simulacao de `NAO_POSSO` em reiteração e validacao de auditoria no detalhe.
+- 13:39 - Validacoes executadas com sucesso:
+  - `backend`: `npm run db:generate` e `npm run build`.
+  - `frontend`: `npm run lint` e `npm run build`.
+  - Docker: `docker-compose up -d --build backend frontend` + `docker-compose exec backend npx prisma migrate deploy --schema=src/prisma/schema.prisma`.
+- 13:39 - Validacao funcional de banco apos deploy:
+  - `logs_automacao` gravando eventos (`DISPARO`, `RESPOSTA_RECEBIDA`, `RESPOSTA_CONFIRMADA`, `SUBSTITUICAO_ABERTA`).
+  - Simulacao webhook `NAO_POSSO` em contexto de reiteração retornou `statusNovo=SUBSTITUICAO_NECESSARIA` e abriu substituicao `ABERTA`.
+- 13:48 - Arquivo `docs/testes-whatsapp.http` reestruturado para roteiro E2E de apresentacao executiva (sequencia simples e linear), removendo blocos redundantes e mantendo foco na orquestracao:
+  - fluxo normal: `D-1 -> check-in -> pos-audiencia -> conclusao`
+  - fluxo de risco: `D-1 -> reiteracao 6h -> NAO_POSSO -> substituicao`
+  - fechamento com `dashboard`, `kanban` e `workers/status`.
+- 13:48 - Documento de testes simplificado para uso guiado por etapas, com observacoes operacionais (deduplicacao por `messageId` e uso opcional de webhook simulado quando nao houver resposta real via WhatsApp).
+- 13:57 - Ajuste de UX da auditoria no detalhe da audiencia (`frontend/src/pages/AudienciaDetalhePage.tsx`): card `Auditoria da automacao` convertido para bloco recolhivel por padrao (mesmo comportamento do `Relatorio pos-audiencia`).
+- 13:57 - Ajuste de semantica de status de automacao:
+  - `AGENDAMENTO` agora grava `status=PENDENTE` no scheduler (`backend/src/jobs/orquestracao.scheduler.ts`), em vez de `SUCESSO`.
+  - tipos de log atualizados para aceitar `PENDENTE` em `backend/src/services/automacao-log.service.ts` e `frontend/src/types/index.ts`.
+- 13:57 - Ajuste de exibicao da auditoria:
+  - para eventos `AGENDAMENTO`, a UI passa a mostrar `PENDENTE` como status do chip.
+  - exibe `Agendado para: <data/hora do scheduledFor>` a partir de `metadados.scheduledFor`, mantendo `registrado em` separado.
+- 13:57 - Validacoes tecnicas executadas: `backend npm run build`, `frontend npm run build`, rebuild Docker de `backend/frontend`.
+- 13:57 - Validacao funcional em banco apos reagendamento manual de audiencia:
+  - novos logs `AGENDAMENTO` confirmados com `status=PENDENTE` e `scheduled_for` correto por etapa (`CONFIRMACAO_D1`, `REITERACAO_6H`, `CHECKIN_DIA`, `RELATORIO_POS`).
+- 14:04 - Ajuste de UX no detalhe da audiencia: `Linha do tempo` agora exibe apenas eventos de mudanca de status (`historicoStatus`), removendo mensagens enviadas/recebidas para evitar duplicidade com a secao `Mensagens detalhadas`.
+- 14:04 - `frontend/src/pages/AudienciaDetalhePage.tsx` simplificado: removido merge de `audiencia.mensagens` na composicao da timeline; mensagens permanecem exclusivamente no card dedicado.
+- 14:04 - Validacao tecnica e deploy da mudanca: `frontend npm run build` com sucesso e rebuild Docker (`docker-compose up -d --build frontend`) com containers `backend/frontend` saudaveis.
+- 14:19 - Correcao de bug no webhook de resposta para cenario de risco: no primeiro D-1 com `NAO_POSSO`, algumas respostas estavam sendo classificadas como reiteração por contexto global do preposto. Ajustado em `backend/src/services/whatsapp-inbound.service.ts` para determinar `respostaEmReiteracao` com base no contexto da **audiencia alvo** (`obterTipoContextoDaAudiencia`) e nao apenas na ultima mensagem interativa global.
+- 14:19 - Resultado esperado apos fix: `NAO_POSSO` no D-1 -> status `NAO_POSSO` (sem abrir substituicao); `NAO_POSSO` na `REITERACAO_H1H30` -> `SUBSTITUICAO_NECESSARIA` com abertura de substituicao.
+- 14:19 - Validacao tecnica e funcional do fix: `backend npm run build`, rebuild `docker-compose up -d --build backend` e teste E2E interno via API confirmando `statusNovo=NAO_POSSO` no primeiro D-1.
+- 14:28 - Ajuste de regra visual no Kanban para refletir o fluxo aprovado:
+  - `NAO_POSSO` (primeiro contato) saiu da coluna `Substituicao necessaria` e passou para `A confirmar (D-1)` em `frontend/src/pages/AudienciasKanbanPage.tsx`.
+  - Coluna `Substituicao necessaria` agora concentra apenas casos criticos (`SEM_RESPOSTA` e `SUBSTITUICAO_NECESSARIA`).
+  - Cards com `NAO_POSSO` passam a exibir alerta visual discreto (`!` amarelo) no canto superior direito, sem classificar como `URGENTE`.
+- 14:28 - Terminologia padronizada no frontend: status `NAO_POSSO` renomeado para `Indisponibilidade do preposto` em `frontend/src/lib/status.ts`.
+- 14:28 - Validacao tecnica e publicacao: `frontend npm run build` com sucesso e rebuild Docker (`docker-compose up -d --build frontend`) com stack saudavel.
+
+## Checkpoint Atual — 12/02/2026 15:01
+
+Entregue e validado no frontend:
+- Lista/detalhe de audiencias com acoes manuais
+- Kanban operacional por status
+- CRUD de prepostos
+- CRUD de parceiros + contatos de escalonamento
+- Tela de TRTs com regra travada da POC (2/15 ativos, demais inativos)
+- Importacao com upload/mapear/preview/confirmar
+- Usuarios (admin)
+- Exportacao CSV/XLSX conectada ao backend
+- Formulario de relatorio pos-audiencia
+- **Disparos manuais WhatsApp na tela de detalhe** (D-1, check-in, pos-audiencia) com feedback
+
+Status da orquestracao backend:
+- Entregue: base BullMQ + scheduler + worker + adapter WhatsApp, agendamento automatico e disparos manuais por endpoint.
+- Adapter Z-API validado em producao com botoes nativos: `send-button-list` -> `send-button-actions` -> `send-text` (fallback). Entrega com botoes clicaveis confirmada.
+- Entrada de respostas via webhook implementada com atualizacao automatica de status, mensagens e historico (incluindo fallback numerico).
+- Abertura automatica de substituicao para respostas de indisponibilidade implementada.
+- Endpoint de status de fila/worker entregue para verificacao operacional.
+- **Prerequisito**: modo botao deve estar ativado no painel Z-API da instancia.
+- Pendente: job H-1h30 (reiteracao) e fluxo completo de escalonamento de substituicao (notificacao para parceiro/contatos + reenvio ao novo preposto).
+
+Proxima etapa:
+1. Implementar job H-1h30 (reiteracao) com regra de transicao para `SEM_RESPOSTA` quando nao houver retorno.
+2. Fechar escalonamento automatico de substituicao (contatos do parceiro por ordem, trilha de mensagens e reenvio ao preposto substituto).
+- 11:56 - Fluxo de checkout pos-audiencia via WhatsApp consolidado no inbound (`backend/src/services/whatsapp-inbound.service.ts`): respostas agora seguem sequencia orientada por pergunta (Q1..Q6), mantem `RELATORIO_PENDENTE` durante preenchimento e conclui audiencia somente apos observacao final.
+- 11:56 - Correcao de robustez no parser de respostas do relatorio: mapeamento textual por contexto de pergunta (inclusive `sim/nao` nas perguntas binarias), com bloqueio de fallback numerico indevido fora da pergunta correspondente.
+- 11:56 - Correcao de continuidade para texto livre final: adicionado `buscarContextoRelatorioPendente(prepostoId)` para recuperar contexto `RELATORIO_POS` ativo quando a resposta chega sem `buttonId` (observacao final digitada).
+- 11:56 - Validacao tecnica da rodada: `backend npm run build` executado com sucesso apos os ajustes do fluxo pos-audiencia.
+
+## Checkpoint Atual — 13/02/2026 11:56
+
+Entregue nesta etapa (pos-audiencia via WhatsApp):
+- Sequencia automatica de perguntas do checkout (ocorrencia -> resultado -> advogado presente -> dominio -> problema relevante -> observacao livre).
+- Persistencia incremental em `relatorios_audiencia` a cada resposta.
+- Status da audiencia permanece `RELATORIO_PENDENTE` ate completar todas as respostas.
+- Conclusao automatica para `CONCLUIDA` somente ao finalizar o questionario, com historico de status e mensagem final de confirmacao ao preposto.
+
+Pendencias objetivas para fechar o fluxo end-to-end:
+1. Validacao funcional real com webhook publico (resposta real no WhatsApp em todas as perguntas, incluindo observacao livre) e conferencia no detalhe da audiencia/kanban.
+2. Ajustar mensagens de UX (texto das perguntas e confirmacao final) conforme aprovacao operacional da POC, se necessario.
+- 12:41 - Diagnostico de pos-audiencia sem checklist concluido por logs do backend container: ao receber `AUDIENCIA_SIM` o sistema retornou `statusNovo=CONCLUIDA` imediatamente (sem enviar Pergunta 2/6), comportamento de versao antiga ainda publicada no container.
+- 12:41 - Evidencia adicional no log: multiplos callbacks com `ignored=RESPOSTA_NAO_MAPEADA` para respostas textuais fora do formato esperado, reforcando necessidade de usar botoes/opcoes numericas enquanto o parser em producao nao estiver atualizado.
+- 12:41 - Verificacao de artefato em execucao: `dist/services/whatsapp-inbound.service.js` no container backend nao contem os marcadores do fluxo novo (`Pergunta 2/6`, `RELATORIO_OBSERVACAO`), confirmando que as ultimas correcoes locais ainda nao foram publicadas via rebuild/redeploy do backend.
+- 12:46 - Deploy da correcao do fluxo pos-audiencia realizado: rebuild e restart do backend via `docker-compose up -d --build backend` com imagem nova publicada (`viseu-backend:latest`) e container recriado com sucesso.
+- 12:46 - Verificacao de versao no artefato em execucao (`dist/services/whatsapp-inbound.service.js` dentro do container): marcadores do fluxo novo confirmados (`Pergunta 2/6` e `RELATORIO_OBSERVACAO`), eliminando o comportamento antigo de conclusao imediata no Q1.
+- 12:46 - Validacao operacional pos-deploy: backend e worker de orquestracao iniciados corretamente (`Server listening` + `[orquestracao-worker] worker pronto para processar jobs`).
+- 12:50 - Proposta de UX (a validar/implementar): adicionar CTA `Baixar relatorio pos-audiencia` no detalhe da audiencia quando status for `CONCLUIDA`, posicionado ao lado do badge/status final. Sugestao de saida principal em PDF com layout executivo-legivel (cabecalho da audiencia + respostas estruturadas + observacao livre + timeline curta + data/hora de fechamento), mantendo opcao secundaria de envio por email/WhatsApp para parceiro/advogado em fase posterior.
+- 13:01 - Relatorio pos-audiencia para download entregue: novo endpoint `GET /api/v1/audiencias/:id/relatorio/download` em `backend/src/routes/audiencias.routes.ts` com arquivo de saida HTML anexado (`Content-Disposition: attachment`).
+- 13:01 - Geracao do documento implementada em `backend/src/services/audiencias.service.ts` (`exportarRelatorioPosAudiencia`): layout executivo legivel (cabecalho da audiencia, checklist 1..5, observacoes e data de fechamento), com escape HTML e nome de arquivo sanitizado.
+- 13:01 - Regra de disponibilidade do download: se audiencia nao existir retorna `404`; se nao houver relatorio preenchido retorna `409` com mensagem orientativa.
+- 13:01 - Frontend conectado ao download em `frontend/src/services/hub.ts` (`audienciasApi.baixarRelatorioPos`).
+- 13:01 - UX aplicada no detalhe da audiencia em `frontend/src/pages/AudienciaDetalhePage.tsx`: botao pill `Baixar relatorio pos-audiencia` exibido ao lado do status quando a audiencia esta `CONCLUIDA`, mantendo o mesmo padrao visual do chip de status.
+- 13:01 - Validacoes tecnicas e deploy:
+  - `backend npm run build` OK
+  - `frontend npm run lint && npm run build` OK
+  - `docker-compose up -d --build backend frontend` executado com sucesso
+  - teste funcional interno do endpoint: `409` sem relatorio e `200` com relatorio preenchido (retornando HTML anexado).
+- 13:06 - Ajuste solicitado no relatorio pos-audiencia aplicado em duas frentes:
+  - limpeza de dado de teste no banco (`relatorios_audiencia.relato='Relatorio de validacao do download.'` -> `NULL`).
+  - correcao de fuso no campo `Fechamento registrado em` para exibir horario local configurado (`ORQ_TIMEZONE`, default `America/Sao_Paulo`) em `backend/src/services/audiencias.service.ts`.
+- 13:06 - Validacao funcional do download apos ajuste: HTML retornando `Observacoes: Sem observacoes.` e `Fechamento registrado em: 13/02/2026, 12:37` (antes aparecia `15:37` por exibicao em UTC).
+- 13:06 - Validacoes tecnicas/deploy: `backend npm run build` OK e `docker-compose up -d --build backend` concluido com container saudavel.
+- 13:11 - Ajustes visuais solicitados no `Dashboard Operacional` aplicados em `frontend/src/pages/DashboardPage.tsx`:
+  - card `Audiencias Hoje / Amanha` simplificado para `Audiencias hoje` com exibicao apenas do numero do dia (removido `/ amanha`).
+  - removido texto de apoio `Monitoramento diario da agenda juridica`.
+  - card `A confirmar (D-1)` sem barra/progresso percentual (removido bloco de 0%).
+  - numeros principais dos cards superiores centralizados para padronizacao visual.
+  - `Check-in Pendente` e `Substituicao Necessaria` tiveram ordem trocada na grade.
+  - `Substituicao Necessaria` manteve borda vermelha e badge `RISCO` em vermelho, mas texto/tipografia interna padronizados como os demais cards.
+  - removidos textos complementares: `Encaminhar acao imediata com parceiro/preposto` e `Audiencias do dia aguardando sinalizacao de chegada`.
+- 13:11 - Validacao tecnica e publicacao dos ajustes: `frontend npm run lint && npm run build` OK e `docker-compose up -d --build --no-deps frontend` concluido com container saudavel.
+- 13:17 - Ajuste fino do dashboard conforme feedback visual:
+  - numeros dos 4 cards superiores reduzidos de `text-5xl` para `text-4xl` e mantidos centralizados.
+  - subtitulos pequenos reintroduzidos em todos os 4 cards para contexto operacional.
+  - card `A confirmar (D-1)` permaneceu sem barra de progresso, apenas numero + subtitulo.
+- 13:17 - Bloco de `Lembretes` deixou de ser estatico em `frontend/src/pages/DashboardPage.tsx` e passou a operar como `Alertas operacionais` dinamicos:
+  - itens agora surgem apenas quando houver contadores > 0 (`Substituicoes criticas`, `Check-in pendente`, `A confirmar (D-1)`, `Sem resposta`).
+  - quando nao houver alertas, exibe estado vazio (`Nenhum alerta operacional ativo no momento`).
+  - CTA ajustado para `Abrir operacao`.
+- 13:17 - Validacao e publicacao: `frontend npm run lint && npm run build` OK e deploy via `docker-compose up -d --build --no-deps frontend` com container saudavel.
+- 13:50 - Fluxo de escalonamento automatico de substituicao implementado no backend:
+  - novo service `backend/src/services/substituicao-automacao.service.ts` para notificar contatos e resolver troca via WhatsApp.
+  - disparo automatico de escalonamento acionado no webhook quando ocorre `2o NAO_POSSO` (reiteracao negada) em `backend/src/services/whatsapp-inbound.service.ts`.
+- 13:50 - Regra de destinatarios aplicada conforme POC:
+  - envia para **todos os contatos** do parceiro interno configurado (`PARCEIRO_INTERNO_NOME`, default `Viseu Advogados`), com botao URL para abrir o Hub (`HUB_FRONTEND_URL/audiencias/:id`).
+  - envia para o **1o contato** (ordem de escalonamento) do parceiro da audiencia, com botao `Indicar novo preposto`.
+- 13:50 - Webhook inbound evoluido para contatos de parceiro:
+  - quando telefone nao e de preposto, tenta resolver como `contatoParceiro`.
+  - parceiro principal clica `INDICAR_NOVO_PREPOSTO` e depois envia `Nome - Telefone`.
+  - sistema cria/atualiza preposto automaticamente, resolve substituicao aberta (com trava transacional para evitar dupla resolucao), troca o preposto da audiencia e dispara confirmacao imediata ao novo preposto.
+- 13:50 - Anti-dupla-substituicao implementado:
+  - primeiro que resolver fecha a substituicao (`ABERTA -> RESOLVIDA`).
+  - tentativas subsequentes retornam mensagem de `substituicao ja concluida` com nome/telefone do preposto definido.
+- 13:50 - Notificacao cruzada apos resolucao implementada:
+  - ao concluir substituicao (via parceiro no WhatsApp **ou** via troca manual no Hub), sistema envia mensagem `Substituicao realizada` para contatos Viseu e contato principal do parceiro com origem (`Viseu`/`Escritorio parceiro`) + nome e telefone do novo preposto.
+- 13:50 - `trocarPreposto` em `backend/src/services/audiencias.service.ts` ajustado:
+  - se existir substituicao aberta da audiencia, ela e resolvida (em vez de criar duplicada) e dispara notificacao de substituicao realizada.
+- 13:50 - Configuracoes novas documentadas em `backend/.env.example` e carregadas em `backend/src/config/env.ts`:
+  - `HUB_FRONTEND_URL`
+  - `PARCEIRO_INTERNO_NOME`
+- 13:50 - Roteiro de testes atualizado em `docs/testes-whatsapp.http` com novo cenario E2E:
+  - escalonamento automatico apos 2a negativa
+  - indicacao de substituto pelo parceiro (Nome - Telefone)
+  - validacao de bloqueio de dupla substituicao
+  - validacao de notificacao cruzada para Viseu e parceiro
+  - cenario manual de Viseu resolvendo pelo Hub
+- 13:50 - Validacao tecnica e deploy:
+  - `backend npm run build` OK
+  - `docker-compose up -d --build backend` OK (container saudavel)
+- 13:59 - Ajustes de front-end solicitados aplicados na lista de audiencias (`frontend/src/pages/AudienciasListPage.tsx`): removido `Exportar CSV`, botao renomeado para `Nova audiencia` ao lado de `Exportar XLSX` e substituicao dos filtros `Periodo de/Periodo ate` por um filtro unico selecionavel (`Todos`, `Hoje`, `Proximos 7 dias`, `Proximos 30 dias`, `Mes atual`) com mapeamento automatico para `dataInicio/dataFim` na API.
+- 13:59 - Gestao de contatos em parceiros expandida com edicao e exclusao:
+  - backend: novos endpoints `PATCH /parceiros/:id/contatos/:contatoId` e `DELETE /parceiros/:id/contatos/:contatoId` em `backend/src/routes/parceiros.routes.ts`, com regras/validacoes em `backend/src/services/parceiros.service.ts`.
+  - frontend: `parceirosApi.atualizarContato` e `parceirosApi.removerContato` em `frontend/src/services/hub.ts` e UI em `frontend/src/pages/ParceirosPage.tsx` com acao de editar por campo e botao `X` vermelho para apagar contato.
+- 13:59 - Tela de prepostos ajustada para `Editar` (nao apenas `Renomear`) em `frontend/src/pages/PrepostosPage.tsx`, permitindo atualizar nome, telefone e email pelo mesmo fluxo de acao.
+- 13:59 - Validacoes tecnicas da rodada concluidas com sucesso: `backend npm run build`, `frontend npm run lint` e `frontend npm run build`.
+- 14:01 - Ajuste fino em `frontend/src/pages/ParceirosPage.tsx`: botoes de edicao de contato trocados para icone visual de lapis por campo (ordem, nome, telefone, email e cargo), mantendo `X` vermelho para exclusao no final da linha.
+- 14:01 - Revalidacao apos ajuste fino: `frontend npm run lint` e `frontend npm run build` executados com sucesso.
+- 14:31 - Correcao de falha no build Docker (`invalid file request node_modules/.bin/baseline-browser-mapping`): adicionados `.dockerignore` em `frontend/.dockerignore` e `backend/.dockerignore` para excluir `node_modules`/`dist`/artefatos locais do contexto de build.
+- 14:31 - Validacao operacional da correcao: `docker-compose build frontend backend` executado com sucesso; `docker-compose up -d backend frontend` concluido; checks HTTP locais confirmados (`http://localhost:3001/api/v1/health` = 200 e `http://localhost:3000` = 200).
+- 14:48 - Refatoracao de UX em `frontend/src/pages/PrepostosPage.tsx`: removidos prompts do navegador para edicao; preposto agora entra em modo inline na propria linha da tabela (nome/telefone/email editaveis), com botao `Editar` que alterna para `Salvar` e retorna ao estado normal apos persistencia.
+- 14:48 - Refatoracao de UX em `frontend/src/pages/ParceirosPage.tsx`:
+  - contatos agora possuem coluna unica `Acao` com apenas icones sem borda (lapis + X), conforme solicitado.
+  - ao clicar no lapis, toda a linha do contato entra em modo editavel inline (ordem, nome, telefone, email, cargo); ao clicar novamente no lapis, salva as alteracoes.
+  - botao `X` vermelho mantido para exclusao do contato.
+  - remocao de prompt tambem no renomear parceiro (agora inline na linha, com alternancia para `Salvar`).
+- 14:48 - Filtro de periodo em `frontend/src/pages/AudienciasListPage.tsx` evoluido para campo unico com calendario de intervalo (`react-day-picker`): selecao `de/ate` em uma unica caixa com popover, mapeando para `dataInicio`/`dataFim` na API; adicionada acao `Limpar`.
+- 14:48 - Dependencias frontend adicionadas para range picker: `react-day-picker` e `date-fns` (`frontend/package.json` e `frontend/package-lock.json`).
+- 14:48 - Validacoes tecnicas da rodada concluidas com sucesso: `frontend npm run lint` e `frontend npm run build`.
+- 14:48 - Publicacao frontend apos refatoracao de UX: `docker-compose up -d --build --no-deps frontend` executado com sucesso; validacao de disponibilidade em `http://localhost:3000` com retorno `200` e bundle novo (`index-CorJtHzh.js`).
+- 14:48 - Diagnostico de substituicao automatica (mensagens para Viseu/parceiro) realizado com evidencias de codigo+banco:
+  - Regra atual confirmada em `backend/src/services/whatsapp-inbound.service.ts`: disparo de escalonamento automatico ocorre apenas quando a resposta e `NAO_POSSO` no contexto de `REITERACAO_H1H30` (2a negativa). Apenas status `SUBSTITUICAO_NECESSARIA` por check-in/problema ou mudanca manual de status nao dispara escalonamento por regra atual.
+  - Validacao de configuracao de parceiro interno: `Viseu Advogados` existe ativo no banco com 1 contato (telefone `11939214731`) e e o parceiro-alvo do fluxo interno.
+  - Validacao de parceiro externo dos testes: audiencias recentes em substituicao usavam parceiros sem contatos (`Escritório ABC Advogados`, `PIPEK - ESTRATÉGICO`, etc.), portanto nao havia destinatario externo para notificar (somente Viseu).
+  - Execucao manual de teste de escalonamento para audiencia `95680f8a-89e3-4da7-ae17-9d7e0fe90e9d` confirmou envio real (`ok=true`, `totalDestinatarios=1`), com registro em `mensagens` tipo `SUBSTITUICAO_AVISO` e `whatsappMessageId=3EB0DA12A33C9735B66B2B`.
+- 15:41 - Regra de escalonamento automatica ampliada no backend para cobrir qualquer entrada em `SUBSTITUICAO_NECESSARIA`:
+  - `backend/src/services/whatsapp-inbound.service.ts`: ao processar resposta WhatsApp, o sistema agora identifica `entrouEmSubstituicao`/`substituicaoCriada` e dispara `dispararEscalonamentoSubstituicao(...)` para `CHECK_IN`, `REITERACAO_H1H30` e demais caminhos que efetivamente abram o fluxo, com protecao contra duplicidade quando ja estava em substituicao.
+  - `backend/src/services/audiencias.service.ts`: caminhos manuais agora tambem disparam escalonamento quando entram em substituicao:
+    - `atualizarAudiencia(...)` ao alterar status manualmente para `SUBSTITUICAO_NECESSARIA`.
+    - `registrarCheckInAudiencia(...)` com evento `ESTOU_COM_PROBLEMA`.
+  - adicionado helper `garantirSubstituicaoAberta(...)` para nao criar substituicao duplicada e helper `dispararEscalonamentoComProtecao(...)` com log estruturado de erro.
+- 15:41 - Validacao tecnica e deploy da correcao:
+  - `backend npm run build` OK
+  - `docker-compose up -d --build --no-deps backend` OK
+  - health check `GET /api/v1/health` = 200
+- 15:41 - Teste funcional de disparo pos-correcao confirmado no banco: audiencia de teste transicionada para `SUBSTITUICAO_NECESSARIA` gerou `logs_automacao` com `evento=DISPARO`, `etapa=ESCALONAMENTO`, `status=SUCESSO` e `totalDestinatarios=2`, com mensagens `SUBSTITUICAO_AVISO/ESCALONAMENTO` persistidas em `mensagens`.
+- 17:10 - Arquivo `docs/testes-whatsapp.http` atualizado e focado em testes de substituicao automatica:
+  - preparo de parceiros/contatos (Viseu interno + parceiro externo)
+  - cenario de gatilho por `CHECK_IN` com `ESTOU_COM_PROBLEMA`
+  - cenario de gatilho por mudanca manual para `SUBSTITUICAO_NECESSARIA`
+  - fluxo inbound do parceiro (`INDICAR_NOVO_PREPOSTO` + `Nome - Telefone`)
+  - validacoes finais (detalhe da audiencia, dashboard, kanban, workers)
+  - variaveis padronizadas adicionadas (`@parceiroInternoId`, `@parceiroRiscoId`, `@audienciaRiscoId`, etc.).
+- 17:32 - Correcao do CTA de workflow manual em `frontend/src/pages/AudienciaDetalhePage.tsx`:
+  - quando a proxima acao calculada for `CHECKIN` e o status atual estiver em `NAO_POSSO` ou `SUBSTITUICAO_NECESSARIA`, o botao de disparo de check-in fica bloqueado.
+  - adicionada mensagem de bloqueio operacional para orientar que a substituicao deve ser resolvida antes do check-in.
+- 17:32 - Ajuste de copy/legibilidade das mensagens de escalonamento em `backend/src/services/substituicao-automacao.service.ts`:
+  - mensagem reformulada com campos em negrito no padrao WhatsApp (`*Data/Hora*`, `*Parceiro*`, `*Local/Link*`, `*Motivo*`).
+  - removidas linhas redundantes de acao textual; mantido somente o botao `Indicar novo preposto`.
+  - motivo operacional padronizado para texto claro: `Preposto nao conseguira comparecer`.
+- 17:32 - Fluxo `Indicar novo preposto` corrigido para 2 etapas no webhook em `backend/src/services/whatsapp-inbound.service.ts`:
+  - etapa 1: apos clique no botao, sistema solicita apenas o nome completo.
+  - etapa 2: apos nome valido, sistema solicita telefone no formato `(DDD) numero`.
+  - substituicao so e aplicada apos receber telefone valido, mantendo confirmacoes e notificacoes cruzadas existentes.
+  - implementado controle de etapa via observacao interna em mensagens enviadas (`ESCALONAMENTO_ETAPA:*`), sem poluir a UX do WhatsApp.
+- 17:32 - Correcao de roteamento do webhook para evitar cair no fluxo errado (checkout) quando o telefone existe em multiplos cadastros:
+  - processamento agora busca preposto e contato parceiro em paralelo.
+  - quando houver evidencias de contexto de escalonamento (botao `INDICAR_NOVO_PREPOSTO`, resposta a mensagem de escalonamento ou etapa ativa), o sistema prioriza o fluxo de contato parceiro.
+- 17:32 - Atualizacao do roteiro `docs/testes-whatsapp.http` para refletir o novo fluxo de substituicao em 2 etapas (`nome` -> `telefone`).
+- 17:32 - Validacoes tecnicas desta rodada concluidas com sucesso:
+  - `backend npm run build` OK
+  - `frontend npm run build` OK
+- 17:50 - Correcao de loop/spam no fluxo `Indicar novo preposto` aplicada em `backend/src/services/whatsapp-inbound.service.ts`:
+  - filtro de evento adicionado para ignorar callbacks de envio/status (`EVENTO_NAO_RECEBIDO`) antes do processamento de resposta.
+  - nova guarda para ignorar payload sem texto e sem botao no contexto de contato parceiro (`RESPOSTA_SEM_CONTEUDO`), evitando resposta automatica em cadeia.
+  - nova guarda para ignorar eco de mensagens do proprio sistema no fluxo de substituicao (`MENSAGEM_SISTEMA_IGNORADA`), bloqueando auto-resposta recursiva.
+- 17:50 - Deploy de correcao concluido: `backend npm run build` OK e `docker-compose up -d --build --no-deps backend` com container recriado e iniciado.
+- 18:05 - Ajustes de UX no frontend aplicados:
+  - `frontend/src/pages/AudienciaDetalhePage.tsx`: secao `Mensagens detalhadas` convertida para card recolhivel (inicia fechado), alinhada ao comportamento dos demais cards inferiores.
+  - `frontend/src/components/AppShell.tsx`: menu renomeado para `Importar Planilha` e reposicionado logo abaixo de `Dashboard`.
+  - `frontend/src/pages/AudienciasListPage.tsx`: cabecalho de acoes ajustado para manter os 3 CTAs lado a lado (`Exportar XLSX`, `Nova audiencia`, `Importar`), com `Importar` levando para `/importacoes`.
+  - `frontend/src/pages/DashboardPage.tsx`: card `Substituicao Necessaria` agora e clicavel e redireciona para `/audiencias?status=SUBSTITUICAO_NECESSARIA`.
+  - `frontend/src/pages/AudienciasListPage.tsx`: leitura de query string para aplicar filtro inicial de status ao abrir a lista via dashboard.
+- 18:05 - Validacao e publicacao frontend:
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps frontend` concluido com container iniciado.

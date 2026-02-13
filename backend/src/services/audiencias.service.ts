@@ -1,5 +1,15 @@
 import XLSX from 'xlsx'
 import { prisma } from '../config/database.js'
+import { env } from '../config/env.js'
+import {
+  agendarOrquestracaoAudiencia,
+  removerOrquestracaoAudiencia,
+} from '../jobs/orquestracao.scheduler.js'
+import { registrarLogAutomacao } from './automacao-log.service.js'
+import {
+  dispararEscalonamentoSubstituicao,
+  notificarSubstituicaoRealizada,
+} from './substituicao-automacao.service.js'
 import type {
   StatusAudiencia,
   Modalidade,
@@ -163,9 +173,245 @@ export async function exportarAudiencias(filtros: FiltrosAudiencia, formato: 'cs
   }
 }
 
+export async function exportarRelatorioPosAudiencia(audienciaId: string) {
+  const audiencia = await prisma.audiencia.findUnique({
+    where: { id: audienciaId },
+    include: {
+      trt: { select: { numero: true, nome: true } },
+      preposto: { select: { nome: true, telefoneWhatsapp: true, email: true } },
+      parceiro: { select: { nome: true } },
+      relatorio: true,
+      historicoStatus: {
+        where: { statusNovo: 'CONCLUIDA' },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
+    },
+  })
+
+  if (!audiencia) return null
+  if (!audiencia.relatorio) return { error: 'RELATORIO_NAO_ENCONTRADO' as const }
+
+  const ocorridoLabel: Record<OcorrenciaAudiencia, string> = {
+    SIM: 'Sim',
+    NAO: 'Nao',
+    REMARCADA: 'Remarcada',
+  }
+  const resultadoLabel: Record<ResultadoAudiencia, string> = {
+    ACORDO: 'Acordo',
+    SEM_ACORDO: 'Sem acordo',
+    AUSENCIA: 'Encerrada por ausencia',
+    REDESIGNADA: 'Redesignada',
+  }
+  const boolLabel = (valor: boolean | null | undefined) => (valor ? 'Sim' : 'Nao')
+
+  const concluidaEm = audiencia.historicoStatus[0]?.createdAt
+    ? formatarDataHoraRelatorio(audiencia.historicoStatus[0].createdAt, env.ORQ_TIMEZONE)
+    : '-'
+  const dataAudiencia = formatarDataRelatorio(audiencia.data)
+  const relato = audiencia.relatorio.relato?.trim() || 'Sem observacoes.'
+  const ocorrido =
+    audiencia.relatorio.audienciaOcorreu
+      ? ocorridoLabel[audiencia.relatorio.audienciaOcorreu]
+      : '-'
+  const resultado =
+    audiencia.relatorio.resultado ? resultadoLabel[audiencia.relatorio.resultado] : '-'
+  const numeroProcessoSeguro = escapeHtml(audiencia.numeroProcesso)
+
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Relatorio Pos-Audiencia - ${numeroProcessoSeguro}</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --line: #e2e8f0;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #d97706;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.4;
+    }
+    .page {
+      max-width: 920px;
+      margin: 24px auto;
+      padding: 0 16px 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .head {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: start;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      background: #ffedd5;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: .2px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .meta {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    .label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .questao {
+      border-top: 1px dashed var(--line);
+      padding: 10px 0;
+    }
+    .questao:first-child { border-top: 0; padding-top: 0; }
+    .q {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .a {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .obs {
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 14px;
+      background: #fff;
+    }
+    .foot {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; margin: 0; padding: 0; }
+      .card { border-radius: 0; margin-bottom: 10px; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <div class="head">
+        <div>
+          <h1>Relatorio Pos-Audiencia</h1>
+          <div class="meta">Processo ${numeroProcessoSeguro}</div>
+        </div>
+        <span class="chip">Concluida</span>
+      </div>
+      <div class="grid" style="margin-top:14px">
+        <div class="item"><span class="label">Data da audiencia</span><span class="value">${escapeHtml(dataAudiencia)} as ${escapeHtml(audiencia.hora)}</span></div>
+        <div class="item"><span class="label">TRT</span><span class="value">${escapeHtml(audiencia.trt.numero)} - ${escapeHtml(audiencia.trt.nome)}</span></div>
+        <div class="item"><span class="label">Preposto</span><span class="value">${escapeHtml(audiencia.preposto.nome)}</span></div>
+        <div class="item"><span class="label">Telefone preposto</span><span class="value">${escapeHtml(audiencia.preposto.telefoneWhatsapp)}</span></div>
+        <div class="item"><span class="label">Advogado</span><span class="value">${escapeHtml(audiencia.advogado ?? '-')}</span></div>
+        <div class="item"><span class="label">Parceiro</span><span class="value">${escapeHtml(audiencia.parceiro.nome)}</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Checklist Pos-Audiencia</h2>
+      <div class="questao">
+        <div class="q">1. A audiencia ocorreu?</div>
+        <div class="a">${escapeHtml(ocorrido)}</div>
+      </div>
+      <div class="questao">
+        <div class="q">2. Resultado</div>
+        <div class="a">${escapeHtml(resultado)}</div>
+      </div>
+      <div class="questao">
+        <div class="q">3. Advogado estava presente no horario?</div>
+        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.advogadoPresente))}</div>
+      </div>
+      <div class="questao">
+        <div class="q">4. Advogado demonstrou dominio minimo do caso?</div>
+        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.advogadoDominioCaso))}</div>
+      </div>
+      <div class="questao">
+        <div class="q">5. Houve algum problema relevante?</div>
+        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.problemaRelevante))}</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Observacoes</h2>
+      <div class="obs">${escapeHtml(relato)}</div>
+      <div class="foot">Fechamento registrado em: ${escapeHtml(concluidaEm)}</div>
+    </section>
+  </main>
+</body>
+</html>`
+
+  return {
+    filename: `relatorio-pos-audiencia-${sanitizarNomeArquivo(audiencia.numeroProcesso)}.html`,
+    contentType: 'text/html; charset=utf-8',
+    buffer: Buffer.from(html, 'utf-8'),
+  }
+}
+
 // === Criar audiência manualmente ===
 
 export async function criarAudiencia(dados: DadosCriarAudiencia, usuarioId: string) {
+  await validarTrtAtivo(dados.trtId)
+
   const audiencia = await prisma.audiencia.create({
     data: {
       ...dados,
@@ -182,6 +428,8 @@ export async function criarAudiencia(dados: DadosCriarAudiencia, usuarioId: stri
     'Audiencia criada manualmente',
     usuarioId,
   )
+
+  await agendarComTolerancia(audiencia.id, audiencia.data, audiencia.hora)
 
   return audiencia
 }
@@ -218,6 +466,10 @@ export async function buscarAudienciaPorId(id: string) {
         },
         orderBy: { createdAt: 'desc' },
       },
+      logsAutomacao: {
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      },
       relatorio: true,
     },
   })
@@ -233,6 +485,10 @@ export async function atualizarAudiencia(
   const audienciaAtual = await prisma.audiencia.findUnique({ where: { id } })
   if (!audienciaAtual) return null
 
+  if (dados.trtId) {
+    await validarTrtAtivo(dados.trtId)
+  }
+
   const audiencia = await prisma.audiencia.update({
     where: { id },
     data: dados,
@@ -247,6 +503,28 @@ export async function atualizarAudiencia(
       'Atualizacao manual',
       usuarioId,
     )
+
+    if (dados.status === 'SUBSTITUICAO_NECESSARIA') {
+      const substituicaoCriada = await garantirSubstituicaoAberta({
+        audienciaId: id,
+        prepostoAnteriorId: audienciaAtual.prepostoId,
+        motivo: 'Atualizacao manual para substituicao necessaria',
+      })
+
+      if (audienciaAtual.status !== 'SUBSTITUICAO_NECESSARIA' || substituicaoCriada) {
+        await dispararEscalonamentoComProtecao(
+          id,
+          'Substituicao necessaria definida manualmente',
+          'MANUAL',
+        )
+      }
+    }
+  }
+
+  if (audiencia.status === 'CANCELADA' || audiencia.status === 'CONCLUIDA') {
+    await removerComTolerancia(audiencia.id)
+  } else {
+    await agendarComTolerancia(audiencia.id, audiencia.data, audiencia.hora)
   }
 
   return audiencia
@@ -256,11 +534,6 @@ export async function atualizarAudiencia(
 
 export async function buscarKanban() {
   const audiencias = await prisma.audiencia.findMany({
-    where: {
-      status: {
-        notIn: ['CONCLUIDA', 'CANCELADA'],
-      },
-    },
     include: {
       trt: { select: { id: true, numero: true } },
       preposto: { select: { id: true, nome: true } },
@@ -289,6 +562,7 @@ export async function buscarDashboard() {
 
   const fimSemana = new Date(hoje)
   fimSemana.setDate(fimSemana.getDate() + 7)
+  const ultimas24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
 
   const [
     totalAtivas,
@@ -297,6 +571,9 @@ export async function buscarDashboard() {
     porStatus,
     aguardandoConfirmacao,
     semResposta,
+    reiteracoesDisparadas24h,
+    respostasWhatsapp24h,
+    substituicoesPorAutomacao24h,
   ] = await Promise.all([
     prisma.audiencia.count({
       where: { status: { notIn: ['CONCLUIDA', 'CANCELADA'] } },
@@ -313,6 +590,25 @@ export async function buscarDashboard() {
     }),
     prisma.audiencia.count({ where: { status: 'A_CONFIRMAR' } }),
     prisma.audiencia.count({ where: { status: 'SEM_RESPOSTA' } }),
+    prisma.logAutomacao.count({
+      where: {
+        evento: 'DISPARO',
+        etapa: 'REITERACAO_6H',
+        createdAt: { gte: ultimas24h },
+      },
+    }),
+    prisma.logAutomacao.count({
+      where: {
+        evento: 'RESPOSTA_CONFIRMADA',
+        createdAt: { gte: ultimas24h },
+      },
+    }),
+    prisma.logAutomacao.count({
+      where: {
+        evento: 'SUBSTITUICAO_ABERTA',
+        createdAt: { gte: ultimas24h },
+      },
+    }),
   ])
 
   return {
@@ -325,6 +621,11 @@ export async function buscarDashboard() {
       status: status.status,
       total: status._count.id,
     })),
+    automacao: {
+      reiteracoesDisparadas24h,
+      respostasWhatsapp24h,
+      substituicoesPorAutomacao24h,
+    },
   }
 }
 
@@ -341,16 +642,37 @@ export async function trocarPreposto(
 
   const prepostoAnteriorId = audiencia.prepostoId
 
-  await prisma.substituicao.create({
-    data: {
+  const substituicaoAberta = await prisma.substituicao.findFirst({
+    where: {
       audienciaId,
-      prepostoAnteriorId,
-      prepostoNovoId,
-      motivo,
-      status: 'RESOLVIDA',
-      resolvidoEm: new Date(),
+      status: 'ABERTA',
     },
+    select: { id: true, motivo: true },
+    orderBy: { createdAt: 'desc' },
   })
+
+  if (substituicaoAberta) {
+    await prisma.substituicao.update({
+      where: { id: substituicaoAberta.id },
+      data: {
+        prepostoNovoId,
+        status: 'RESOLVIDA',
+        resolvidoEm: new Date(),
+        motivo: `${substituicaoAberta.motivo} | Resolucao manual Hub: ${motivo}`,
+      },
+    })
+  } else {
+    await prisma.substituicao.create({
+      data: {
+        audienciaId,
+        prepostoAnteriorId,
+        prepostoNovoId,
+        motivo,
+        status: 'RESOLVIDA',
+        resolvidoEm: new Date(),
+      },
+    })
+  }
 
   const audienciaAtualizada = await prisma.audiencia.update({
     where: { id: audienciaId },
@@ -368,6 +690,25 @@ export async function trocarPreposto(
     `Troca de preposto: ${motivo}`,
     usuarioId,
   )
+
+  await agendarComTolerancia(audienciaAtualizada.id, audienciaAtualizada.data, audienciaAtualizada.hora)
+
+  if (substituicaoAberta) {
+    try {
+      await notificarSubstituicaoRealizada({
+        audienciaId,
+        origem: 'VISEU',
+        novoPrepostoNome: audienciaAtualizada.preposto?.nome ?? 'Preposto substituto',
+        novoPrepostoTelefone: audienciaAtualizada.preposto?.telefoneWhatsapp ?? '-',
+        origemEvento: 'MANUAL',
+      })
+    } catch (error) {
+      console.error('[substituicao] falha ao notificar substituicao manual realizada', {
+        audienciaId,
+        erro: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
 
   return audienciaAtualizada
 }
@@ -434,6 +775,8 @@ export async function cancelarAudiencia(audienciaId: string, motivo: string, usu
       usuarioId,
     )
   }
+
+  await removerComTolerancia(audienciaId)
 
   return atualizada
 }
@@ -509,25 +852,13 @@ export async function registrarCheckInAudiencia(
     },
   })
 
+  let substituicaoCriada = false
   if (evento === 'ESTOU_COM_PROBLEMA') {
-    const substituicaoAberta = await prisma.substituicao.findFirst({
-      where: {
-        audienciaId,
-        status: 'ABERTA',
-      },
-      select: { id: true },
+    substituicaoCriada = await garantirSubstituicaoAberta({
+      audienciaId,
+      prepostoAnteriorId: audiencia.prepostoId,
+      motivo: observacao ?? 'Check-in: estou com problema',
     })
-
-    if (!substituicaoAberta) {
-      await prisma.substituicao.create({
-        data: {
-          audienciaId,
-          prepostoAnteriorId: audiencia.prepostoId,
-          motivo: observacao ?? 'Check-in: estou com problema',
-          status: 'ABERTA',
-        },
-      })
-    }
   }
 
   const atualizada = await prisma.audiencia.update({
@@ -543,6 +874,14 @@ export async function registrarCheckInAudiencia(
       statusNovo,
       `Check-in: ${eventoLabel[evento]}`,
       usuarioId,
+    )
+  }
+
+  if (evento === 'ESTOU_COM_PROBLEMA' && (audiencia.status !== statusNovo || substituicaoCriada)) {
+    await dispararEscalonamentoComProtecao(
+      audienciaId,
+      'Check-in com problema reportado pelo preposto',
+      'MANUAL',
     )
   }
 
@@ -610,6 +949,55 @@ export async function registrarRelatorioAudiencia(
 
 // === Helpers ===
 
+async function garantirSubstituicaoAberta(params: {
+  audienciaId: string
+  prepostoAnteriorId: string
+  motivo: string
+}) {
+  const substituicaoAberta = await prisma.substituicao.findFirst({
+    where: {
+      audienciaId: params.audienciaId,
+      status: 'ABERTA',
+    },
+    select: { id: true },
+  })
+
+  if (substituicaoAberta) return false
+
+  await prisma.substituicao.create({
+    data: {
+      audienciaId: params.audienciaId,
+      prepostoAnteriorId: params.prepostoAnteriorId,
+      motivo: params.motivo,
+      status: 'ABERTA',
+    },
+  })
+
+  return true
+}
+
+async function dispararEscalonamentoComProtecao(
+  audienciaId: string,
+  motivo: string,
+  origem: 'WEBHOOK' | 'MANUAL',
+) {
+  try {
+    await dispararEscalonamentoSubstituicao(audienciaId, motivo, origem)
+  } catch (error) {
+    await registrarLogAutomacao({
+      audienciaId,
+      origem,
+      evento: 'ERRO',
+      etapa: 'ESCALONAMENTO',
+      status: 'ERRO',
+      mensagem: 'Falha ao disparar escalonamento de substituicao',
+      metadados: {
+        erro: error instanceof Error ? error.message : String(error),
+      },
+    })
+  }
+}
+
 const includeAudienciaResumo = {
   trt: { select: { id: true, numero: true, nome: true } },
   preposto: { select: { id: true, nome: true, telefoneWhatsapp: true } },
@@ -663,6 +1051,43 @@ function escaparCsv(valor: string) {
   return valor
 }
 
+function formatarDataRelatorio(data: Date) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(data)
+}
+
+function formatarDataHoraRelatorio(data: Date, timeZone: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    timeZone,
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(data)
+}
+
+function sanitizarNomeArquivo(valor: string) {
+  return valor
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase()
+}
+
+function escapeHtml(valor: string) {
+  return valor
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 async function registrarMudancaStatus(
   audienciaId: string,
   statusAnterior: StatusAudiencia,
@@ -679,4 +1104,41 @@ async function registrarMudancaStatus(
       atualizadoPor,
     },
   })
+}
+
+async function validarTrtAtivo(trtId: string) {
+  const trt = await prisma.trt.findUnique({
+    where: { id: trtId },
+    select: { id: true, ativo: true },
+  })
+
+  if (!trt) {
+    throw new Error('TRT_NAO_ENCONTRADO')
+  }
+
+  if (!trt.ativo) {
+    throw new Error('TRT_INATIVO')
+  }
+}
+
+async function agendarComTolerancia(audienciaId: string, data: Date, hora: string) {
+  try {
+    await agendarOrquestracaoAudiencia({ audienciaId, data, hora })
+  } catch (error) {
+    console.error('[orquestracao] falha ao agendar audiencia', {
+      audienciaId,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
+}
+
+async function removerComTolerancia(audienciaId: string) {
+  try {
+    await removerOrquestracaoAudiencia(audienciaId)
+  } catch (error) {
+    console.error('[orquestracao] falha ao remover audiencia da fila', {
+      audienciaId,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
 }

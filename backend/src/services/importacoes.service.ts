@@ -3,6 +3,7 @@ import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import XLSX from 'xlsx'
 import { prisma } from '../config/database.js'
+import { agendarOrquestracaoAudiencia } from '../jobs/orquestracao.scheduler.js'
 import type { Modalidade, Prisma } from '../generated/prisma/client.js'
 
 const IMPORTACOES_DIR = process.env.IMPORTACOES_DIR ?? '/tmp/viseu-importacoes'
@@ -194,6 +195,7 @@ export async function confirmarImportacao(importacaoId: string, usuarioId: strin
   const resultado = await prisma.$transaction(async (tx) => {
     let importadas = 0
     let ignoradas = preview.ignoradasPorTrt + preview.invalidas
+    const audienciasCriadas: Array<{ id: string; data: Date; hora: string }> = []
 
     const cacheParceiros = new Map<string, string>()
     const cachePrepostos = new Map<string, string>()
@@ -250,6 +252,12 @@ export async function confirmarImportacao(importacaoId: string, usuarioId: strin
         },
       })
 
+      audienciasCriadas.push({
+        id: audiencia.id,
+        data: audiencia.data,
+        hora: audiencia.hora,
+      })
+
       importadas += 1
     }
 
@@ -270,13 +278,33 @@ export async function confirmarImportacao(importacaoId: string, usuarioId: strin
       invalidas: preview.invalidas,
       ignoradasPorTrt: preview.ignoradasPorTrt,
       totalLinhas: preview.totalLinhas,
+      audienciasCriadas,
     }
   })
+
+  for (const audiencia of resultado.audienciasCriadas) {
+    try {
+      await agendarOrquestracaoAudiencia({
+        audienciaId: audiencia.id,
+        data: audiencia.data,
+        hora: audiencia.hora,
+      })
+    } catch (error) {
+      console.error('[orquestracao] falha ao agendar audiencia importada', {
+        audienciaId: audiencia.id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
 
   return {
     importacaoId,
     status: 'CONCLUIDA',
-    ...resultado,
+    importadas: resultado.importadas,
+    ignoradas: resultado.ignoradas,
+    invalidas: resultado.invalidas,
+    ignoradasPorTrt: resultado.ignoradasPorTrt,
+    totalLinhas: resultado.totalLinhas,
   }
 }
 

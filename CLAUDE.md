@@ -50,48 +50,62 @@ Decisoes arquiteturais relevantes devem ser registradas neste arquivo e/ou em `a
 - Adotar pipeline assincrono: **upload -> mapeamento -> preview -> confirmar**.
 - Motivo: melhor controle de validacao, erros por linha e previsibilidade operacional.
 
-## Estado Atual (Codigo)
+## Estado Atual (Codigo) — atualizado 12/02/2026
 
-Concluido:
-- Setup de frontend/backend + Docker
-- Modelagem Prisma completa (11 entidades), migration e seed
-- Auth backend (`/api/v1/auth/login`, `/me`, `/logout`)
-- Modulo de audiencias (lista, detalhe, criar, atualizar, kanban, dashboard, troca de preposto)
+### Concluido (backend + frontend + Docker)
+- Setup completo: frontend (React/Vite/Tailwind v4), backend (Fastify/TS/ESM), Docker Compose (4 servicos)
+- Modelagem Prisma completa (11 entidades), migrations aplicadas e seed (admin + TRTs)
+- Auth backend (JWT + bcrypt): `/api/v1/auth/login`, `/me`, `/logout`
+- Backend CRUD completo: audiencias, prepostos, parceiros/contatos, trts, usuarios, importacoes, webhooks
+- Backend acoes de audiencia: trocar-preposto, check-in, relatorio, cancelar, confirmar-telefone, export
+- Import pipeline completo: upload -> mapear (auto-detect) -> preview (validacao por linha) -> confirmar
+- Frontend operacional: login, dashboard (KPIs), lista/kanban/detalhe audiencias, prepostos, parceiros, importacoes, usuarios
+- Frontend check-in: 3 botoes funcionais (Estou a caminho / Ja cheguei / Estou com problema) em AudienciaDetalhePage
+- Frontend relatorio pos-audiencia: formulario completo em AudienciaDetalhePage
+- Frontend export CSV/XLSX: botoes conectados no header de AudienciasListPage
+- Frontend parceiros: CRUD completo com sub-secao de contatos inline (escalonamento)
+- Design system Freedom aplicado (paleta yellow/neutral, tipografia Inter, tokens semanticos)
+- Contrato OpenAPI formal em `docs/openapi.yaml` (40+ endpoints)
+- Stack Docker validada: frontend (nginx:3000), backend (3001), postgres, redis
 
-Em andamento:
-- Modulos backend faltantes (prepostos, parceiros/contatos, trts, importacoes, webhooks, usuarios)
-- Orquestracao de mensagens/check-in/relatorio/substituicao
+### Parcialmente feito
+- TRTs admin: tela dedicada no frontend entregue com regra travada (somente TRT 2 e 15 ativos)
+- Orquestracao WhatsApp entregue com adapter Z-API validado em producao:
+  - Provider `zapi`: `send-button-list` (botoes nativos) como primario, fallback `send-button-actions`, fallback final `send-text` com opcoes numeradas.
+  - Provider `cloud` (Meta) e `webhook` (generico) tambem suportados
+  - Fila BullMQ + scheduler + worker para D-1, check-in e pos-audiencia
+  - Agendamento automatico conectado em criacao manual e importacao de audiencias
+  - Endpoints manuais: `POST /audiencias/:id/disparos/d1`, `POST /audiencias/:id/disparos/check-in`, `POST /audiencias/:id/disparos/pos-audiencia`
+  - **Prerequisito Z-API**: modo botao deve estar ativado no painel da instancia. Sem isso, botoes retornam 200 mas WhatsApp descarta silenciosamente.
+  - Frontend: 3 botoes de disparo manual WhatsApp na tela de detalhe (D-1, check-in, pos-audiencia) com feedback visual
+  - Testes operacionais completos em `docs/testes-whatsapp.http` (direto Z-API + via backend)
+  - Entrada de respostas WhatsApp implementada via `POST /api/v1/webhooks/whatsapp`:
+    - parse de `buttonId` e fallback de texto numerico (`1/2/3`)
+    - atualizacao automatica de status de audiencia
+    - registro em `mensagens` (RECEBIDA) e `historico_status`
+    - abertura automatica de `substituicao` para indisponibilidade (`NAO_POSSO`/`ESTOU_COM_PROBLEMA`)
+  - Endpoint de observabilidade operacional: `GET /api/v1/webhooks/workers/status` (contadores da fila BullMQ)
 
-Nao iniciado de forma funcional:
-- Frontend de operacao (atualmente placeholder)
+### Nao iniciado
+- **Job de reiteracao H-1h30**: ainda nao implementado
+- **Fluxo automatico de substituicao completo**: notificar Viseu + parceiro, escalonamento e reenvio ao novo preposto
 
-## Proximos Passos Prioritarios
+## Proximos Passos Prioritarios — 12/02/2026
 
-1. Backend core faltante
-- CRUD de prepostos
-- CRUD de parceiros + contatos
-- Leitura/ativacao de TRTs
-- Usuarios admin
+1. **Fechar automacao WhatsApp da POC** (core do valor)
+   - Envio real validado com botoes nativos clicaveis via Z-API send-button-list
+   - Entrada de webhook concluida: respostas atualizam status e timeline automaticamente
+   - Adicionar job H-1h30 e fluxo de substituicao automatica
+   - Consolidar trilha de mensagens/status para auditoria operacional
 
-2. Importacao assincrona
-- Upload de xlsx
-- Mapeamento de colunas
-- Preview com validacoes
-- Confirmacao e persistencia
-
-3. Automacao operacional
-- Agendamento D-1 e H-1h30
-- Abertura de substituicao e escalonamento
-- Check-in no dia
-- Relatorio pos-audiencia
-- Adapter de notificacao para n8n
-
-4. Frontend
-- Login
-- Dashboard
-- Lista e detalhe de audiencias
-- Kanban
-- Fluxos manuais de operacao
+3. **Validacao final contra criterios de aceite**
+   - Importar planilha e gerar audiencias (feito)
+   - Disparar D-1 e registrar resposta
+   - Reiterar H-1h30 e abrir substituicao
+   - Notificar automaticamente Viseu + parceiro
+   - Trocar preposto e reenviar para novo
+   - Coletar relatorio pos-audiencia
+   - Rodar com logging e trilha de auditoria
 
 ## Comandos de Desenvolvimento
 
@@ -123,6 +137,7 @@ docker-compose up postgres redis
 - Backend ESM: imports com extensao `.js`
 - Frontend TS: preferir objetos `as const` em vez de `enum`
 - Integracao WhatsApp oficial fica desacoplada por adapter para troca futura sem refatoracao de dominio
+- Z-API: modo botao deve estar ativado no painel da instancia para botoes nativos funcionarem. Adapter usa send-button-list -> send-button-actions -> send-text (fallback)
 
 ## Referencias
 

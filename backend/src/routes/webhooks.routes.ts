@@ -1,5 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { env } from '../config/env.js'
+import { obterResumoFilaOrquestracao } from '../jobs/orquestracao.queue.js'
+import { processarRespostaWhatsApp } from '../services/whatsapp-inbound.service.js'
 
 export default async function webhooksRoutes(app: FastifyInstance) {
   // GET /api/v1/webhooks/whatsapp
@@ -17,9 +19,26 @@ export default async function webhooksRoutes(app: FastifyInstance) {
     return reply.status(403).send({ error: 'Token de verificacao invalido' })
   })
 
+  // GET /api/v1/webhooks/workers/status
+  app.get('/workers/status', async (_request, reply) => {
+    try {
+      const fila = await obterResumoFilaOrquestracao()
+      return reply.send({
+        ok: true,
+        worker: 'embutido-no-backend',
+        fila,
+        timestamp: new Date().toISOString(),
+      })
+    } catch (error) {
+      app.log.error(error)
+      return reply.status(500).send({ ok: false, error: 'Falha ao consultar status da fila' })
+    }
+  })
+
   // POST /api/v1/webhooks/whatsapp
   app.post('/whatsapp', async (request, reply) => {
-    app.log.info({ payload: request.body }, 'Webhook recebido')
-    return reply.send({ ok: true })
+    const resultado = await processarRespostaWhatsApp(request.body)
+    app.log.info({ resultado }, 'Webhook WhatsApp processado')
+    return reply.send(resultado)
   })
 }
