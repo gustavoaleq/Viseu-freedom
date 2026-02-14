@@ -288,6 +288,29 @@ model Substituicao {
   @@map("substituicoes")
 }
 
+model ConfiguracaoGlobal {
+  id                          String   @id @default("singleton")
+  enviarAvisoNaImportacao     Boolean  @default(true)
+  horarioD1                   String? // HH:mm — se null, usa antecedenciaD1Horas
+  antecedenciaD1Horas         Int      @default(24)
+  antecedenciaReiteracaoHoras Int      @default(6)
+  antecedenciaCheckinMinutos  Int      @default(60)
+  posAudienciaMinutosDepois   Int      @default(30)
+  fusoHorario                 String   @default("America/Sao_Paulo")
+  mensagemD1                  String?
+  mensagemReiteracao          String?
+  mensagemCheckin             String?
+  mensagemPosAudiencia        String?
+  mensagemPosPergunta2        String?
+  mensagemPosPergunta3        String?
+  mensagemPosPergunta4        String?
+  mensagemPosPergunta5        String?
+  mensagemPosPergunta6        String?
+  updatedAt                   DateTime @updatedAt
+
+  @@map("configuracao_global")
+}
+
 model LogAutomacao {
   id          String   @id @default(uuid())
   audienciaId String

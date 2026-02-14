@@ -4,6 +4,11 @@ import { prisma } from '../config/database.js'
 import type { StatusAudiencia, TipoMensagem } from '../generated/prisma/client.js'
 import { registrarLogAutomacao } from './automacao-log.service.js'
 import {
+  aplicarTemplate,
+  obterConfiguracoes,
+  TEMPLATES_DEFAULT,
+} from './configuracoes.service.js'
+import {
   buscarContextoContatoEscalonamento,
   dispararEscalonamentoSubstituicao,
   enviarMensagemContato,
@@ -73,6 +78,7 @@ type EstadoColetaSubstituto =
 
 const OBS_ETAPA_SUBSTITUTO_NOME = 'ESCALONAMENTO_ETAPA:NOME'
 const OBS_ETAPA_SUBSTITUTO_TELEFONE = 'ESCALONAMENTO_ETAPA:TELEFONE:'
+const OBS_RELATORIO_PERGUNTA_PREFIX = 'RELATORIO_PERGUNTA:'
 
 const RESPOSTAS: Record<RespostaId, RegraResposta> = {
   CONFIRMO: {
@@ -363,7 +369,13 @@ export async function processarRespostaWhatsApp(payload: unknown): Promise<Resul
   }
 
   let contexto = await buscarContextoMensagem(preposto.id, mensagemReferenciaId)
-  let respostaId = resolverResposta(buttonId, textoResposta, contexto?.tipo, contexto?.conteudo)
+  let respostaId = resolverResposta(
+    buttonId,
+    textoResposta,
+    contexto?.tipo,
+    contexto?.conteudo,
+    contexto?.observacao,
+  )
   if (!respostaId && textoResposta) {
     const contextoRelatorio = await buscarContextoRelatorioPendente(preposto.id)
     if (contextoRelatorio) {
@@ -1007,7 +1019,7 @@ async function buscarContextoMensagem(prepostoId: string, mensagemReferenciaId?:
         direcao: 'ENVIADA',
         whatsappMessageId: mensagemReferenciaId,
       },
-      select: { audienciaId: true, tipo: true, conteudo: true },
+      select: { audienciaId: true, tipo: true, conteudo: true, observacao: true },
       orderBy: { createdAt: 'desc' },
     })
     if (porId && TIPOS_INTERATIVOS.includes(porId.tipo)) return porId
@@ -1022,7 +1034,7 @@ async function buscarContextoMensagem(prepostoId: string, mensagemReferenciaId?:
         status: { notIn: ['CONCLUIDA', 'CANCELADA'] },
       },
     },
-    select: { audienciaId: true, tipo: true, conteudo: true },
+    select: { audienciaId: true, tipo: true, conteudo: true, observacao: true },
     orderBy: { createdAt: 'desc' },
   })
 }
@@ -1037,7 +1049,7 @@ async function buscarContextoRelatorioPendente(prepostoId: string) {
         status: 'RELATORIO_PENDENTE',
       },
     },
-    select: { audienciaId: true, tipo: true, conteudo: true },
+    select: { audienciaId: true, tipo: true, conteudo: true, observacao: true },
     orderBy: { createdAt: 'desc' },
   })
 }
@@ -1157,7 +1169,49 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
     },
   })
 
-  const proximaPergunta = obterProximaPerguntaRelatorio(relatorioAtual)
+  const [config, audienciaContexto] = await Promise.all([
+    obterConfiguracoes(),
+    prisma.audiencia.findUnique({
+      where: { id: params.audienciaId },
+      select: {
+        numeroProcesso: true,
+        data: true,
+        hora: true,
+        local: true,
+        link: true,
+        preposto: { select: { nome: true } },
+        parceiro: { select: { nome: true } },
+        trt: { select: { numero: true } },
+      },
+    }),
+  ])
+
+  const dataFmt = audienciaContexto?.data
+    ? new Intl.DateTimeFormat('pt-BR').format(audienciaContexto.data)
+    : ''
+  const localOuLink = audienciaContexto?.local || audienciaContexto?.link || 'local a confirmar'
+  const variaveis: Record<string, string> = {
+    nomePreposto: audienciaContexto?.preposto?.nome ?? '',
+    numeroProcesso: audienciaContexto?.numeroProcesso ?? '',
+    data: dataFmt,
+    hora: audienciaContexto?.hora ?? '',
+    local: localOuLink,
+    escritorioParceiro: audienciaContexto?.parceiro?.nome ?? '',
+    trt: audienciaContexto?.trt?.numero ?? '',
+  }
+
+  const proximaPergunta = obterProximaPerguntaRelatorio(
+    relatorioAtual,
+    {
+      mensagemPosAudiencia: config.mensagemPosAudiencia,
+      mensagemPosPergunta2: config.mensagemPosPergunta2,
+      mensagemPosPergunta3: config.mensagemPosPergunta3,
+      mensagemPosPergunta4: config.mensagemPosPergunta4,
+      mensagemPosPergunta5: config.mensagemPosPergunta5,
+      mensagemPosPergunta6: config.mensagemPosPergunta6,
+    },
+    variaveis,
+  )
   if (proximaPergunta) {
     await enviarMensagemRelatorioPos({
       audienciaId: params.audienciaId,
@@ -1165,6 +1219,7 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
       prepostoTelefone: params.prepostoTelefone,
       texto: proximaPergunta.texto,
       buttons: proximaPergunta.buttons,
+      observacao: `${OBS_RELATORIO_PERGUNTA_PREFIX}${proximaPergunta.codigo}`,
     })
     return { statusAtual: 'RELATORIO_PENDENTE' as StatusAudiencia }
   }
@@ -1236,10 +1291,21 @@ function obterProximaPerguntaRelatorio(
         relato: string | null
       }
     | null,
+  config: {
+    mensagemPosAudiencia: string | null
+    mensagemPosPergunta2: string | null
+    mensagemPosPergunta3: string | null
+    mensagemPosPergunta4: string | null
+    mensagemPosPergunta5: string | null
+    mensagemPosPergunta6: string | null
+  },
+  variaveis: Record<string, string>,
 ) {
   if (!relatorio || !relatorio.audienciaOcorreu) {
+    const template = config.mensagemPosAudiencia || TEMPLATES_DEFAULT.mensagemPosAudiencia
     return {
-      texto: 'Pergunta 1/6: A audiencia ocorreu?',
+      codigo: 'Q1' as const,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'AUDIENCIA_SIM', label: 'Sim, ocorreu' },
         { id: 'AUDIENCIA_NAO', label: 'Nao ocorreu' },
@@ -1249,8 +1315,10 @@ function obterProximaPerguntaRelatorio(
   }
 
   if (!relatorio.resultado) {
+    const template = config.mensagemPosPergunta2 || TEMPLATES_DEFAULT.mensagemPosPergunta2
     return {
-      texto: 'Pergunta 2/6: Qual foi o resultado?',
+      codigo: 'Q2' as const,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'RESULTADO_ACORDO', label: 'Acordo' },
         { id: 'RESULTADO_SEM_ACORDO', label: 'Sem acordo' },
@@ -1261,8 +1329,10 @@ function obterProximaPerguntaRelatorio(
   }
 
   if (typeof relatorio.advogadoPresente !== 'boolean') {
+    const template = config.mensagemPosPergunta3 || TEMPLATES_DEFAULT.mensagemPosPergunta3
     return {
-      texto: 'Pergunta 3/6: O advogado estava presente no horario?',
+      codigo: 'Q3' as const,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'ADVOGADO_PRESENTE_SIM', label: 'Sim' },
         { id: 'ADVOGADO_PRESENTE_NAO', label: 'Nao' },
@@ -1271,8 +1341,10 @@ function obterProximaPerguntaRelatorio(
   }
 
   if (typeof relatorio.advogadoDominioCaso !== 'boolean') {
+    const template = config.mensagemPosPergunta4 || TEMPLATES_DEFAULT.mensagemPosPergunta4
     return {
-      texto: 'Pergunta 4/6: O advogado demonstrou dominio minimo do caso?',
+      codigo: 'Q4' as const,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'ADVOGADO_DOMINIO_SIM', label: 'Sim' },
         { id: 'ADVOGADO_DOMINIO_NAO', label: 'Nao' },
@@ -1281,8 +1353,10 @@ function obterProximaPerguntaRelatorio(
   }
 
   if (typeof relatorio.problemaRelevante !== 'boolean') {
+    const template = config.mensagemPosPergunta5 || TEMPLATES_DEFAULT.mensagemPosPergunta5
     return {
-      texto: 'Pergunta 5/6: Houve algum problema relevante?',
+      codigo: 'Q5' as const,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'PROBLEMA_RELEVANTE_SIM', label: 'Sim' },
         { id: 'PROBLEMA_RELEVANTE_NAO', label: 'Nao' },
@@ -1291,8 +1365,10 @@ function obterProximaPerguntaRelatorio(
   }
 
   if (!relatorio.relato || !relatorio.relato.trim()) {
+    const template = config.mensagemPosPergunta6 || TEMPLATES_DEFAULT.mensagemPosPergunta6
     return {
-      texto: 'Pergunta 6/6: Deixe uma observacao curta sobre o que aconteceu. Se nao houver, responda: Sem observacoes.',
+      codigo: 'Q6' as const,
+      texto: aplicarTemplate(template, variaveis),
     }
   }
 
@@ -1305,6 +1381,7 @@ async function enviarMensagemRelatorioPos(params: {
   prepostoTelefone: string
   texto: string
   buttons?: Array<{ id: string; label: string }>
+  observacao?: string | null
 }) {
   const envio = await whatsapp.enviarMensagem({
     para: params.prepostoTelefone,
@@ -1321,6 +1398,7 @@ async function enviarMensagemRelatorioPos(params: {
       tipo: 'RELATORIO_POS',
       direcao: 'ENVIADA',
       conteudo: params.texto,
+      observacao: params.observacao ?? null,
       statusEnvio: 'ENVIADA',
       whatsappMessageId: envio.providerMessageId ?? null,
     },
@@ -1341,6 +1419,7 @@ function resolverResposta(
   textoResposta: string | undefined,
   tipoContexto?: TipoMensagem,
   conteudoContexto?: string,
+  observacaoContexto?: string | null,
 ): RespostaId | null {
   const codigo = normalizarCodigo(buttonId)
   if (codigo && codigo in RESPOSTAS) return codigo as RespostaId
@@ -1361,7 +1440,7 @@ function resolverResposta(
   const opcao = parseInt(texto, 10)
   if (!Number.isNaN(opcao) && tipoContexto && opcao > 0) {
     if (tipoContexto === 'RELATORIO_POS') {
-      const pergunta = identificarPerguntaRelatorioPorConteudo(conteudoContexto)
+      const pergunta = identificarPerguntaRelatorioPorContexto(conteudoContexto, observacaoContexto)
       const respostaPorPergunta = respostaRelatorioPorOpcao(pergunta, opcao)
       if (respostaPorPergunta) return respostaPorPergunta
       return null
@@ -1384,7 +1463,7 @@ function resolverResposta(
   }
 
   if (tipoContexto === 'RELATORIO_POS') {
-    const pergunta = identificarPerguntaRelatorioPorConteudo(conteudoContexto)
+    const pergunta = identificarPerguntaRelatorioPorContexto(conteudoContexto, observacaoContexto)
 
     if (pergunta === 'Q1') {
       if (texto === 'sim, ocorreu' || texto === 'sim ocorreu' || texto === 'sim') return 'AUDIENCIA_SIM'
@@ -1429,7 +1508,13 @@ function resolverResposta(
 
 type PerguntaRelatorioCodigo = 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'Q5' | 'Q6'
 
-function identificarPerguntaRelatorioPorConteudo(conteudoContexto?: string): PerguntaRelatorioCodigo {
+function identificarPerguntaRelatorioPorContexto(
+  conteudoContexto?: string,
+  observacaoContexto?: string | null,
+): PerguntaRelatorioCodigo {
+  const porObservacao = identificarPerguntaRelatorioPorObservacao(observacaoContexto)
+  if (porObservacao) return porObservacao
+
   const texto = normalizarTexto(conteudoContexto)
   if (texto.includes('pergunta 2 6')) return 'Q2'
   if (texto.includes('pergunta 3 6')) return 'Q3'
@@ -1437,6 +1522,28 @@ function identificarPerguntaRelatorioPorConteudo(conteudoContexto?: string): Per
   if (texto.includes('pergunta 5 6')) return 'Q5'
   if (texto.includes('pergunta 6 6')) return 'Q6'
   return 'Q1'
+}
+
+function identificarPerguntaRelatorioPorObservacao(
+  observacaoContexto?: string | null,
+): PerguntaRelatorioCodigo | null {
+  if (!observacaoContexto) return null
+  const match = observacaoContexto.trim().match(/^RELATORIO_PERGUNTA:(Q[1-6])$/i)
+  if (!match) return null
+
+  const codigo = match[1]?.toUpperCase()
+  if (
+    codigo === 'Q1' ||
+    codigo === 'Q2' ||
+    codigo === 'Q3' ||
+    codigo === 'Q4' ||
+    codigo === 'Q5' ||
+    codigo === 'Q6'
+  ) {
+    return codigo
+  }
+
+  return null
 }
 
 function respostaRelatorioPorOpcao(

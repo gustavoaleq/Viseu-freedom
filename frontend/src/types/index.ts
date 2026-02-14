@@ -212,6 +212,33 @@ export interface DashboardResponse {
     respostasWhatsapp24h: number
     substituicoesPorAutomacao24h: number
   }
+  posRelatorio?: {
+    periodoDias: number
+    totalRelatorios: number
+    audienciaOcorreu: {
+      sim: number
+      nao: number
+      remarcada: number
+    }
+    resultado: {
+      acordo: number
+      semAcordo: number
+      ausencia: number
+      redesignada: number
+    }
+    advogadoPresente: {
+      sim: number
+      nao: number
+    }
+    advogadoDominioCaso: {
+      sim: number
+      nao: number
+    }
+    problemaRelevante: {
+      sim: number
+      nao: number
+    }
+  }
 }
 
 export interface Importacao {
@@ -261,4 +288,28 @@ export interface ImportacaoPreviewResponse {
 export interface AuthLoginResponse {
   token: string
   usuario: Usuario
+}
+
+export interface ConfiguracaoGlobal {
+  enviarAvisoNaImportacao: boolean
+  horarioD1: string | null
+  antecedenciaD1Horas: number
+  antecedenciaReiteracaoHoras: number
+  antecedenciaCheckinMinutos: number
+  posAudienciaMinutosDepois: number
+  fusoHorario: string
+  mensagemD1: string | null
+  mensagemReiteracao: string | null
+  mensagemCheckin: string | null
+  mensagemPosAudiencia: string | null
+  mensagemPosPergunta2: string | null
+  mensagemPosPergunta3: string | null
+  mensagemPosPergunta4: string | null
+  mensagemPosPergunta5: string | null
+  mensagemPosPergunta6: string | null
+  updatedAt: string
+}
+
+export interface ConfiguracaoGlobalPatchResponse extends ConfiguracaoGlobal {
+  reagendadas?: number
 }

@@ -1,4 +1,5 @@
-import { env } from '../config/env.js'
+import { prisma } from '../config/database.js'
+import { obterConfiguracoes } from '../services/configuracoes.service.js'
 import { registrarLogAutomacao } from '../services/automacao-log.service.js'
 import {
   filaOrquestracaoAudiencias,
@@ -15,17 +16,25 @@ interface AgendarParams {
 }
 
 export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
-  const dataAudiencia = combinarDataHora(params.data, params.hora)
+  const config = await obterConfiguracoes()
+  const dataAudiencia = combinarDataHora(params.data, params.hora, config.fusoHorario)
   if (!dataAudiencia) return
 
-  const d1 = new Date(dataAudiencia.getTime() - env.ORQ_D1_HORAS_ANTES * 60 * 60 * 1000)
+  // D-1: horario fixo ou antecedencia em horas
+  let d1: Date
+  if (config.horarioD1) {
+    d1 = calcularD1HorarioFixo(params.data, config.horarioD1, config.fusoHorario)
+  } else {
+    d1 = new Date(dataAudiencia.getTime() - config.antecedenciaD1Horas * 60 * 60 * 1000)
+  }
+
   const reiteracao = new Date(
-    dataAudiencia.getTime() - env.ORQ_REITERACAO_HORAS_ANTES * 60 * 60 * 1000,
+    dataAudiencia.getTime() - config.antecedenciaReiteracaoHoras * 60 * 60 * 1000,
   )
   const checkIn = new Date(
-    dataAudiencia.getTime() - env.ORQ_CHECKIN_MINUTOS_ANTES * 60 * 1000,
+    dataAudiencia.getTime() - config.antecedenciaCheckinMinutos * 60 * 1000,
   )
-  const pos = new Date(dataAudiencia.getTime() + env.ORQ_POS_MINUTOS_DEPOIS * 60 * 1000)
+  const pos = new Date(dataAudiencia.getTime() + config.posAudienciaMinutosDepois * 60 * 1000)
 
   const jobs = await Promise.all([
     upsertJob('CONFIRMACAO_D1', params.audienciaId, d1),
@@ -80,6 +89,71 @@ export async function removerOrquestracaoAudiencia(audienciaId: string) {
   }
 }
 
+/**
+ * Reagenda todos os jobs de audiencias ativas (chamado ao salvar configuracoes).
+ * Retorna quantidade de audiencias reagendadas.
+ */
+export async function reagendarTodasAudienciasAtivas(): Promise<number> {
+  const audiencias = await prisma.audiencia.findMany({
+    where: {
+      status: {
+        notIn: ['CONCLUIDA', 'CANCELADA'],
+      },
+    },
+    select: {
+      id: true,
+      data: true,
+      hora: true,
+    },
+  })
+
+  let reagendadas = 0
+  for (const aud of audiencias) {
+    try {
+      await agendarOrquestracaoAudiencia({
+        audienciaId: aud.id,
+        data: aud.data,
+        hora: aud.hora,
+      })
+      reagendadas++
+    } catch (error) {
+      console.error('[configuracoes] falha ao reagendar audiencia', {
+        audienciaId: aud.id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+
+  return reagendadas
+}
+
+// --- Funcoes internas ---
+
+function calcularD1HorarioFixo(dataAudiencia: Date, horarioD1: string, timeZone: string): Date {
+  const match = horarioD1.match(/^(\d{1,2}):(\d{2})$/)
+  if (!match) {
+    // Fallback: 24h antes
+    return new Date(dataAudiencia.getTime() - 24 * 60 * 60 * 1000)
+  }
+
+  const horasD1 = Number(match[1])
+  const minutosD1 = Number(match[2])
+
+  // Dia anterior a audiencia
+  const ano = dataAudiencia.getUTCFullYear()
+  const mes = dataAudiencia.getUTCMonth()
+  const dia = dataAudiencia.getUTCDate() - 1
+
+  return criarDataNoFuso({
+    ano,
+    mes,
+    dia,
+    horas: horasD1,
+    minutos: minutosD1,
+    timeZone,
+  })
+}
+
 async function upsertJob(tipo: TipoJobOrquestracao, audienciaId: string, quando: Date) {
   const id = jobIdOrquestracao(tipo, audienciaId)
   const existente = await filaOrquestracaoAudiencias.getJob(id)
@@ -110,7 +184,7 @@ async function upsertJob(tipo: TipoJobOrquestracao, audienciaId: string, quando:
   }
 }
 
-function combinarDataHora(data: Date, hora: string) {
+function combinarDataHora(data: Date, hora: string, timeZone: string) {
   const match = hora.match(/^(\d{1,2}):(\d{2})/)
   if (!match) return null
 
@@ -128,7 +202,7 @@ function combinarDataHora(data: Date, hora: string) {
     dia,
     horas,
     minutos,
-    timeZone: env.ORQ_TIMEZONE,
+    timeZone,
   })
 }
 

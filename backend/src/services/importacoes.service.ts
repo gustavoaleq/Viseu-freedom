@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto'
 import XLSX from 'xlsx'
 import { prisma } from '../config/database.js'
 import { agendarOrquestracaoAudiencia } from '../jobs/orquestracao.scheduler.js'
+import { obterConfiguracoes } from './configuracoes.service.js'
 import type { Modalidade, Prisma } from '../generated/prisma/client.js'
 
 const IMPORTACOES_DIR = process.env.IMPORTACOES_DIR ?? '/tmp/viseu-importacoes'
@@ -282,19 +283,27 @@ export async function confirmarImportacao(importacaoId: string, usuarioId: strin
     }
   })
 
-  for (const audiencia of resultado.audienciasCriadas) {
-    try {
-      await agendarOrquestracaoAudiencia({
-        audienciaId: audiencia.id,
-        data: audiencia.data,
-        hora: audiencia.hora,
-      })
-    } catch (error) {
-      console.error('[orquestracao] falha ao agendar audiencia importada', {
-        audienciaId: audiencia.id,
-        error: error instanceof Error ? error.message : String(error),
-      })
+  const configGlobal = await obterConfiguracoes()
+
+  if (configGlobal.enviarAvisoNaImportacao) {
+    for (const audiencia of resultado.audienciasCriadas) {
+      try {
+        await agendarOrquestracaoAudiencia({
+          audienciaId: audiencia.id,
+          data: audiencia.data,
+          hora: audiencia.hora,
+        })
+      } catch (error) {
+        console.error('[orquestracao] falha ao agendar audiencia importada', {
+          audienciaId: audiencia.id,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
     }
+  } else {
+    console.log(
+      `[importacao] agendamento automatico desativado nas configuracoes — ${resultado.audienciasCriadas.length} audiencias criadas sem disparo`,
+    )
   }
 
   return {

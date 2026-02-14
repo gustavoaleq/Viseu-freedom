@@ -69,6 +69,11 @@ export type HistoricoStatus = $Result.DefaultSelection<Prisma.$HistoricoStatusPa
  */
 export type Substituicao = $Result.DefaultSelection<Prisma.$SubstituicaoPayload>
 /**
+ * Model ConfiguracaoGlobal
+ * 
+ */
+export type ConfiguracaoGlobal = $Result.DefaultSelection<Prisma.$ConfiguracaoGlobalPayload>
+/**
  * Model LogAutomacao
  * 
  */
@@ -448,6 +453,16 @@ export class PrismaClient<
     * ```
     */
   get substituicao(): Prisma.SubstituicaoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.configuracaoGlobal`: Exposes CRUD operations for the **ConfiguracaoGlobal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConfiguracaoGlobals
+    * const configuracaoGlobals = await prisma.configuracaoGlobal.findMany()
+    * ```
+    */
+  get configuracaoGlobal(): Prisma.ConfiguracaoGlobalDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.logAutomacao`: Exposes CRUD operations for the **LogAutomacao** model.
@@ -903,6 +918,7 @@ export namespace Prisma {
     RelatorioAudiencia: 'RelatorioAudiencia',
     HistoricoStatus: 'HistoricoStatus',
     Substituicao: 'Substituicao',
+    ConfiguracaoGlobal: 'ConfiguracaoGlobal',
     LogAutomacao: 'LogAutomacao'
   };
 
@@ -919,7 +935,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "trt" | "preposto" | "parceiro" | "contatoParceiro" | "importacao" | "audiencia" | "mensagem" | "relatorioAudiencia" | "historicoStatus" | "substituicao" | "logAutomacao"
+      modelProps: "usuario" | "trt" | "preposto" | "parceiro" | "contatoParceiro" | "importacao" | "audiencia" | "mensagem" | "relatorioAudiencia" | "historicoStatus" | "substituicao" | "configuracaoGlobal" | "logAutomacao"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1737,6 +1753,80 @@ export namespace Prisma {
           }
         }
       }
+      ConfiguracaoGlobal: {
+        payload: Prisma.$ConfiguracaoGlobalPayload<ExtArgs>
+        fields: Prisma.ConfiguracaoGlobalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConfiguracaoGlobalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConfiguracaoGlobalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          findFirst: {
+            args: Prisma.ConfiguracaoGlobalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConfiguracaoGlobalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          findMany: {
+            args: Prisma.ConfiguracaoGlobalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>[]
+          }
+          create: {
+            args: Prisma.ConfiguracaoGlobalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          createMany: {
+            args: Prisma.ConfiguracaoGlobalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConfiguracaoGlobalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>[]
+          }
+          delete: {
+            args: Prisma.ConfiguracaoGlobalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          update: {
+            args: Prisma.ConfiguracaoGlobalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConfiguracaoGlobalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConfiguracaoGlobalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConfiguracaoGlobalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConfiguracaoGlobalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConfiguracaoGlobalPayload>
+          }
+          aggregate: {
+            args: Prisma.ConfiguracaoGlobalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConfiguracaoGlobal>
+          }
+          groupBy: {
+            args: Prisma.ConfiguracaoGlobalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConfiguracaoGlobalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConfiguracaoGlobalCountArgs<ExtArgs>
+            result: $Utils.Optional<ConfiguracaoGlobalCountAggregateOutputType> | number
+          }
+        }
+      }
       LogAutomacao: {
         payload: Prisma.$LogAutomacaoPayload<ExtArgs>
         fields: Prisma.LogAutomacaoFieldRefs
@@ -1930,6 +2020,7 @@ export namespace Prisma {
     relatorioAudiencia?: RelatorioAudienciaOmit
     historicoStatus?: HistoricoStatusOmit
     substituicao?: SubstituicaoOmit
+    configuracaoGlobal?: ConfiguracaoGlobalOmit
     logAutomacao?: LogAutomacaoOmit
   }
 
@@ -14986,6 +15077,1216 @@ export namespace Prisma {
 
 
   /**
+   * Model ConfiguracaoGlobal
+   */
+
+  export type AggregateConfiguracaoGlobal = {
+    _count: ConfiguracaoGlobalCountAggregateOutputType | null
+    _avg: ConfiguracaoGlobalAvgAggregateOutputType | null
+    _sum: ConfiguracaoGlobalSumAggregateOutputType | null
+    _min: ConfiguracaoGlobalMinAggregateOutputType | null
+    _max: ConfiguracaoGlobalMaxAggregateOutputType | null
+  }
+
+  export type ConfiguracaoGlobalAvgAggregateOutputType = {
+    antecedenciaD1Horas: number | null
+    antecedenciaReiteracaoHoras: number | null
+    antecedenciaCheckinMinutos: number | null
+    posAudienciaMinutosDepois: number | null
+  }
+
+  export type ConfiguracaoGlobalSumAggregateOutputType = {
+    antecedenciaD1Horas: number | null
+    antecedenciaReiteracaoHoras: number | null
+    antecedenciaCheckinMinutos: number | null
+    posAudienciaMinutosDepois: number | null
+  }
+
+  export type ConfiguracaoGlobalMinAggregateOutputType = {
+    id: string | null
+    enviarAvisoNaImportacao: boolean | null
+    horarioD1: string | null
+    antecedenciaD1Horas: number | null
+    antecedenciaReiteracaoHoras: number | null
+    antecedenciaCheckinMinutos: number | null
+    posAudienciaMinutosDepois: number | null
+    fusoHorario: string | null
+    mensagemD1: string | null
+    mensagemReiteracao: string | null
+    mensagemCheckin: string | null
+    mensagemPosAudiencia: string | null
+    mensagemPosPergunta2: string | null
+    mensagemPosPergunta3: string | null
+    mensagemPosPergunta4: string | null
+    mensagemPosPergunta5: string | null
+    mensagemPosPergunta6: string | null
+    updatedAt: Date | null
+  }
+
+  export type ConfiguracaoGlobalMaxAggregateOutputType = {
+    id: string | null
+    enviarAvisoNaImportacao: boolean | null
+    horarioD1: string | null
+    antecedenciaD1Horas: number | null
+    antecedenciaReiteracaoHoras: number | null
+    antecedenciaCheckinMinutos: number | null
+    posAudienciaMinutosDepois: number | null
+    fusoHorario: string | null
+    mensagemD1: string | null
+    mensagemReiteracao: string | null
+    mensagemCheckin: string | null
+    mensagemPosAudiencia: string | null
+    mensagemPosPergunta2: string | null
+    mensagemPosPergunta3: string | null
+    mensagemPosPergunta4: string | null
+    mensagemPosPergunta5: string | null
+    mensagemPosPergunta6: string | null
+    updatedAt: Date | null
+  }
+
+  export type ConfiguracaoGlobalCountAggregateOutputType = {
+    id: number
+    enviarAvisoNaImportacao: number
+    horarioD1: number
+    antecedenciaD1Horas: number
+    antecedenciaReiteracaoHoras: number
+    antecedenciaCheckinMinutos: number
+    posAudienciaMinutosDepois: number
+    fusoHorario: number
+    mensagemD1: number
+    mensagemReiteracao: number
+    mensagemCheckin: number
+    mensagemPosAudiencia: number
+    mensagemPosPergunta2: number
+    mensagemPosPergunta3: number
+    mensagemPosPergunta4: number
+    mensagemPosPergunta5: number
+    mensagemPosPergunta6: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConfiguracaoGlobalAvgAggregateInputType = {
+    antecedenciaD1Horas?: true
+    antecedenciaReiteracaoHoras?: true
+    antecedenciaCheckinMinutos?: true
+    posAudienciaMinutosDepois?: true
+  }
+
+  export type ConfiguracaoGlobalSumAggregateInputType = {
+    antecedenciaD1Horas?: true
+    antecedenciaReiteracaoHoras?: true
+    antecedenciaCheckinMinutos?: true
+    posAudienciaMinutosDepois?: true
+  }
+
+  export type ConfiguracaoGlobalMinAggregateInputType = {
+    id?: true
+    enviarAvisoNaImportacao?: true
+    horarioD1?: true
+    antecedenciaD1Horas?: true
+    antecedenciaReiteracaoHoras?: true
+    antecedenciaCheckinMinutos?: true
+    posAudienciaMinutosDepois?: true
+    fusoHorario?: true
+    mensagemD1?: true
+    mensagemReiteracao?: true
+    mensagemCheckin?: true
+    mensagemPosAudiencia?: true
+    mensagemPosPergunta2?: true
+    mensagemPosPergunta3?: true
+    mensagemPosPergunta4?: true
+    mensagemPosPergunta5?: true
+    mensagemPosPergunta6?: true
+    updatedAt?: true
+  }
+
+  export type ConfiguracaoGlobalMaxAggregateInputType = {
+    id?: true
+    enviarAvisoNaImportacao?: true
+    horarioD1?: true
+    antecedenciaD1Horas?: true
+    antecedenciaReiteracaoHoras?: true
+    antecedenciaCheckinMinutos?: true
+    posAudienciaMinutosDepois?: true
+    fusoHorario?: true
+    mensagemD1?: true
+    mensagemReiteracao?: true
+    mensagemCheckin?: true
+    mensagemPosAudiencia?: true
+    mensagemPosPergunta2?: true
+    mensagemPosPergunta3?: true
+    mensagemPosPergunta4?: true
+    mensagemPosPergunta5?: true
+    mensagemPosPergunta6?: true
+    updatedAt?: true
+  }
+
+  export type ConfiguracaoGlobalCountAggregateInputType = {
+    id?: true
+    enviarAvisoNaImportacao?: true
+    horarioD1?: true
+    antecedenciaD1Horas?: true
+    antecedenciaReiteracaoHoras?: true
+    antecedenciaCheckinMinutos?: true
+    posAudienciaMinutosDepois?: true
+    fusoHorario?: true
+    mensagemD1?: true
+    mensagemReiteracao?: true
+    mensagemCheckin?: true
+    mensagemPosAudiencia?: true
+    mensagemPosPergunta2?: true
+    mensagemPosPergunta3?: true
+    mensagemPosPergunta4?: true
+    mensagemPosPergunta5?: true
+    mensagemPosPergunta6?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConfiguracaoGlobalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConfiguracaoGlobal to aggregate.
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConfiguracaoGlobals to fetch.
+     */
+    orderBy?: ConfiguracaoGlobalOrderByWithRelationInput | ConfiguracaoGlobalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConfiguracaoGlobalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConfiguracaoGlobals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConfiguracaoGlobals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConfiguracaoGlobals
+    **/
+    _count?: true | ConfiguracaoGlobalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConfiguracaoGlobalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConfiguracaoGlobalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConfiguracaoGlobalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConfiguracaoGlobalMaxAggregateInputType
+  }
+
+  export type GetConfiguracaoGlobalAggregateType<T extends ConfiguracaoGlobalAggregateArgs> = {
+        [P in keyof T & keyof AggregateConfiguracaoGlobal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConfiguracaoGlobal[P]>
+      : GetScalarType<T[P], AggregateConfiguracaoGlobal[P]>
+  }
+
+
+
+
+  export type ConfiguracaoGlobalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConfiguracaoGlobalWhereInput
+    orderBy?: ConfiguracaoGlobalOrderByWithAggregationInput | ConfiguracaoGlobalOrderByWithAggregationInput[]
+    by: ConfiguracaoGlobalScalarFieldEnum[] | ConfiguracaoGlobalScalarFieldEnum
+    having?: ConfiguracaoGlobalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConfiguracaoGlobalCountAggregateInputType | true
+    _avg?: ConfiguracaoGlobalAvgAggregateInputType
+    _sum?: ConfiguracaoGlobalSumAggregateInputType
+    _min?: ConfiguracaoGlobalMinAggregateInputType
+    _max?: ConfiguracaoGlobalMaxAggregateInputType
+  }
+
+  export type ConfiguracaoGlobalGroupByOutputType = {
+    id: string
+    enviarAvisoNaImportacao: boolean
+    horarioD1: string | null
+    antecedenciaD1Horas: number
+    antecedenciaReiteracaoHoras: number
+    antecedenciaCheckinMinutos: number
+    posAudienciaMinutosDepois: number
+    fusoHorario: string
+    mensagemD1: string | null
+    mensagemReiteracao: string | null
+    mensagemCheckin: string | null
+    mensagemPosAudiencia: string | null
+    mensagemPosPergunta2: string | null
+    mensagemPosPergunta3: string | null
+    mensagemPosPergunta4: string | null
+    mensagemPosPergunta5: string | null
+    mensagemPosPergunta6: string | null
+    updatedAt: Date
+    _count: ConfiguracaoGlobalCountAggregateOutputType | null
+    _avg: ConfiguracaoGlobalAvgAggregateOutputType | null
+    _sum: ConfiguracaoGlobalSumAggregateOutputType | null
+    _min: ConfiguracaoGlobalMinAggregateOutputType | null
+    _max: ConfiguracaoGlobalMaxAggregateOutputType | null
+  }
+
+  type GetConfiguracaoGlobalGroupByPayload<T extends ConfiguracaoGlobalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConfiguracaoGlobalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConfiguracaoGlobalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConfiguracaoGlobalGroupByOutputType[P]>
+            : GetScalarType<T[P], ConfiguracaoGlobalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConfiguracaoGlobalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: boolean
+    antecedenciaD1Horas?: boolean
+    antecedenciaReiteracaoHoras?: boolean
+    antecedenciaCheckinMinutos?: boolean
+    posAudienciaMinutosDepois?: boolean
+    fusoHorario?: boolean
+    mensagemD1?: boolean
+    mensagemReiteracao?: boolean
+    mensagemCheckin?: boolean
+    mensagemPosAudiencia?: boolean
+    mensagemPosPergunta2?: boolean
+    mensagemPosPergunta3?: boolean
+    mensagemPosPergunta4?: boolean
+    mensagemPosPergunta5?: boolean
+    mensagemPosPergunta6?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["configuracaoGlobal"]>
+
+  export type ConfiguracaoGlobalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: boolean
+    antecedenciaD1Horas?: boolean
+    antecedenciaReiteracaoHoras?: boolean
+    antecedenciaCheckinMinutos?: boolean
+    posAudienciaMinutosDepois?: boolean
+    fusoHorario?: boolean
+    mensagemD1?: boolean
+    mensagemReiteracao?: boolean
+    mensagemCheckin?: boolean
+    mensagemPosAudiencia?: boolean
+    mensagemPosPergunta2?: boolean
+    mensagemPosPergunta3?: boolean
+    mensagemPosPergunta4?: boolean
+    mensagemPosPergunta5?: boolean
+    mensagemPosPergunta6?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["configuracaoGlobal"]>
+
+  export type ConfiguracaoGlobalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: boolean
+    antecedenciaD1Horas?: boolean
+    antecedenciaReiteracaoHoras?: boolean
+    antecedenciaCheckinMinutos?: boolean
+    posAudienciaMinutosDepois?: boolean
+    fusoHorario?: boolean
+    mensagemD1?: boolean
+    mensagemReiteracao?: boolean
+    mensagemCheckin?: boolean
+    mensagemPosAudiencia?: boolean
+    mensagemPosPergunta2?: boolean
+    mensagemPosPergunta3?: boolean
+    mensagemPosPergunta4?: boolean
+    mensagemPosPergunta5?: boolean
+    mensagemPosPergunta6?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["configuracaoGlobal"]>
+
+  export type ConfiguracaoGlobalSelectScalar = {
+    id?: boolean
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: boolean
+    antecedenciaD1Horas?: boolean
+    antecedenciaReiteracaoHoras?: boolean
+    antecedenciaCheckinMinutos?: boolean
+    posAudienciaMinutosDepois?: boolean
+    fusoHorario?: boolean
+    mensagemD1?: boolean
+    mensagemReiteracao?: boolean
+    mensagemCheckin?: boolean
+    mensagemPosAudiencia?: boolean
+    mensagemPosPergunta2?: boolean
+    mensagemPosPergunta3?: boolean
+    mensagemPosPergunta4?: boolean
+    mensagemPosPergunta5?: boolean
+    mensagemPosPergunta6?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
+
+  export type $ConfiguracaoGlobalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConfiguracaoGlobal"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      enviarAvisoNaImportacao: boolean
+      horarioD1: string | null
+      antecedenciaD1Horas: number
+      antecedenciaReiteracaoHoras: number
+      antecedenciaCheckinMinutos: number
+      posAudienciaMinutosDepois: number
+      fusoHorario: string
+      mensagemD1: string | null
+      mensagemReiteracao: string | null
+      mensagemCheckin: string | null
+      mensagemPosAudiencia: string | null
+      mensagemPosPergunta2: string | null
+      mensagemPosPergunta3: string | null
+      mensagemPosPergunta4: string | null
+      mensagemPosPergunta5: string | null
+      mensagemPosPergunta6: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["configuracaoGlobal"]>
+    composites: {}
+  }
+
+  type ConfiguracaoGlobalGetPayload<S extends boolean | null | undefined | ConfiguracaoGlobalDefaultArgs> = $Result.GetResult<Prisma.$ConfiguracaoGlobalPayload, S>
+
+  type ConfiguracaoGlobalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConfiguracaoGlobalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConfiguracaoGlobalCountAggregateInputType | true
+    }
+
+  export interface ConfiguracaoGlobalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConfiguracaoGlobal'], meta: { name: 'ConfiguracaoGlobal' } }
+    /**
+     * Find zero or one ConfiguracaoGlobal that matches the filter.
+     * @param {ConfiguracaoGlobalFindUniqueArgs} args - Arguments to find a ConfiguracaoGlobal
+     * @example
+     * // Get one ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConfiguracaoGlobalFindUniqueArgs>(args: SelectSubset<T, ConfiguracaoGlobalFindUniqueArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConfiguracaoGlobal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConfiguracaoGlobalFindUniqueOrThrowArgs} args - Arguments to find a ConfiguracaoGlobal
+     * @example
+     * // Get one ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConfiguracaoGlobalFindUniqueOrThrowArgs>(args: SelectSubset<T, ConfiguracaoGlobalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConfiguracaoGlobal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalFindFirstArgs} args - Arguments to find a ConfiguracaoGlobal
+     * @example
+     * // Get one ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConfiguracaoGlobalFindFirstArgs>(args?: SelectSubset<T, ConfiguracaoGlobalFindFirstArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConfiguracaoGlobal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalFindFirstOrThrowArgs} args - Arguments to find a ConfiguracaoGlobal
+     * @example
+     * // Get one ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConfiguracaoGlobalFindFirstOrThrowArgs>(args?: SelectSubset<T, ConfiguracaoGlobalFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConfiguracaoGlobals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConfiguracaoGlobals
+     * const configuracaoGlobals = await prisma.configuracaoGlobal.findMany()
+     * 
+     * // Get first 10 ConfiguracaoGlobals
+     * const configuracaoGlobals = await prisma.configuracaoGlobal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const configuracaoGlobalWithIdOnly = await prisma.configuracaoGlobal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConfiguracaoGlobalFindManyArgs>(args?: SelectSubset<T, ConfiguracaoGlobalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConfiguracaoGlobal.
+     * @param {ConfiguracaoGlobalCreateArgs} args - Arguments to create a ConfiguracaoGlobal.
+     * @example
+     * // Create one ConfiguracaoGlobal
+     * const ConfiguracaoGlobal = await prisma.configuracaoGlobal.create({
+     *   data: {
+     *     // ... data to create a ConfiguracaoGlobal
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConfiguracaoGlobalCreateArgs>(args: SelectSubset<T, ConfiguracaoGlobalCreateArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConfiguracaoGlobals.
+     * @param {ConfiguracaoGlobalCreateManyArgs} args - Arguments to create many ConfiguracaoGlobals.
+     * @example
+     * // Create many ConfiguracaoGlobals
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConfiguracaoGlobalCreateManyArgs>(args?: SelectSubset<T, ConfiguracaoGlobalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConfiguracaoGlobals and returns the data saved in the database.
+     * @param {ConfiguracaoGlobalCreateManyAndReturnArgs} args - Arguments to create many ConfiguracaoGlobals.
+     * @example
+     * // Create many ConfiguracaoGlobals
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConfiguracaoGlobals and only return the `id`
+     * const configuracaoGlobalWithIdOnly = await prisma.configuracaoGlobal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConfiguracaoGlobalCreateManyAndReturnArgs>(args?: SelectSubset<T, ConfiguracaoGlobalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConfiguracaoGlobal.
+     * @param {ConfiguracaoGlobalDeleteArgs} args - Arguments to delete one ConfiguracaoGlobal.
+     * @example
+     * // Delete one ConfiguracaoGlobal
+     * const ConfiguracaoGlobal = await prisma.configuracaoGlobal.delete({
+     *   where: {
+     *     // ... filter to delete one ConfiguracaoGlobal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConfiguracaoGlobalDeleteArgs>(args: SelectSubset<T, ConfiguracaoGlobalDeleteArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConfiguracaoGlobal.
+     * @param {ConfiguracaoGlobalUpdateArgs} args - Arguments to update one ConfiguracaoGlobal.
+     * @example
+     * // Update one ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConfiguracaoGlobalUpdateArgs>(args: SelectSubset<T, ConfiguracaoGlobalUpdateArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConfiguracaoGlobals.
+     * @param {ConfiguracaoGlobalDeleteManyArgs} args - Arguments to filter ConfiguracaoGlobals to delete.
+     * @example
+     * // Delete a few ConfiguracaoGlobals
+     * const { count } = await prisma.configuracaoGlobal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConfiguracaoGlobalDeleteManyArgs>(args?: SelectSubset<T, ConfiguracaoGlobalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConfiguracaoGlobals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConfiguracaoGlobals
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConfiguracaoGlobalUpdateManyArgs>(args: SelectSubset<T, ConfiguracaoGlobalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConfiguracaoGlobals and returns the data updated in the database.
+     * @param {ConfiguracaoGlobalUpdateManyAndReturnArgs} args - Arguments to update many ConfiguracaoGlobals.
+     * @example
+     * // Update many ConfiguracaoGlobals
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConfiguracaoGlobals and only return the `id`
+     * const configuracaoGlobalWithIdOnly = await prisma.configuracaoGlobal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConfiguracaoGlobalUpdateManyAndReturnArgs>(args: SelectSubset<T, ConfiguracaoGlobalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConfiguracaoGlobal.
+     * @param {ConfiguracaoGlobalUpsertArgs} args - Arguments to update or create a ConfiguracaoGlobal.
+     * @example
+     * // Update or create a ConfiguracaoGlobal
+     * const configuracaoGlobal = await prisma.configuracaoGlobal.upsert({
+     *   create: {
+     *     // ... data to create a ConfiguracaoGlobal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConfiguracaoGlobal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConfiguracaoGlobalUpsertArgs>(args: SelectSubset<T, ConfiguracaoGlobalUpsertArgs<ExtArgs>>): Prisma__ConfiguracaoGlobalClient<$Result.GetResult<Prisma.$ConfiguracaoGlobalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConfiguracaoGlobals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalCountArgs} args - Arguments to filter ConfiguracaoGlobals to count.
+     * @example
+     * // Count the number of ConfiguracaoGlobals
+     * const count = await prisma.configuracaoGlobal.count({
+     *   where: {
+     *     // ... the filter for the ConfiguracaoGlobals we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConfiguracaoGlobalCountArgs>(
+      args?: Subset<T, ConfiguracaoGlobalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConfiguracaoGlobalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConfiguracaoGlobal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConfiguracaoGlobalAggregateArgs>(args: Subset<T, ConfiguracaoGlobalAggregateArgs>): Prisma.PrismaPromise<GetConfiguracaoGlobalAggregateType<T>>
+
+    /**
+     * Group by ConfiguracaoGlobal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfiguracaoGlobalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConfiguracaoGlobalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConfiguracaoGlobalGroupByArgs['orderBy'] }
+        : { orderBy?: ConfiguracaoGlobalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConfiguracaoGlobalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConfiguracaoGlobalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConfiguracaoGlobal model
+   */
+  readonly fields: ConfiguracaoGlobalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConfiguracaoGlobal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConfiguracaoGlobalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConfiguracaoGlobal model
+   */
+  interface ConfiguracaoGlobalFieldRefs {
+    readonly id: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly enviarAvisoNaImportacao: FieldRef<"ConfiguracaoGlobal", 'Boolean'>
+    readonly horarioD1: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly antecedenciaD1Horas: FieldRef<"ConfiguracaoGlobal", 'Int'>
+    readonly antecedenciaReiteracaoHoras: FieldRef<"ConfiguracaoGlobal", 'Int'>
+    readonly antecedenciaCheckinMinutos: FieldRef<"ConfiguracaoGlobal", 'Int'>
+    readonly posAudienciaMinutosDepois: FieldRef<"ConfiguracaoGlobal", 'Int'>
+    readonly fusoHorario: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemD1: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemReiteracao: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemCheckin: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosAudiencia: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta2: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta3: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta4: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta5: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta6: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly updatedAt: FieldRef<"ConfiguracaoGlobal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConfiguracaoGlobal findUnique
+   */
+  export type ConfiguracaoGlobalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter, which ConfiguracaoGlobal to fetch.
+     */
+    where: ConfiguracaoGlobalWhereUniqueInput
+  }
+
+  /**
+   * ConfiguracaoGlobal findUniqueOrThrow
+   */
+  export type ConfiguracaoGlobalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter, which ConfiguracaoGlobal to fetch.
+     */
+    where: ConfiguracaoGlobalWhereUniqueInput
+  }
+
+  /**
+   * ConfiguracaoGlobal findFirst
+   */
+  export type ConfiguracaoGlobalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter, which ConfiguracaoGlobal to fetch.
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConfiguracaoGlobals to fetch.
+     */
+    orderBy?: ConfiguracaoGlobalOrderByWithRelationInput | ConfiguracaoGlobalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConfiguracaoGlobals.
+     */
+    cursor?: ConfiguracaoGlobalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConfiguracaoGlobals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConfiguracaoGlobals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConfiguracaoGlobals.
+     */
+    distinct?: ConfiguracaoGlobalScalarFieldEnum | ConfiguracaoGlobalScalarFieldEnum[]
+  }
+
+  /**
+   * ConfiguracaoGlobal findFirstOrThrow
+   */
+  export type ConfiguracaoGlobalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter, which ConfiguracaoGlobal to fetch.
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConfiguracaoGlobals to fetch.
+     */
+    orderBy?: ConfiguracaoGlobalOrderByWithRelationInput | ConfiguracaoGlobalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConfiguracaoGlobals.
+     */
+    cursor?: ConfiguracaoGlobalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConfiguracaoGlobals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConfiguracaoGlobals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConfiguracaoGlobals.
+     */
+    distinct?: ConfiguracaoGlobalScalarFieldEnum | ConfiguracaoGlobalScalarFieldEnum[]
+  }
+
+  /**
+   * ConfiguracaoGlobal findMany
+   */
+  export type ConfiguracaoGlobalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter, which ConfiguracaoGlobals to fetch.
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConfiguracaoGlobals to fetch.
+     */
+    orderBy?: ConfiguracaoGlobalOrderByWithRelationInput | ConfiguracaoGlobalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConfiguracaoGlobals.
+     */
+    cursor?: ConfiguracaoGlobalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConfiguracaoGlobals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConfiguracaoGlobals.
+     */
+    skip?: number
+    distinct?: ConfiguracaoGlobalScalarFieldEnum | ConfiguracaoGlobalScalarFieldEnum[]
+  }
+
+  /**
+   * ConfiguracaoGlobal create
+   */
+  export type ConfiguracaoGlobalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ConfiguracaoGlobal.
+     */
+    data: XOR<ConfiguracaoGlobalCreateInput, ConfiguracaoGlobalUncheckedCreateInput>
+  }
+
+  /**
+   * ConfiguracaoGlobal createMany
+   */
+  export type ConfiguracaoGlobalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConfiguracaoGlobals.
+     */
+    data: ConfiguracaoGlobalCreateManyInput | ConfiguracaoGlobalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConfiguracaoGlobal createManyAndReturn
+   */
+  export type ConfiguracaoGlobalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConfiguracaoGlobals.
+     */
+    data: ConfiguracaoGlobalCreateManyInput | ConfiguracaoGlobalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConfiguracaoGlobal update
+   */
+  export type ConfiguracaoGlobalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ConfiguracaoGlobal.
+     */
+    data: XOR<ConfiguracaoGlobalUpdateInput, ConfiguracaoGlobalUncheckedUpdateInput>
+    /**
+     * Choose, which ConfiguracaoGlobal to update.
+     */
+    where: ConfiguracaoGlobalWhereUniqueInput
+  }
+
+  /**
+   * ConfiguracaoGlobal updateMany
+   */
+  export type ConfiguracaoGlobalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConfiguracaoGlobals.
+     */
+    data: XOR<ConfiguracaoGlobalUpdateManyMutationInput, ConfiguracaoGlobalUncheckedUpdateManyInput>
+    /**
+     * Filter which ConfiguracaoGlobals to update
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * Limit how many ConfiguracaoGlobals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConfiguracaoGlobal updateManyAndReturn
+   */
+  export type ConfiguracaoGlobalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * The data used to update ConfiguracaoGlobals.
+     */
+    data: XOR<ConfiguracaoGlobalUpdateManyMutationInput, ConfiguracaoGlobalUncheckedUpdateManyInput>
+    /**
+     * Filter which ConfiguracaoGlobals to update
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * Limit how many ConfiguracaoGlobals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConfiguracaoGlobal upsert
+   */
+  export type ConfiguracaoGlobalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ConfiguracaoGlobal to update in case it exists.
+     */
+    where: ConfiguracaoGlobalWhereUniqueInput
+    /**
+     * In case the ConfiguracaoGlobal found by the `where` argument doesn't exist, create a new ConfiguracaoGlobal with this data.
+     */
+    create: XOR<ConfiguracaoGlobalCreateInput, ConfiguracaoGlobalUncheckedCreateInput>
+    /**
+     * In case the ConfiguracaoGlobal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConfiguracaoGlobalUpdateInput, ConfiguracaoGlobalUncheckedUpdateInput>
+  }
+
+  /**
+   * ConfiguracaoGlobal delete
+   */
+  export type ConfiguracaoGlobalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+    /**
+     * Filter which ConfiguracaoGlobal to delete.
+     */
+    where: ConfiguracaoGlobalWhereUniqueInput
+  }
+
+  /**
+   * ConfiguracaoGlobal deleteMany
+   */
+  export type ConfiguracaoGlobalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConfiguracaoGlobals to delete
+     */
+    where?: ConfiguracaoGlobalWhereInput
+    /**
+     * Limit how many ConfiguracaoGlobals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConfiguracaoGlobal without action
+   */
+  export type ConfiguracaoGlobalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConfiguracaoGlobal
+     */
+    select?: ConfiguracaoGlobalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConfiguracaoGlobal
+     */
+    omit?: ConfiguracaoGlobalOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model LogAutomacao
    */
 
@@ -16274,6 +17575,30 @@ export namespace Prisma {
   export type SubstituicaoScalarFieldEnum = (typeof SubstituicaoScalarFieldEnum)[keyof typeof SubstituicaoScalarFieldEnum]
 
 
+  export const ConfiguracaoGlobalScalarFieldEnum: {
+    id: 'id',
+    enviarAvisoNaImportacao: 'enviarAvisoNaImportacao',
+    horarioD1: 'horarioD1',
+    antecedenciaD1Horas: 'antecedenciaD1Horas',
+    antecedenciaReiteracaoHoras: 'antecedenciaReiteracaoHoras',
+    antecedenciaCheckinMinutos: 'antecedenciaCheckinMinutos',
+    posAudienciaMinutosDepois: 'posAudienciaMinutosDepois',
+    fusoHorario: 'fusoHorario',
+    mensagemD1: 'mensagemD1',
+    mensagemReiteracao: 'mensagemReiteracao',
+    mensagemCheckin: 'mensagemCheckin',
+    mensagemPosAudiencia: 'mensagemPosAudiencia',
+    mensagemPosPergunta2: 'mensagemPosPergunta2',
+    mensagemPosPergunta3: 'mensagemPosPergunta3',
+    mensagemPosPergunta4: 'mensagemPosPergunta4',
+    mensagemPosPergunta5: 'mensagemPosPergunta5',
+    mensagemPosPergunta6: 'mensagemPosPergunta6',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConfiguracaoGlobalScalarFieldEnum = (typeof ConfiguracaoGlobalScalarFieldEnum)[keyof typeof ConfiguracaoGlobalScalarFieldEnum]
+
+
   export const LogAutomacaoScalarFieldEnum: {
     id: 'id',
     audienciaId: 'audienciaId',
@@ -17452,6 +18777,125 @@ export namespace Prisma {
     resolvidoEm?: DateTimeNullableWithAggregatesFilter<"Substituicao"> | Date | string | null
   }
 
+  export type ConfiguracaoGlobalWhereInput = {
+    AND?: ConfiguracaoGlobalWhereInput | ConfiguracaoGlobalWhereInput[]
+    OR?: ConfiguracaoGlobalWhereInput[]
+    NOT?: ConfiguracaoGlobalWhereInput | ConfiguracaoGlobalWhereInput[]
+    id?: StringFilter<"ConfiguracaoGlobal"> | string
+    enviarAvisoNaImportacao?: BoolFilter<"ConfiguracaoGlobal"> | boolean
+    horarioD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    antecedenciaD1Horas?: IntFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaReiteracaoHoras?: IntFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaCheckinMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
+    posAudienciaMinutosDepois?: IntFilter<"ConfiguracaoGlobal"> | number
+    fusoHorario?: StringFilter<"ConfiguracaoGlobal"> | string
+    mensagemD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta2?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta3?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta5?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta6?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    updatedAt?: DateTimeFilter<"ConfiguracaoGlobal"> | Date | string
+  }
+
+  export type ConfiguracaoGlobalOrderByWithRelationInput = {
+    id?: SortOrder
+    enviarAvisoNaImportacao?: SortOrder
+    horarioD1?: SortOrderInput | SortOrder
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+    fusoHorario?: SortOrder
+    mensagemD1?: SortOrderInput | SortOrder
+    mensagemReiteracao?: SortOrderInput | SortOrder
+    mensagemCheckin?: SortOrderInput | SortOrder
+    mensagemPosAudiencia?: SortOrderInput | SortOrder
+    mensagemPosPergunta2?: SortOrderInput | SortOrder
+    mensagemPosPergunta3?: SortOrderInput | SortOrder
+    mensagemPosPergunta4?: SortOrderInput | SortOrder
+    mensagemPosPergunta5?: SortOrderInput | SortOrder
+    mensagemPosPergunta6?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConfiguracaoGlobalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConfiguracaoGlobalWhereInput | ConfiguracaoGlobalWhereInput[]
+    OR?: ConfiguracaoGlobalWhereInput[]
+    NOT?: ConfiguracaoGlobalWhereInput | ConfiguracaoGlobalWhereInput[]
+    enviarAvisoNaImportacao?: BoolFilter<"ConfiguracaoGlobal"> | boolean
+    horarioD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    antecedenciaD1Horas?: IntFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaReiteracaoHoras?: IntFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaCheckinMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
+    posAudienciaMinutosDepois?: IntFilter<"ConfiguracaoGlobal"> | number
+    fusoHorario?: StringFilter<"ConfiguracaoGlobal"> | string
+    mensagemD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta2?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta3?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta5?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta6?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    updatedAt?: DateTimeFilter<"ConfiguracaoGlobal"> | Date | string
+  }, "id">
+
+  export type ConfiguracaoGlobalOrderByWithAggregationInput = {
+    id?: SortOrder
+    enviarAvisoNaImportacao?: SortOrder
+    horarioD1?: SortOrderInput | SortOrder
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+    fusoHorario?: SortOrder
+    mensagemD1?: SortOrderInput | SortOrder
+    mensagemReiteracao?: SortOrderInput | SortOrder
+    mensagemCheckin?: SortOrderInput | SortOrder
+    mensagemPosAudiencia?: SortOrderInput | SortOrder
+    mensagemPosPergunta2?: SortOrderInput | SortOrder
+    mensagemPosPergunta3?: SortOrderInput | SortOrder
+    mensagemPosPergunta4?: SortOrderInput | SortOrder
+    mensagemPosPergunta5?: SortOrderInput | SortOrder
+    mensagemPosPergunta6?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: ConfiguracaoGlobalCountOrderByAggregateInput
+    _avg?: ConfiguracaoGlobalAvgOrderByAggregateInput
+    _max?: ConfiguracaoGlobalMaxOrderByAggregateInput
+    _min?: ConfiguracaoGlobalMinOrderByAggregateInput
+    _sum?: ConfiguracaoGlobalSumOrderByAggregateInput
+  }
+
+  export type ConfiguracaoGlobalScalarWhereWithAggregatesInput = {
+    AND?: ConfiguracaoGlobalScalarWhereWithAggregatesInput | ConfiguracaoGlobalScalarWhereWithAggregatesInput[]
+    OR?: ConfiguracaoGlobalScalarWhereWithAggregatesInput[]
+    NOT?: ConfiguracaoGlobalScalarWhereWithAggregatesInput | ConfiguracaoGlobalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConfiguracaoGlobal"> | string
+    enviarAvisoNaImportacao?: BoolWithAggregatesFilter<"ConfiguracaoGlobal"> | boolean
+    horarioD1?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    antecedenciaD1Horas?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaReiteracaoHoras?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
+    antecedenciaCheckinMinutos?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
+    posAudienciaMinutosDepois?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
+    fusoHorario?: StringWithAggregatesFilter<"ConfiguracaoGlobal"> | string
+    mensagemD1?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemReiteracao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCheckin?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosAudiencia?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta2?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta3?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta4?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta5?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta6?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"ConfiguracaoGlobal"> | Date | string
+  }
+
   export type LogAutomacaoWhereInput = {
     AND?: LogAutomacaoWhereInput | LogAutomacaoWhereInput[]
     OR?: LogAutomacaoWhereInput[]
@@ -18522,6 +19966,153 @@ export namespace Prisma {
     resolvidoEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type ConfiguracaoGlobalCreateInput = {
+    id?: string
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: string | null
+    antecedenciaD1Horas?: number
+    antecedenciaReiteracaoHoras?: number
+    antecedenciaCheckinMinutos?: number
+    posAudienciaMinutosDepois?: number
+    fusoHorario?: string
+    mensagemD1?: string | null
+    mensagemReiteracao?: string | null
+    mensagemCheckin?: string | null
+    mensagemPosAudiencia?: string | null
+    mensagemPosPergunta2?: string | null
+    mensagemPosPergunta3?: string | null
+    mensagemPosPergunta4?: string | null
+    mensagemPosPergunta5?: string | null
+    mensagemPosPergunta6?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type ConfiguracaoGlobalUncheckedCreateInput = {
+    id?: string
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: string | null
+    antecedenciaD1Horas?: number
+    antecedenciaReiteracaoHoras?: number
+    antecedenciaCheckinMinutos?: number
+    posAudienciaMinutosDepois?: number
+    fusoHorario?: string
+    mensagemD1?: string | null
+    mensagemReiteracao?: string | null
+    mensagemCheckin?: string | null
+    mensagemPosAudiencia?: string | null
+    mensagemPosPergunta2?: string | null
+    mensagemPosPergunta3?: string | null
+    mensagemPosPergunta4?: string | null
+    mensagemPosPergunta5?: string | null
+    mensagemPosPergunta6?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type ConfiguracaoGlobalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enviarAvisoNaImportacao?: BoolFieldUpdateOperationsInput | boolean
+    horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
+    antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
+    antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
+    posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
+    fusoHorario?: StringFieldUpdateOperationsInput | string
+    mensagemD1?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConfiguracaoGlobalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enviarAvisoNaImportacao?: BoolFieldUpdateOperationsInput | boolean
+    horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
+    antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
+    antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
+    posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
+    fusoHorario?: StringFieldUpdateOperationsInput | string
+    mensagemD1?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConfiguracaoGlobalCreateManyInput = {
+    id?: string
+    enviarAvisoNaImportacao?: boolean
+    horarioD1?: string | null
+    antecedenciaD1Horas?: number
+    antecedenciaReiteracaoHoras?: number
+    antecedenciaCheckinMinutos?: number
+    posAudienciaMinutosDepois?: number
+    fusoHorario?: string
+    mensagemD1?: string | null
+    mensagemReiteracao?: string | null
+    mensagemCheckin?: string | null
+    mensagemPosAudiencia?: string | null
+    mensagemPosPergunta2?: string | null
+    mensagemPosPergunta3?: string | null
+    mensagemPosPergunta4?: string | null
+    mensagemPosPergunta5?: string | null
+    mensagemPosPergunta6?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type ConfiguracaoGlobalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enviarAvisoNaImportacao?: BoolFieldUpdateOperationsInput | boolean
+    horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
+    antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
+    antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
+    posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
+    fusoHorario?: StringFieldUpdateOperationsInput | string
+    mensagemD1?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConfiguracaoGlobalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enviarAvisoNaImportacao?: BoolFieldUpdateOperationsInput | boolean
+    horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
+    antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
+    antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
+    posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
+    fusoHorario?: StringFieldUpdateOperationsInput | string
+    mensagemD1?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LogAutomacaoCreateInput = {
     id?: string
     origem: string
@@ -19520,6 +21111,83 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type ConfiguracaoGlobalCountOrderByAggregateInput = {
+    id?: SortOrder
+    enviarAvisoNaImportacao?: SortOrder
+    horarioD1?: SortOrder
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+    fusoHorario?: SortOrder
+    mensagemD1?: SortOrder
+    mensagemReiteracao?: SortOrder
+    mensagemCheckin?: SortOrder
+    mensagemPosAudiencia?: SortOrder
+    mensagemPosPergunta2?: SortOrder
+    mensagemPosPergunta3?: SortOrder
+    mensagemPosPergunta4?: SortOrder
+    mensagemPosPergunta5?: SortOrder
+    mensagemPosPergunta6?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConfiguracaoGlobalAvgOrderByAggregateInput = {
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+  }
+
+  export type ConfiguracaoGlobalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    enviarAvisoNaImportacao?: SortOrder
+    horarioD1?: SortOrder
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+    fusoHorario?: SortOrder
+    mensagemD1?: SortOrder
+    mensagemReiteracao?: SortOrder
+    mensagemCheckin?: SortOrder
+    mensagemPosAudiencia?: SortOrder
+    mensagemPosPergunta2?: SortOrder
+    mensagemPosPergunta3?: SortOrder
+    mensagemPosPergunta4?: SortOrder
+    mensagemPosPergunta5?: SortOrder
+    mensagemPosPergunta6?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConfiguracaoGlobalMinOrderByAggregateInput = {
+    id?: SortOrder
+    enviarAvisoNaImportacao?: SortOrder
+    horarioD1?: SortOrder
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
+    fusoHorario?: SortOrder
+    mensagemD1?: SortOrder
+    mensagemReiteracao?: SortOrder
+    mensagemCheckin?: SortOrder
+    mensagemPosAudiencia?: SortOrder
+    mensagemPosPergunta2?: SortOrder
+    mensagemPosPergunta3?: SortOrder
+    mensagemPosPergunta4?: SortOrder
+    mensagemPosPergunta5?: SortOrder
+    mensagemPosPergunta6?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConfiguracaoGlobalSumOrderByAggregateInput = {
+    antecedenciaD1Horas?: SortOrder
+    antecedenciaReiteracaoHoras?: SortOrder
+    antecedenciaCheckinMinutos?: SortOrder
+    posAudienciaMinutosDepois?: SortOrder
   }
 
   export type LogAutomacaoCountOrderByAggregateInput = {

@@ -13,7 +13,8 @@ const itensMenu = [
   { to: '/parceiros', label: 'Parceiros' },
   { to: '/trts', label: 'TRTs' },
   { to: '/usuarios', label: 'Usuarios' },
-]
+  { to: '/configuracoes', label: 'Configuracoes', adminOnly: true },
+] as const
 
 export function AppShell() {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1280px]">
+      <div className="flex min-h-screen w-full">
         <aside className={`${menuAberto ? 'translate-x-0' : '-translate-x-full'} fixed z-30 flex h-full w-72 flex-col border-r border-border bg-surface p-4 transition-transform duration-300 lg:static lg:translate-x-0`}>
           <div className="mb-8 flex items-center gap-3 px-2">
             <img src="/logo.png" alt="Freedom logo" className="h-10 w-10 rounded-lg object-contain" />
@@ -47,7 +48,9 @@ export function AppShell() {
           </div>
 
           <nav className="space-y-1">
-            {itensMenu.map((item) => (
+            {itensMenu
+              .filter((item) => !('adminOnly' in item && item.adminOnly) || usuario?.role === 'ADMIN')
+              .map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}

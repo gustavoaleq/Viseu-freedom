@@ -472,3 +472,164 @@ Pendencias objetivas para fechar o fluxo end-to-end:
   - `frontend npm run lint` OK
   - `frontend npm run build` OK
   - `docker-compose up -d --build --no-deps frontend` concluido com container iniciado.
+- 16:00 - Modulo de Configuracoes (ADMIN) implementado — parametrizacao de regras de envio WhatsApp:
+  - Tabela `configuracao_global` (singleton) com migration `20260213160000_add_configuracao_global`.
+  - Backend: `configuracoes.service.ts` (obter com auto-create + cache 30s, atualizar) e `configuracoes.routes.ts` (GET + PATCH, ADMIN only, Zod).
+  - Rota registrada em `app.ts` como `/api/v1/configuracoes`.
+  - Scheduler (`orquestracao.scheduler.ts`) agora le configuracoes do banco em vez de `env.ORQ_*`, com suporte a horario fixo D-1.
+  - Import (`importacoes.service.ts`) checa toggle `enviarAvisoNaImportacao` antes de agendar.
+  - Reagendamento automatico de audiencias ativas ao alterar configuracoes de timing.
+  - Frontend: `ConfiguracoesPage.tsx` com 6 secoes (importacao, D-1, reiteracao, check-in, checkout, fuso), toggle, inputs, select.
+  - Menu `Configuracoes` visivel somente para ADMIN no `AppShell.tsx`.
+  - Rota `/configuracoes` adicionada em `App.tsx`.
+  - Documentacao: `docs/config-modulo.md` (plano + campos + comportamento), `workers.md` atualizado.
+  - Validacoes: `backend npm run build`, `frontend npm run lint`, `frontend npm run build` — todos OK.
+- 18:39 - Contexto sincronizado apos entrega via Claude:
+  - Confirmada presenca dos novos artefatos de configuracao no workspace (`configuracoes.service.ts`, `configuracoes.routes.ts`, `ConfiguracoesPage.tsx`, migration e `docs/config-modulo.md`).
+  - Confirmada integracao em pontos criticos: `app.ts` (registro da rota), `orquestracao.scheduler.ts` (leitura de configuracao em banco + reagendamento), `importacoes.service.ts` (toggle de disparo na importacao), `AppShell`/`App.tsx`/`hub.ts`/`types` no frontend.
+  - Proxima validacao recomendada: teste funcional manual E2E da tela `/configuracoes` com alteracao de horarios e verificacao de reagendamento real dos jobs no worker.
+- 18:48 - Validacao funcional backend/worker das configuracoes de orquestracao executada via runtime no container backend:
+  - Configuracoes de teste aplicadas temporariamente: `horarioD1=09:17`, `antecedenciaReiteracaoHoras=5`, `antecedenciaCheckinMinutos=77`, `posAudienciaMinutosDepois=44`, `fusoHorario=America/Sao_Paulo`.
+  - Audiencia tecnica criada (`TESTE-CONFIG-...`) e agendamento executado com verificacao direta de jobs na fila BullMQ:
+    - `CONFIRMACAO_D1` => `09:17` no dia anterior (OK hora e data)
+    - `REITERACAO_6H` => `10:40` (OK)
+    - `CHECKIN_DIA` => `14:23` (OK)
+    - `RELATORIO_POS` => `16:24` (OK)
+  - Reagendamento em massa validado com retorno numerico:
+    - apos alteracao de timing: `reagendarTodasAudienciasAtivas() = 11`
+    - apos restauracao dos defaults: `reagendarTodasAudienciasAtivas() = 10`
+  - Configuracoes originais restauradas ao final do teste (`horarioD1=null`, `D1=24h`, `reiteracao=6h`, `checkin=60min`, `pos=30min`, `fuso=America/Sao_Paulo`).
+  - Estado atual da fila conferido: `waiting=0`, `active=0`, `delayed=32`, `failed=0` (worker/scheduler operacional sem falhas no teste).
+- 15:26 - Validacao da personalizacao de mensagens/variaveis em `Configuracoes` concluida:
+  - Confirmado no backend que `orquestracao.processor.ts` usa templates configuraveis para os 4 disparos (`mensagemD1`, `mensagemReiteracao`, `mensagemCheckin`, `mensagemPosAudiencia`) com fallback em `TEMPLATES_DEFAULT`.
+  - Confirmado que disparo automatico (worker) e disparo manual (`/audiencias/:id/disparos/*`) passam pelo mesmo `processarOrquestracaoAudiencia`, garantindo comportamento unico de template.
+  - Teste runtime executado no container backend: template custom D-1 salvo temporariamente no banco, renderizado via `aplicarTemplate(...)` com substituicao correta de variaveis validas e preservacao de variavel desconhecida (`{{inexistente}}`).
+  - Build tecnico backend executado apos validacao (`npm run build`) sem erros.
+  - Configuracao de mensagens restaurada ao estado anterior ao fim do teste.
+- 17:38 - Checagem adicional de runtime (container em execucao) das mensagens customizaveis:
+  - Confirmado no artefato publicado (`dist/jobs/orquestracao.processor.js`) o uso de `obterConfiguracoes + aplicarTemplate + TEMPLATES_DEFAULT` para D-1, reiteracao, check-in e pos-audiencia.
+  - Confirmado no banco (via `obterConfiguracoes`) que os novos campos de template existem e sao retornados (`mensagemD1`, `mensagemReiteracao`, `mensagemCheckin`, `mensagemPosAudiencia`), validando migration aplicada no ambiente.
+- 19:30 - Templates de mensagem WhatsApp personalizaveis entregues no modulo de Configuracoes:
+  - Prisma schema: 4 novos campos `mensagemD1`, `mensagemReiteracao`, `mensagemCheckin`, `mensagemPosAudiencia` (nullable) em `ConfiguracaoGlobal`.
+  - Migration `20260213190000_add_mensagens_template` aplicada.
+  - Backend service (`configuracoes.service.ts`): `TEMPLATES_DEFAULT` com textos padrao, `aplicarTemplate(template, variaveis)` com substituicao `{{chave}}`.
+  - Backend routes: Zod schema atualizado para aceitar os 4 campos de template (min 10 chars ou null).
+  - Processor (`orquestracao.processor.ts`): `montarMensagem()` agora le templates do config e aplica variaveis (`nomePreposto`, `numeroProcesso`, `data`, `hora`, `local`, `escritorioParceiro`, `trt`).
+  - Frontend: secao `Mensagens de envio` em `ConfiguracoesPage.tsx` com 4 textareas editaveis, tabela de variaveis disponiveis (recolhivel) e botao `Restaurar padrao` por campo.
+  - Documentacao: `docs/config-modulo.md` atualizado com campos e variaveis.
+  - Validacoes: `backend npm run build`, `frontend npm run lint`, `frontend npm run build` — todos OK.
+  - Deploy: `docker-compose up -d --build backend frontend` + `prisma migrate deploy` — OK.
+- 17:52 - Parametrizacao do checkout pos-audiencia expandida para perguntas 2/6 a 6/6 com foco em UX limpa:
+  - Backend `backend/src/prisma/schema.prisma`: adicionados campos `mensagemPosPergunta2..mensagemPosPergunta6` em `ConfiguracaoGlobal`.
+  - Migration criada `backend/src/prisma/migrations/20260214152500_add_mensagens_checkout_perguntas_2a6/migration.sql` com `ALTER TABLE configuracao_global` para os 5 novos campos.
+  - Service `backend/src/services/configuracoes.service.ts`: defaults, DTO e update input atualizados para os novos templates.
+  - Route `backend/src/routes/configuracoes.routes.ts`: validacao Zod atualizada para receber `mensagemPosPergunta2..6`.
+- 17:52 - Fluxo inbound de relatorio pos-audiencia robustecido para templates customizados:
+  - `backend/src/services/whatsapp-inbound.service.ts` passa a identificar a pergunta atual por contexto interno (`RELATORIO_PERGUNTA:Qn`) salvo em `mensagens.observacao`.
+  - envio das perguntas do checkout agora usa templates configuraveis por pergunta (`mensagemPosAudiencia` + `mensagemPosPergunta2..6`) com `aplicarTemplate(...)`.
+  - fallback numerico e textual preservado mesmo com perguntas customizadas.
+- 17:52 - Frontend `frontend/src/pages/ConfiguracoesPage.tsx` atualizado sem poluir UI:
+  - adicionados templates default e form state para `mensagemPosPergunta2..6`.
+  - nova subsecao recolhida `Checkout avancado (Perguntas 2/6 a 6/6)` dentro de `Mensagens de envio` com campos editaveis opcionais.
+  - componente `TemplateField` ajustado para aceitar `rows` dinamico.
+- 17:52 - Tipagem frontend sincronizada em `frontend/src/types/index.ts` com os novos campos de configuracao.
+- 17:52 - Validacoes tecnicas desta rodada concluidas com sucesso:
+  - `backend npm run db:generate` OK
+  - `backend npm run build` OK
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+- 18:04 - Correcao do erro `500` em `/api/v1/configuracoes` aplicada e validada.
+  - Causa raiz identificada nos logs do backend: `Prisma P2022` por coluna ausente `configuracao_global.mensagemPosPergunta2`.
+  - Acao executada: migration pendente aplicada no ambiente em execucao via `docker-compose exec backend npx prisma migrate deploy --schema src/prisma/schema.prisma`.
+  - Evidencia de correção:
+    - tabela `configuracao_global` agora contem `mensagemPosPergunta2..mensagemPosPergunta6` (checado via `\d+ configuracao_global`).
+    - requests sem autenticacao para `/api/v1/configuracoes` passaram a retornar `401` (esperado), sem novo `500` de coluna ausente.
+- 18:13 - Implementado suporte a rotulo editavel com ID fixo para botoes do checkout pos-audiencia (Q1 a Q5), mantendo a automacao segura.
+  - Backend schema atualizado em `backend/src/prisma/schema.prisma` com 13 novos campos opcionais de rotulo (`botaoPosQ1Sim..botaoPosQ5Nao`).
+  - Migration criada/aplicada: `backend/src/prisma/migrations/20260214181000_add_botao_labels_checkout/migration.sql`.
+  - Service de configuracoes (`backend/src/services/configuracoes.service.ts`) expandido com defaults `BOTOES_CHECKOUT_DEFAULT`, DTO e input de update com os novos campos.
+  - Validacao de API (`backend/src/routes/configuracoes.routes.ts`) atualizada para aceitar rotulos customizados (1-40 chars ou `null`).
+  - Orquestracao (`backend/src/jobs/orquestracao.processor.ts`) agora usa rotulo configuravel para os botoes da pergunta 1/6 do checkout.
+  - Webhook inbound (`backend/src/services/whatsapp-inbound.service.ts`) agora usa rotulos configuraveis para botoes das perguntas Q1..Q5, preservando IDs internos fixos para mapeamento de status.
+  - Frontend tipos (`frontend/src/types/index.ts`) sincronizados com os novos campos.
+  - Frontend configuracoes (`frontend/src/pages/ConfiguracoesPage.tsx`) recebeu secao compacta `Rotulos dos botoes (IDs fixos do sistema)` dentro de `Checkout avancado`, com restaurar padrao por campo.
+- 18:13 - Validacoes e deploy:
+  - `backend npm run db:generate` OK
+  - `backend npm run build` OK
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps backend frontend` OK
+  - `docker-compose exec backend npx prisma migrate deploy --schema src/prisma/schema.prisma` OK (migration aplicada)
+  - Confirmacao no banco: colunas `botaoPosQ1Sim..botaoPosQ5Nao` presentes em `configuracao_global`.
+- 18:20 - Rollback completo da funcionalidade de `rotulo de botoes` solicitado pelo usuario (desfeito).
+  - Frontend: removida a secao de rotulos de botoes no checkout avancado em `frontend/src/pages/ConfiguracoesPage.tsx`.
+  - Tipagem frontend: removidos campos `botaoPosQ*` de `ConfiguracaoGlobal` em `frontend/src/types/index.ts`.
+  - Backend configuracoes: removidos defaults/DTO/input dos campos `botaoPosQ*` em `backend/src/services/configuracoes.service.ts`.
+  - Backend API: removida validacao `rotuloBotaoSchema` e campos `botaoPosQ*` da rota `PATCH /configuracoes` em `backend/src/routes/configuracoes.routes.ts`.
+  - Orquestracao e inbound: retorno aos labels fixos nos botoes de checkout em `backend/src/jobs/orquestracao.processor.ts` e `backend/src/services/whatsapp-inbound.service.ts`.
+  - Prisma schema: removidos campos `botaoPosQ*` de `ConfiguracaoGlobal` em `backend/src/prisma/schema.prisma`.
+- 18:20 - Banco de dados sincronizado com rollback:
+  - Nova migration criada `backend/src/prisma/migrations/20260214183500_remove_botao_labels_checkout/migration.sql` (DROP das colunas `botaoPosQ*`).
+  - Migration aplicada com sucesso via `prisma migrate deploy` no container backend.
+  - Validacao no Postgres: tabela `configuracao_global` sem colunas `botaoPosQ*`.
+- 18:20 - Validacoes e publicacao:
+  - `backend npm run db:generate` OK
+  - `backend npm run build` OK
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps backend frontend` OK
+- 18:25 - Dashboard inicial expandido com bloco de indicadores pos-audiencia (base: ultimos 30 dias), mantendo o operacional existente.
+  - Backend `backend/src/services/audiencias.service.ts`:
+    - `buscarDashboard()` agora retorna `posRelatorio` com contagens de:
+      - total de relatorios no periodo
+      - audiencia ocorreu (`sim/nao/remarcada`)
+      - resultado (`acordo/semAcordo/ausencia/redesignada`)
+      - advogado presente (`sim/nao`)
+      - dominio do caso (`sim/nao`)
+      - problema relevante (`sim/nao`)
+    - Implementacao via `count + groupBy` em `relatorioAudiencia` com filtro `createdAt` dos ultimos 30 dias.
+  - Frontend `frontend/src/types/index.ts`:
+    - `DashboardResponse` atualizado com tipo `posRelatorio`.
+  - Frontend `frontend/src/pages/DashboardPage.tsx`:
+    - nova secao `Indicadores Pos-Audiencia` com cards executivos:
+      - relatorios fechados
+      - resultado da audiencia
+      - presenca/dominio do advogado
+      - risco operacional (problema relevante + ocorreu vs nao ocorreu/remarcada)
+    - estado vazio amigavel quando nao houver relatorios no periodo.
+- 18:25 - Validacoes tecnicas e runtime:
+  - `backend npm run build` OK
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - deploy containers: `docker-compose up -d --build --no-deps backend frontend` OK
+  - validacao runtime backend: `buscarDashboard()` retornando `posRelatorio` com dados reais sem erro.
+- 18:30 - Validacao de aderencia ao escopo para os 3 cards de automacao (Reiteracoes 24h / Respostas WhatsApp 24h / Substituicoes por automacao 24h).
+  - Fonte conferida: `docs/ESCOPO POC VIZEU (1).docx` (texto extraido localmente).
+  - Resultado: o escopo cita em `2.6 Painel operacional` apenas contadores/alertas como "quantas audiencias na semana", "quantas em risco (sem resposta)" e "SLA de substituicao"; nao ha requisito explicito para os 3 cards de janela 24h.
+- 18:30 - Ajuste aplicado no frontend conforme solicitado:
+  - removida a secao com os 3 cards de automacao em `frontend/src/pages/DashboardPage.tsx`.
+  - resto do dashboard operacional e do bloco pos-relatorio mantidos.
+- 18:30 - Validacoes e publicacao:
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps frontend` OK
+- 18:34 - Ajuste de responsividade/layout global para ocupar largura total da tela (estilo sistema) aplicado.
+  - Causa identificada: `AppShell` limitava todo o app com `mx-auto` + `max-w-[1280px]`.
+  - Correcao em `frontend/src/components/AppShell.tsx`:
+    - antes: `className="mx-auto flex min-h-screen w-full max-w-[1280px]"`
+    - depois: `className="flex min-h-screen w-full"`
+  - Resultado: a aplicacao deixa de ficar centralizada com grandes bordas laterais e passa a usar largura total disponivel, mantendo sidebar fixa e comportamento mobile.
+- 18:34 - Validacoes/publicacao:
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps frontend` OK
+- 18:38 - Ajuste visual em `/audiencias`: botao `Importar` alinhado ao mesmo estilo/cor do botao `Nova audiencia` em `frontend/src/pages/AudienciasListPage.tsx`.
+- 18:38 - Validacoes/publicacao:
+  - `frontend npm run lint` OK
+  - `frontend npm run build` OK
+  - `docker-compose up -d --build --no-deps frontend` OK
+- 18:42 - Criado modulo de consultas para agente (Dify) no backend: `backend/src/routes/agent.routes.ts` e `backend/src/services/agent.service.ts`, com endpoints autenticados em `/api/v1/agent` para resumo operacional, audiencias do dia, proximas audiencias, filtro por status e indicadores pos-relatorio.
+- 18:42 - Registro de rota adicionado em `backend/src/app.ts` (`/api/v1/agent`).
+- 18:42 - Criado guia de integracao `endpoints-agent.md` com autenticacao, contratos de request/response, exemplos cURL e mapeamento de perguntas do advogado para cada endpoint.
+- 18:42 - Validacao tecnica concluida: `backend npm run build` com sucesso.
+- 18:45 - Decisao arquitetural para consumo por agente (Dify): manter consulta via endpoints do backend (`/api/v1/agent`) como padrao, evitando exposicao direta do banco para IA. Exposicao SQL direta so considerada em modo controlado (usuario read-only + views dedicadas + whitelist de consultas + sem escrita).

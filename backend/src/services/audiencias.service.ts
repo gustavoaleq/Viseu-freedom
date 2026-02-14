@@ -563,6 +563,8 @@ export async function buscarDashboard() {
   const fimSemana = new Date(hoje)
   fimSemana.setDate(fimSemana.getDate() + 7)
   const ultimas24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const periodoPosRelatorioDias = 30
+  const inicioPosRelatorio = new Date(Date.now() - periodoPosRelatorioDias * 24 * 60 * 60 * 1000)
 
   const [
     totalAtivas,
@@ -574,6 +576,12 @@ export async function buscarDashboard() {
     reiteracoesDisparadas24h,
     respostasWhatsapp24h,
     substituicoesPorAutomacao24h,
+    totalRelatoriosPosPeriodo,
+    ocorrenciaPosPeriodo,
+    resultadoPosPeriodo,
+    advogadoPresentePosPeriodo,
+    advogadoDominioPosPeriodo,
+    problemaRelevantePosPeriodo,
   ] = await Promise.all([
     prisma.audiencia.count({
       where: { status: { notIn: ['CONCLUIDA', 'CANCELADA'] } },
@@ -609,7 +617,64 @@ export async function buscarDashboard() {
         createdAt: { gte: ultimas24h },
       },
     }),
+    prisma.relatorioAudiencia.count({
+      where: { createdAt: { gte: inicioPosRelatorio } },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['audienciaOcorreu'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        audienciaOcorreu: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['resultado'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        resultado: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['advogadoPresente'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        advogadoPresente: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['advogadoDominioCaso'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        advogadoDominioCaso: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['problemaRelevante'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        problemaRelevante: { not: null },
+      },
+      _count: { _all: true },
+    }),
   ])
+
+  const ocorrenciaMap = new Map(
+    ocorrenciaPosPeriodo.map((item) => [item.audienciaOcorreu, item._count._all]),
+  )
+  const resultadoMap = new Map(resultadoPosPeriodo.map((item) => [item.resultado, item._count._all]))
+  const advogadoPresenteMap = new Map(
+    advogadoPresentePosPeriodo.map((item) => [item.advogadoPresente, item._count._all]),
+  )
+  const advogadoDominioMap = new Map(
+    advogadoDominioPosPeriodo.map((item) => [item.advogadoDominioCaso, item._count._all]),
+  )
+  const problemaMap = new Map(
+    problemaRelevantePosPeriodo.map((item) => [item.problemaRelevante, item._count._all]),
+  )
 
   return {
     totalAtivas,
@@ -625,6 +690,33 @@ export async function buscarDashboard() {
       reiteracoesDisparadas24h,
       respostasWhatsapp24h,
       substituicoesPorAutomacao24h,
+    },
+    posRelatorio: {
+      periodoDias: periodoPosRelatorioDias,
+      totalRelatorios: totalRelatoriosPosPeriodo,
+      audienciaOcorreu: {
+        sim: ocorrenciaMap.get('SIM') ?? 0,
+        nao: ocorrenciaMap.get('NAO') ?? 0,
+        remarcada: ocorrenciaMap.get('REMARCADA') ?? 0,
+      },
+      resultado: {
+        acordo: resultadoMap.get('ACORDO') ?? 0,
+        semAcordo: resultadoMap.get('SEM_ACORDO') ?? 0,
+        ausencia: resultadoMap.get('AUSENCIA') ?? 0,
+        redesignada: resultadoMap.get('REDESIGNADA') ?? 0,
+      },
+      advogadoPresente: {
+        sim: advogadoPresenteMap.get(true) ?? 0,
+        nao: advogadoPresenteMap.get(false) ?? 0,
+      },
+      advogadoDominioCaso: {
+        sim: advogadoDominioMap.get(true) ?? 0,
+        nao: advogadoDominioMap.get(false) ?? 0,
+      },
+      problemaRelevante: {
+        sim: problemaMap.get(true) ?? 0,
+        nao: problemaMap.get(false) ?? 0,
+      },
     },
   }
 }

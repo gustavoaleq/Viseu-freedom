@@ -256,6 +256,27 @@ exports.Prisma.SubstituicaoScalarFieldEnum = {
   resolvidoEm: 'resolvidoEm'
 };
 
+exports.Prisma.ConfiguracaoGlobalScalarFieldEnum = {
+  id: 'id',
+  enviarAvisoNaImportacao: 'enviarAvisoNaImportacao',
+  horarioD1: 'horarioD1',
+  antecedenciaD1Horas: 'antecedenciaD1Horas',
+  antecedenciaReiteracaoHoras: 'antecedenciaReiteracaoHoras',
+  antecedenciaCheckinMinutos: 'antecedenciaCheckinMinutos',
+  posAudienciaMinutosDepois: 'posAudienciaMinutosDepois',
+  fusoHorario: 'fusoHorario',
+  mensagemD1: 'mensagemD1',
+  mensagemReiteracao: 'mensagemReiteracao',
+  mensagemCheckin: 'mensagemCheckin',
+  mensagemPosAudiencia: 'mensagemPosAudiencia',
+  mensagemPosPergunta2: 'mensagemPosPergunta2',
+  mensagemPosPergunta3: 'mensagemPosPergunta3',
+  mensagemPosPergunta4: 'mensagemPosPergunta4',
+  mensagemPosPergunta5: 'mensagemPosPergunta5',
+  mensagemPosPergunta6: 'mensagemPosPergunta6',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.LogAutomacaoScalarFieldEnum = {
   id: 'id',
   audienciaId: 'audienciaId',
@@ -378,6 +399,7 @@ exports.Prisma.ModelName = {
   RelatorioAudiencia: 'RelatorioAudiencia',
   HistoricoStatus: 'HistoricoStatus',
   Substituicao: 'Substituicao',
+  ConfiguracaoGlobal: 'ConfiguracaoGlobal',
   LogAutomacao: 'LogAutomacao'
 };
 

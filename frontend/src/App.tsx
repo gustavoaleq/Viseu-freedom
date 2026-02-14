@@ -13,6 +13,7 @@ import { ParceirosPage } from './pages/ParceirosPage'
 import { PrepostosPage } from './pages/PrepostosPage'
 import { TrtsPage } from './pages/TrtsPage'
 import { UsuariosPage } from './pages/UsuariosPage'
+import { ConfiguracoesPage } from './pages/ConfiguracoesPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ function App() {
               <Route path="/trts" element={<TrtsPage />} />
               <Route path="/importacoes" element={<ImportacoesPage />} />
               <Route path="/usuarios" element={<UsuariosPage />} />
+              <Route path="/configuracoes" element={<ConfiguracoesPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Route>

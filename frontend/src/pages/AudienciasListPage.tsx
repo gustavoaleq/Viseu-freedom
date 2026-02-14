@@ -229,7 +229,7 @@ export function AudienciasListPage() {
             </button>
             <Link
               to="/importacoes"
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:border-primary-300 hover:text-primary-700"
+              className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
             >
               Importar
             </Link>

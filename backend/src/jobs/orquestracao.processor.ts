@@ -1,6 +1,11 @@
 import { prisma } from '../config/database.js'
 import { registrarLogAutomacao } from '../services/automacao-log.service.js'
 import { criarWhatsAppAdapter } from '../services/whatsapp.adapter.js'
+import {
+  obterConfiguracoes,
+  aplicarTemplate,
+  TEMPLATES_DEFAULT,
+} from '../services/configuracoes.service.js'
 import type { StatusAudiencia, TipoMensagem } from '../generated/prisma/client.js'
 import type { TipoJobOrquestracao } from './orquestracao.queue.js'
 
@@ -82,7 +87,8 @@ export async function processarOrquestracaoAudiencia(
     }
   }
 
-  const mensagem = montarMensagem(tipo, audiencia)
+  const config = await obterConfiguracoes()
+  const mensagem = montarMensagem(tipo, audiencia, config)
   try {
     const envio = await whatsapp.enviarMensagem({
       para: audiencia.preposto.telefoneWhatsapp,
@@ -159,17 +165,36 @@ function montarMensagem(
     link: string | null
     status: StatusAudiencia
     preposto: { nome: string }
+    parceiro?: { nome: string } | null
+    trt?: { numero: string } | null
+  },
+  config: {
+    mensagemD1: string | null
+    mensagemReiteracao: string | null
+    mensagemCheckin: string | null
+    mensagemPosAudiencia: string | null
   },
 ) {
   const dataFmt = new Intl.DateTimeFormat('pt-BR').format(audiencia.data)
   const localOuLink = audiencia.local || audiencia.link || 'local a confirmar'
 
+  const variaveis: Record<string, string> = {
+    nomePreposto: audiencia.preposto.nome,
+    numeroProcesso: audiencia.numeroProcesso,
+    data: dataFmt,
+    hora: audiencia.hora,
+    local: localOuLink,
+    escritorioParceiro: audiencia.parceiro?.nome ?? '',
+    trt: audiencia.trt?.numero ?? '',
+  }
+
   if (tipo === 'CONFIRMACAO_D1') {
+    const template = config.mensagemD1 || TEMPLATES_DEFAULT.mensagemD1
     return {
       tipo: 'CONFIRMACAO_D1' as TipoMensagem,
       statusNovo: 'A_CONFIRMAR' as StatusAudiencia,
       motivo: 'Disparo automatico D-1',
-      texto: `Ola ${audiencia.preposto.nome}. Temos audiencia do processo ${audiencia.numeroProcesso} em ${dataFmt} as ${audiencia.hora}. Local/link: ${localOuLink}. Voce ira participar?`,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'CONFIRMO', label: 'Sim, confirmo' },
         { id: 'NAO_POSSO', label: 'Nao, nao posso' },
@@ -178,11 +203,12 @@ function montarMensagem(
   }
 
   if (tipo === 'REITERACAO_6H') {
+    const template = config.mensagemReiteracao || TEMPLATES_DEFAULT.mensagemReiteracao
     return {
       tipo: 'REITERACAO_H1H30' as TipoMensagem,
       statusNovo: 'A_CONFIRMAR' as StatusAudiencia,
-      motivo: 'Disparo automatico de reiteracao 6h',
-      texto: `Ola ${audiencia.preposto.nome}. Reiterando a audiencia do processo ${audiencia.numeroProcesso} em ${dataFmt} as ${audiencia.hora}. Local/link: ${localOuLink}. Voce ira participar? Apenas para confirmarmos.`,
+      motivo: 'Disparo automatico de reiteracao',
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'CONFIRMO', label: 'Sim, confirmo' },
         { id: 'NAO_POSSO', label: 'Nao, nao posso' },
@@ -191,11 +217,12 @@ function montarMensagem(
   }
 
   if (tipo === 'CHECKIN_DIA') {
+    const template = config.mensagemCheckin || TEMPLATES_DEFAULT.mensagemCheckin
     return {
       tipo: 'CHECK_IN' as TipoMensagem,
       statusNovo: 'CHECK_IN_PENDENTE' as StatusAudiencia,
       motivo: 'Disparo automatico de check-in',
-      texto: `Check-in da audiencia ${audiencia.numeroProcesso} hoje as ${audiencia.hora}. Chegou no local?`,
+      texto: aplicarTemplate(template, variaveis),
       buttons: [
         { id: 'ESTOU_A_CAMINHO', label: 'Estou a caminho' },
         { id: 'JA_CHEGUEI', label: 'Ja cheguei' },
@@ -204,11 +231,12 @@ function montarMensagem(
     }
   }
 
+  const template = config.mensagemPosAudiencia || TEMPLATES_DEFAULT.mensagemPosAudiencia
   return {
     tipo: 'RELATORIO_POS' as TipoMensagem,
     statusNovo: 'RELATORIO_PENDENTE' as StatusAudiencia,
     motivo: 'Disparo automatico de relatorio pos-audiencia',
-    texto: `Checkout pos-audiencia do processo ${audiencia.numeroProcesso}. Pergunta 1/6: A audiencia ocorreu?`,
+    texto: aplicarTemplate(template, variaveis),
     buttons: [
       { id: 'AUDIENCIA_SIM', label: 'Sim, ocorreu' },
       { id: 'AUDIENCIA_NAO', label: 'Nao ocorreu' },

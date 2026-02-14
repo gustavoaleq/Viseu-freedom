@@ -12,6 +12,8 @@ import parceirosRoutes from './routes/parceiros.routes.js'
 import trtsRoutes from './routes/trts.routes.js'
 import webhooksRoutes from './routes/webhooks.routes.js'
 import usuariosRoutes from './routes/usuarios.routes.js'
+import configuracoesRoutes from './routes/configuracoes.routes.js'
+import agentRoutes from './routes/agent.routes.js'
 
 export async function buildApp() {
   const app = Fastify({
@@ -49,6 +51,8 @@ export async function buildApp() {
   await app.register(importacoesRoutes, { prefix: '/api/v1/importacoes' })
   await app.register(webhooksRoutes, { prefix: '/api/v1/webhooks' })
   await app.register(usuariosRoutes, { prefix: '/api/v1/usuarios' })
+  await app.register(configuracoesRoutes, { prefix: '/api/v1/configuracoes' })
+  await app.register(agentRoutes, { prefix: '/api/v1/agent' })
 
   return app
 }

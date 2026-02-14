@@ -90,6 +90,16 @@ Decisoes arquiteturais relevantes devem ser registradas neste arquivo e/ou em `a
 - **Job de reiteracao H-1h30**: ainda nao implementado
 - **Fluxo automatico de substituicao completo**: notificar Viseu + parceiro, escalonamento e reenvio ao novo preposto
 
+### Modulo de Configuracoes (ADMIN) — entregue 13/02/2026
+- Tabela `configuracao_global` (singleton PostgreSQL) com 7 parametros operacionais
+- Backend: `GET /api/v1/configuracoes` e `PATCH /api/v1/configuracoes` (ADMIN only, Zod)
+- Scheduler le configuracoes do banco (cache 30s) em vez de env vars fixas
+- Toggle `enviarAvisoNaImportacao` controla disparo automatico na importacao
+- Suporte a horario fixo D-1 (`horarioD1` HH:mm) ou antecedencia em horas (mantido)
+- Reagendamento automatico de jobs ao salvar alteracoes de timing
+- Frontend: tela `/configuracoes` com 6 secoes, visivel apenas para ADMIN
+- Documentacao completa em `docs/config-modulo.md`
+
 ## Proximos Passos Prioritarios — 12/02/2026
 
 1. **Fechar automacao WhatsApp da POC** (core do valor)

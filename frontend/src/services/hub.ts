@@ -3,6 +3,8 @@ import type {
   AuthLoginResponse,
   Audiencia,
   AudienciaDetalhe,
+  ConfiguracaoGlobal,
+  ConfiguracaoGlobalPatchResponse,
   ContatoParceiro,
   ParceiroContatosResponse,
   DashboardResponse,
@@ -356,6 +358,17 @@ export const importacoesApi = {
       totalLinhas: number
     }>(`/importacoes/${id}/confirmar`)
 
+    return data
+  },
+}
+
+export const configuracoesApi = {
+  async obter() {
+    const { data } = await api.get<ConfiguracaoGlobal>('/configuracoes')
+    return data
+  },
+  async atualizar(payload: Partial<ConfiguracaoGlobal>) {
+    const { data } = await api.patch<ConfiguracaoGlobalPatchResponse>('/configuracoes', payload)
     return data
   },
 }

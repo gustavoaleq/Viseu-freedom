@@ -84,14 +84,28 @@ processarRespostaWhatsApp()
 | CHECKIN_DIA | 12/02/2026 14:00 | Envia "Chegou no local?" com botoes [A caminho / Ja cheguei / Problema]. Status: -> CHECK_IN_PENDENTE |
 | RELATORIO_POS | 12/02/2026 15:30 | Envia "Ocorreu normalmente?" com botoes [Sim / Nao / Remarcada]. Status: -> RELATORIO_PENDENTE |
 
-### Configuracao dos intervalos (variaveis de ambiente)
+### Configuracao dos intervalos (banco de dados)
 
-| Variavel | Padrao | Descricao |
-|----------|--------|-----------|
-| `ORQ_D1_HORAS_ANTES` | 24 | Horas antes da audiencia para D-1 |
-| `ORQ_REITERACAO_HORAS_ANTES` | 6 | Horas antes da audiencia para reiteração |
-| `ORQ_CHECKIN_MINUTOS_ANTES` | 60 | Minutos antes da audiencia para check-in |
-| `ORQ_POS_MINUTOS_DEPOIS` | 30 | Minutos depois da audiencia para pos-audiencia |
+Os intervalos agora sao parametrizaveis pela tela de **Configuracoes** (`/configuracoes`, somente ADMIN).
+Os valores sao persistidos na tabela `configuracao_global` e aplicados em tempo real pelo scheduler.
+
+| Parametro | Default | Descricao |
+|-----------|---------|-----------|
+| `enviarAvisoNaImportacao` | `true` | Se ativado, importacao agenda jobs automaticamente |
+| `horarioD1` | `null` | Horario fixo HH:mm para D-1 (se null, usa antecedencia em horas) |
+| `antecedenciaD1Horas` | 24 | Horas antes da audiencia para D-1 (quando horarioD1 = null) |
+| `antecedenciaReiteracaoHoras` | 6 | Horas antes da audiencia para reiteracao |
+| `antecedenciaCheckinMinutos` | 60 | Minutos antes da audiencia para check-in |
+| `posAudienciaMinutosDepois` | 30 | Minutos depois da audiencia para pos-audiencia |
+| `fusoHorario` | `America/Sao_Paulo` | Fuso horario para calculo de agendamentos |
+
+**Nota**: variaveis de ambiente `ORQ_*` continuam como fallback na inicializacao dos defaults.
+
+### Reagendamento ao salvar configuracoes
+
+Ao alterar parametros de timing via `PATCH /api/v1/configuracoes`, o backend reagenda automaticamente
+todos os jobs pendentes de audiencias ativas (status != CONCLUIDA/CANCELADA). O scheduler usa upsert
+nativo (remove + recria), sem risco de duplicidade.
 
 ## Jobs e Mensagens
 

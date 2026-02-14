@@ -230,7 +230,7 @@ function construirWorkflow(status: StatusAudiencia): WorkflowItem[] {
     },
     {
       id: 'checkin',
-      titulo: 'Check-in H-1h30',
+      titulo: 'Check-in',
       detalhe: 'Acompanhamento de deslocamento e confirmacao de chegada.',
       estado: checkinEstado,
     },
@@ -454,7 +454,7 @@ export function AudienciaDetalhePage() {
         }
       : proximaAcaoWorkflow === 'CHECKIN'
         ? {
-            label: 'Disparar check-in H-1h30 (WhatsApp)',
+            label: 'Disparar check-in (WhatsApp)',
             loading: 'Enviando check-in...',
             onClick: () => dispararCheckInWhatsApp.mutate(),
             isPending: dispararCheckInWhatsApp.isPending,
@@ -692,7 +692,7 @@ export function AudienciaDetalhePage() {
               disabled={dispararReiteracao6h.isPending}
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-900 hover:border-primary hover:text-primary disabled:opacity-60"
             >
-              {dispararReiteracao6h.isPending ? 'Enviando...' : 'Enviar reiteracao 6h'}
+              {dispararReiteracao6h.isPending ? 'Enviando...' : 'Enviar reiteracao'}
             </button>
 
             <button
