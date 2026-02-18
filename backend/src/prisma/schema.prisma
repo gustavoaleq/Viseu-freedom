@@ -301,6 +301,10 @@ model ConfiguracaoGlobal {
   mensagemReiteracao          String?
   mensagemCheckin             String?
   mensagemPosAudiencia        String?
+  respostaD1Confirmacao       String?
+  respostaReiteracaoConfirmacao String?
+  respostaCheckinConfirmacao  String?
+  respostaPosAudienciaConfirmacao String?
   mensagemPosPergunta2        String?
   mensagemPosPergunta3        String?
   mensagemPosPergunta4        String?

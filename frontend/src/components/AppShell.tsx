@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { authApi } from '../services/hub'
 import { obterIniciais } from '../lib/format'
 
@@ -17,8 +18,10 @@ const itensMenu = [
 ] as const
 
 export function AppShell() {
+  const location = useLocation()
   const navigate = useNavigate()
   const [menuAberto, setMenuAberto] = useState(false)
+  const [buscaCabecalho, setBuscaCabecalho] = useState('')
 
   const { data: usuario } = useQuery({
     queryKey: ['auth-me'],
@@ -33,6 +36,34 @@ export function AppShell() {
       localStorage.removeItem('token')
       navigate('/login', { replace: true })
     }
+  }
+
+  useEffect(() => {
+    if (!location.pathname.startsWith('/audiencias')) {
+      setBuscaCabecalho('')
+      return
+    }
+
+    const params = new URLSearchParams(location.search)
+    setBuscaCabecalho((params.get('busca') ?? '').trim())
+  }, [location.pathname, location.search])
+
+  function submitBuscaCabecalho(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const busca = buscaCabecalho.trim()
+    const params = new URLSearchParams()
+
+    if (busca) {
+      params.set('busca', busca)
+    }
+
+    window.dispatchEvent(
+      new CustomEvent('audiencias:buscar-global', {
+        detail: { busca },
+      }),
+    )
+
+    navigate(`/audiencias${params.toString() ? `?${params.toString()}` : ''}`)
   }
 
   return (
@@ -103,13 +134,17 @@ export function AppShell() {
               <span className="text-lg leading-none" aria-hidden="true">≡</span>
             </button>
 
-            <div className="hidden max-w-xl flex-1 items-center gap-2 rounded-lg border border-border bg-neutral-50 px-3 py-2 md:flex">
+            <form
+              onSubmit={submitBuscaCabecalho}
+              className="hidden max-w-xl flex-1 items-center gap-2 rounded-lg border border-border bg-neutral-50 px-3 py-2 md:flex"
+            >
               <input
-                readOnly
-                value="Buscar audiencias, processos e prepostos"
-                className="w-full bg-transparent text-sm text-muted-foreground outline-none"
+                value={buscaCabecalho}
+                onChange={(event) => setBuscaCabecalho(event.target.value)}
+                placeholder="Buscar audiencias, processos e prepostos"
+                className="w-full bg-transparent text-sm text-neutral-700 outline-none placeholder:text-muted-foreground"
               />
-            </div>
+            </form>
 
             <button className="inline-flex h-9 items-center rounded-md border border-border bg-surface px-3 text-sm text-neutral-700 transition hover:border-primary-300 hover:bg-primary-50 hover:text-neutral-900">
               Atualizar

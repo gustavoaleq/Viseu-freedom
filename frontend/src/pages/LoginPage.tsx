@@ -14,8 +14,8 @@ function lerDestinoPadrao(valor: unknown): string {
 export function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const [email, setEmail] = useState('admin@freedom.ai')
-  const [senha, setSenha] = useState('admin123')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
   const [manterConectado, setManterConectado] = useState(true)
 
   const destino = useMemo(() => lerDestinoPadrao(location.state?.from), [location.state])
@@ -56,7 +56,7 @@ export function LoginPage() {
               <h1 className="mb-2 text-h2 text-neutral-900">Acesse sua conta</h1>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-semibold text-neutral-800">
                   E-mail
@@ -70,6 +70,7 @@ export function LoginPage() {
                     name="email"
                     type="email"
                     required
+                    autoComplete="username"
                     placeholder="nome@viseu.com.br"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
@@ -93,6 +94,7 @@ export function LoginPage() {
                     name="password"
                     type="password"
                     required
+                    autoComplete="current-password"
                     placeholder="••••••••"
                     value={senha}
                     onChange={(event) => setSenha(event.target.value)}

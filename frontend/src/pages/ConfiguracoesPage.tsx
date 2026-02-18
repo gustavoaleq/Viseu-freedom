@@ -24,7 +24,15 @@ const TEMPLATES_DEFAULT = {
   mensagemCheckin:
     'Check-in da audiencia {{numeroProcesso}} hoje as {{hora}}. Chegou no local?',
   mensagemPosAudiencia:
-  'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+    'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+  respostaD1Confirmacao:
+    'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.',
+  respostaReiteracaoConfirmacao:
+    'Agradecemos sua confirmacao na reiteracao. Sua presenca esta registrada no sistema.',
+  respostaCheckinConfirmacao:
+    'Recebemos sua atualizacao de check-in. Obrigado pelo retorno.',
+  respostaPosAudienciaConfirmacao:
+    'Obrigado. Relatorio pos-audiencia finalizado com sucesso.',
   mensagemPosPergunta2:
     'Pergunta 2/6 do processo {{numeroProcesso}}: Qual foi o resultado?',
   mensagemPosPergunta3:
@@ -104,6 +112,10 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
     mensagemReiteracao: dados.mensagemReiteracao,
     mensagemCheckin: dados.mensagemCheckin,
     mensagemPosAudiencia: dados.mensagemPosAudiencia,
+    respostaD1Confirmacao: dados.respostaD1Confirmacao,
+    respostaReiteracaoConfirmacao: dados.respostaReiteracaoConfirmacao,
+    respostaCheckinConfirmacao: dados.respostaCheckinConfirmacao,
+    respostaPosAudienciaConfirmacao: dados.respostaPosAudienciaConfirmacao,
     mensagemPosPergunta2: dados.mensagemPosPergunta2,
     mensagemPosPergunta3: dados.mensagemPosPergunta3,
     mensagemPosPergunta4: dados.mensagemPosPergunta4,
@@ -430,6 +442,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               onChange={(v) => setForm((f) => ({ ...f, mensagemD1: v }))}
               onRestaurar={() => restaurarTemplate('mensagemD1')}
             />
+            <TemplateField
+              label="Resposta D-1 (confirmacao)"
+              value={form.respostaD1Confirmacao}
+              defaultValue={TEMPLATES_DEFAULT.respostaD1Confirmacao}
+              onChange={(v) => setForm((f) => ({ ...f, respostaD1Confirmacao: v }))}
+              onRestaurar={() => restaurarTemplate('respostaD1Confirmacao')}
+              rows={2}
+            />
 
             <TemplateField
               label="Mensagem de reiteracao"
@@ -437,6 +457,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               defaultValue={TEMPLATES_DEFAULT.mensagemReiteracao}
               onChange={(v) => setForm((f) => ({ ...f, mensagemReiteracao: v }))}
               onRestaurar={() => restaurarTemplate('mensagemReiteracao')}
+            />
+            <TemplateField
+              label="Resposta de reiteracao (confirmacao)"
+              value={form.respostaReiteracaoConfirmacao}
+              defaultValue={TEMPLATES_DEFAULT.respostaReiteracaoConfirmacao}
+              onChange={(v) => setForm((f) => ({ ...f, respostaReiteracaoConfirmacao: v }))}
+              onRestaurar={() => restaurarTemplate('respostaReiteracaoConfirmacao')}
+              rows={2}
             />
 
             <TemplateField
@@ -446,6 +474,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               onChange={(v) => setForm((f) => ({ ...f, mensagemCheckin: v }))}
               onRestaurar={() => restaurarTemplate('mensagemCheckin')}
             />
+            <TemplateField
+              label="Resposta de check-in (confirmacao)"
+              value={form.respostaCheckinConfirmacao}
+              defaultValue={TEMPLATES_DEFAULT.respostaCheckinConfirmacao}
+              onChange={(v) => setForm((f) => ({ ...f, respostaCheckinConfirmacao: v }))}
+              onRestaurar={() => restaurarTemplate('respostaCheckinConfirmacao')}
+              rows={2}
+            />
 
             <TemplateField
               label="Mensagem de checkout (pos-audiencia)"
@@ -453,6 +489,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               defaultValue={TEMPLATES_DEFAULT.mensagemPosAudiencia}
               onChange={(v) => setForm((f) => ({ ...f, mensagemPosAudiencia: v }))}
               onRestaurar={() => restaurarTemplate('mensagemPosAudiencia')}
+            />
+            <TemplateField
+              label="Resposta de checkout (confirmacao final)"
+              value={form.respostaPosAudienciaConfirmacao}
+              defaultValue={TEMPLATES_DEFAULT.respostaPosAudienciaConfirmacao}
+              onChange={(v) => setForm((f) => ({ ...f, respostaPosAudienciaConfirmacao: v }))}
+              onRestaurar={() => restaurarTemplate('respostaPosAudienciaConfirmacao')}
+              rows={2}
             />
 
             <details className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">

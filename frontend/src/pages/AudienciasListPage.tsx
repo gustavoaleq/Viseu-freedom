@@ -31,13 +31,13 @@ function paraYmd(data?: Date) {
 export function AudienciasListPage() {
   const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
+  const buscaQuery = (searchParams.get('busca') ?? '').trim()
   const statusQuery = (searchParams.get('status') ?? '').trim().toUpperCase()
+  const statusQueryValido = STATUS_AUDIENCIA.some((item) => item === statusQuery) ? statusQuery : ''
 
   const [page, setPage] = useState(1)
-  const [busca, setBusca] = useState('')
-  const [status, setStatus] = useState(
-    STATUS_AUDIENCIA.some((item) => item === statusQuery) ? statusQuery : '',
-  )
+  const [busca, setBusca] = useState(buscaQuery)
+  const [status, setStatus] = useState(statusQueryValido)
   const [trtId, setTrtId] = useState('')
   const [prepostoId, setPrepostoId] = useState('')
   const [parceiroId, setParceiroId] = useState('')
@@ -46,6 +46,8 @@ export function AudienciasListPage() {
   const [calendarioAberto, setCalendarioAberto] = useState(false)
   const calendarioRef = useRef<HTMLDivElement>(null)
   const [mostrarNovo, setMostrarNovo] = useState(false)
+  const [cancelamentoAlvo, setCancelamentoAlvo] = useState<{ id: string; numeroProcesso: string } | null>(null)
+  const [motivoCancelamento, setMotivoCancelamento] = useState('')
 
   const periodoSelecionado = useMemo(() => {
     return {
@@ -63,6 +65,20 @@ export function AudienciasListPage() {
     }
     return 'Selecione o periodo'
   }, [periodo])
+
+  useEffect(() => {
+    function aoBuscarGlobal(event: Event) {
+      const customEvent = event as CustomEvent<{ busca?: string }>
+      const termo = (customEvent.detail?.busca ?? '').trim()
+      setBusca(termo)
+      setPage(1)
+    }
+
+    window.addEventListener('audiencias:buscar-global', aoBuscarGlobal as EventListener)
+    return () => {
+      window.removeEventListener('audiencias:buscar-global', aoBuscarGlobal as EventListener)
+    }
+  }, [])
 
   useEffect(() => {
     function aoClicarFora(event: MouseEvent) {
@@ -189,6 +205,8 @@ export function AudienciasListPage() {
       queryClient.invalidateQueries({ queryKey: ['audiencias-lista'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['kanban'] })
+      setCancelamentoAlvo(null)
+      setMotivoCancelamento('')
     },
   })
 
@@ -632,10 +650,11 @@ export function AudienciasListPage() {
 
                       <button
                         onClick={() => {
-                          const motivo = window.prompt('Motivo do cancelamento:')
-                          if (motivo && motivo.trim()) {
-                            cancelar.mutate({ id: audiencia.id, motivo })
-                          }
+                          setCancelamentoAlvo({
+                            id: audiencia.id,
+                            numeroProcesso: audiencia.numeroProcesso,
+                          })
+                          setMotivoCancelamento('')
                         }}
                         className="rounded border border-rose-200 bg-rose-50 px-2 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100"
                       >
@@ -673,6 +692,61 @@ export function AudienciasListPage() {
           </div>
         </footer>
       </section>
+
+      {cancelamentoAlvo ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 px-4">
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-2xl">
+            <h2 className="text-base font-semibold text-slate-900">Cancelar audiencia</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Informe o motivo do cancelamento da audiencia{' '}
+              <span className="font-mono text-xs text-slate-800">{cancelamentoAlvo.numeroProcesso}</span>.
+            </p>
+
+            <label className="mt-4 block text-sm">
+              <span className="mb-1 block text-xs text-slate-500">Motivo *</span>
+              <textarea
+                required
+                value={motivoCancelamento}
+                onChange={(event) => setMotivoCancelamento(event.target.value)}
+                rows={3}
+                placeholder="Ex.: audiencia suspensa pelo cliente"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-rose-200 focus:ring"
+              />
+            </label>
+
+            {cancelar.isError ? (
+              <p className="mt-2 text-xs text-rose-600">Falha ao cancelar audiencia. Tente novamente.</p>
+            ) : null}
+
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (cancelar.isPending) return
+                  setCancelamentoAlvo(null)
+                  setMotivoCancelamento('')
+                }}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+              >
+                Fechar
+              </button>
+              <button
+                type="button"
+                disabled={cancelar.isPending || !motivoCancelamento.trim()}
+                onClick={() =>
+                  cancelar.mutate({
+                    id: cancelamentoAlvo.id,
+                    motivo: motivoCancelamento.trim(),
+                  })
+                }
+                className="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60"
+              >
+                {cancelar.isPending ? 'Cancelando...' : 'Confirmar cancelamento'}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

@@ -12,15 +12,15 @@
 @baseUrl = http://localhost:3001/api/v1
 @email = admin@freedom.ai
 @senha = admin123
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUwOGIwMGJmLThiMzMtNDg3Yy05OWJkLTRmZjZiOGNjMmJlMSIsImVtYWlsIjoiYWRtaW5AZnJlZWRvbS5haSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MTAxMzQ5NywiZXhwIjoxNzcxMDk5ODk3fQ.h3ELGPPZPeDboY2ZEumUc6CXbQIdt0fOj0vD_QghZA8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM3NGE0NDgxLWQyNjAtNDhmYS1iZDIwLWRmMzhiMzQ5ZTJiOCIsImVtYWlsIjoiYWRtaW5AZnJlZWRvbS5haSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MTQxNjI3NSwiZXhwIjoxNzcxNTAyNjc1fQ.Li3JGCS-TsoH02IygOk5-Ii7HXOjuyTksdeoR_Sm-zE
 
 ### IDs e telefones (preencha conforme seu ambiente)
 @trtId =
 @prepostoId =
 @parceiroInternoId =
 @parceiroRiscoId =
-@audienciaRiscoId = d51026b3-17e8-4a29-af78-5c51b73ec2e2
-@audienciaRiscoManualId = d51026b3-17e8-4a29-af78-5c51b73ec2e2
+@audienciaRiscoId = a90d5288-5078-44be-8bba-77256fbc2291
+@audienciaRiscoManualId = a90d5288-5078-44be-8bba-77256fbc2291
 
 ### Nome do parceiro interno (deve casar com PARCEIRO_INTERNO_NOME no backend)
 @parceiroInternoNome = Viseu Advogados

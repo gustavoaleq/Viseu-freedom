@@ -617,7 +617,20 @@ export async function processarRespostaWhatsApp(payload: unknown): Promise<Resul
   }
 
   try {
-    const respostaAutomatica = montarRespostaAutomaticaPreposto(regra.id, respostaEmReiteracao)
+    const [configMensagens, variaveisTemplate] = await Promise.all([
+      obterConfiguracoes(),
+      montarVariaveisTemplateAudiencia(aplicado.audienciaId),
+    ])
+    const respostaAutomaticaTemplate = montarRespostaAutomaticaPreposto({
+      respostaId: regra.id,
+      respostaEmReiteracao,
+      config: {
+        respostaD1Confirmacao: configMensagens.respostaD1Confirmacao,
+        respostaReiteracaoConfirmacao: configMensagens.respostaReiteracaoConfirmacao,
+        respostaCheckinConfirmacao: configMensagens.respostaCheckinConfirmacao,
+      },
+    })
+    const respostaAutomatica = aplicarTemplate(respostaAutomaticaTemplate, variaveisTemplate)
     const envio = await whatsapp.enviarMensagem({
       para: preposto.telefoneWhatsapp,
       texto: respostaAutomatica,
@@ -1204,6 +1217,7 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
     relatorioAtual,
     {
       mensagemPosAudiencia: config.mensagemPosAudiencia,
+      respostaPosAudienciaConfirmacao: config.respostaPosAudienciaConfirmacao,
       mensagemPosPergunta2: config.mensagemPosPergunta2,
       mensagemPosPergunta3: config.mensagemPosPergunta3,
       mensagemPosPergunta4: config.mensagemPosPergunta4,
@@ -1240,11 +1254,14 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
     })
   }
 
+  const templateConclusao =
+    config.respostaPosAudienciaConfirmacao || TEMPLATES_DEFAULT.respostaPosAudienciaConfirmacao
+
   await enviarMensagemRelatorioPos({
     audienciaId: params.audienciaId,
     prepostoId: params.prepostoId,
     prepostoTelefone: params.prepostoTelefone,
-    texto: 'Obrigado. Relatorio pos-audiencia finalizado com sucesso.',
+    texto: aplicarTemplate(templateConclusao, variaveis),
   })
 
   try {
@@ -1293,6 +1310,7 @@ function obterProximaPerguntaRelatorio(
     | null,
   config: {
     mensagemPosAudiencia: string | null
+    respostaPosAudienciaConfirmacao: string | null
     mensagemPosPergunta2: string | null
     mensagemPosPergunta3: string | null
     mensagemPosPergunta4: string | null
@@ -1890,6 +1908,46 @@ function montarObservacaoEtapaTelefone(nome: string) {
   return `${OBS_ETAPA_SUBSTITUTO_TELEFONE}${encodeURIComponent(nome)}`
 }
 
+async function montarVariaveisTemplateAudiencia(audienciaId: string) {
+  const audiencia = await prisma.audiencia.findUnique({
+    where: { id: audienciaId },
+    select: {
+      numeroProcesso: true,
+      data: true,
+      hora: true,
+      local: true,
+      link: true,
+      preposto: { select: { nome: true } },
+      parceiro: { select: { nome: true } },
+      trt: { select: { numero: true } },
+    },
+  })
+
+  if (!audiencia) {
+    return {
+      nomePreposto: '',
+      numeroProcesso: '',
+      data: '',
+      hora: '',
+      local: '',
+      escritorioParceiro: '',
+      trt: '',
+    }
+  }
+
+  const localOuLink = audiencia.local || audiencia.link || 'local a confirmar'
+
+  return {
+    nomePreposto: audiencia.preposto?.nome ?? '',
+    numeroProcesso: audiencia.numeroProcesso,
+    data: new Intl.DateTimeFormat('pt-BR').format(audiencia.data),
+    hora: audiencia.hora,
+    local: localOuLink,
+    escritorioParceiro: audiencia.parceiro?.nome ?? '',
+    trt: audiencia.trt?.numero ?? '',
+  }
+}
+
 function lerEstadoColetaSubstituto(observacao?: string | null): EstadoColetaSubstituto | null {
   if (!observacao) return null
   if (observacao === OBS_ETAPA_SUBSTITUTO_NOME) return { etapa: 'NOME' }
@@ -1905,28 +1963,43 @@ function lerEstadoColetaSubstituto(observacao?: string | null): EstadoColetaSubs
   }
 }
 
-function montarRespostaAutomaticaPreposto(respostaId: RespostaId, respostaEmReiteracao: boolean) {
-  if (respostaId === 'CONFIRMO') {
-    return 'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.'
+function montarRespostaAutomaticaPreposto(params: {
+  respostaId: RespostaId
+  respostaEmReiteracao: boolean
+  config: {
+    respostaD1Confirmacao: string | null
+    respostaReiteracaoConfirmacao: string | null
+    respostaCheckinConfirmacao: string | null
+  }
+}) {
+  if (params.respostaId === 'CONFIRMO') {
+    if (params.respostaEmReiteracao) {
+      return (
+        params.config.respostaReiteracaoConfirmacao
+        || TEMPLATES_DEFAULT.respostaReiteracaoConfirmacao
+      )
+    }
+
+    return params.config.respostaD1Confirmacao || TEMPLATES_DEFAULT.respostaD1Confirmacao
   }
 
-  if (respostaId === 'NAO_POSSO') {
-    if (respostaEmReiteracao) {
+  if (params.respostaId === 'NAO_POSSO') {
+    if (params.respostaEmReiteracao) {
       return 'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.'
     }
 
     return 'Entendemos que nao pode participar no momento e agradecemos. Enviaremos uma nova confirmacao mais proxima da audiencia.'
   }
 
-  if (respostaId === 'ESTOU_A_CAMINHO' || respostaId === 'JA_CHEGUEI') {
-    return 'Recebemos sua atualizacao de check-in. Obrigado pelo retorno.'
+  if (params.respostaId === 'ESTOU_A_CAMINHO' || params.respostaId === 'JA_CHEGUEI') {
+    return params.config.respostaCheckinConfirmacao || TEMPLATES_DEFAULT.respostaCheckinConfirmacao
   }
 
-  if (respostaId === 'ESTOU_COM_PROBLEMA') {
+  if (params.respostaId === 'ESTOU_COM_PROBLEMA') {
     return 'Entendemos o problema informado. Vamos iniciar o suporte para substituicao.'
   }
 
-  if (respostaId === 'AUDIENCIA_REMARCADA') {
+  if (params.respostaId === 'AUDIENCIA_REMARCADA') {
     return 'Obrigado pelo retorno. Ja vamos atualizar o sistema com a remarcacao.'
   }
 

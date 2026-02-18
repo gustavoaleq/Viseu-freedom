@@ -18,6 +18,14 @@ export const TEMPLATES_DEFAULT = {
     'Check-in da audiencia {{numeroProcesso}} hoje as {{hora}}. Chegou no local?',
   mensagemPosAudiencia:
     'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+  respostaD1Confirmacao:
+    'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.',
+  respostaReiteracaoConfirmacao:
+    'Agradecemos sua confirmacao na reiteracao. Sua presenca esta registrada no sistema.',
+  respostaCheckinConfirmacao:
+    'Recebemos sua atualizacao de check-in. Obrigado pelo retorno.',
+  respostaPosAudienciaConfirmacao:
+    'Obrigado. Relatorio pos-audiencia finalizado com sucesso.',
   mensagemPosPergunta2:
     'Pergunta 2/6 do processo {{numeroProcesso}}: Qual foi o resultado?',
   mensagemPosPergunta3:
@@ -42,6 +50,10 @@ export interface ConfiguracaoGlobalDTO {
   mensagemReiteracao: string | null
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
+  respostaD1Confirmacao: string | null
+  respostaReiteracaoConfirmacao: string | null
+  respostaCheckinConfirmacao: string | null
+  respostaPosAudienciaConfirmacao: string | null
   mensagemPosPergunta2: string | null
   mensagemPosPergunta3: string | null
   mensagemPosPergunta4: string | null
@@ -62,6 +74,10 @@ function configParaDTO(config: {
   mensagemReiteracao: string | null
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
+  respostaD1Confirmacao: string | null
+  respostaReiteracaoConfirmacao: string | null
+  respostaCheckinConfirmacao: string | null
+  respostaPosAudienciaConfirmacao: string | null
   mensagemPosPergunta2: string | null
   mensagemPosPergunta3: string | null
   mensagemPosPergunta4: string | null
@@ -81,6 +97,10 @@ function configParaDTO(config: {
     mensagemReiteracao: config.mensagemReiteracao,
     mensagemCheckin: config.mensagemCheckin,
     mensagemPosAudiencia: config.mensagemPosAudiencia,
+    respostaD1Confirmacao: config.respostaD1Confirmacao,
+    respostaReiteracaoConfirmacao: config.respostaReiteracaoConfirmacao,
+    respostaCheckinConfirmacao: config.respostaCheckinConfirmacao,
+    respostaPosAudienciaConfirmacao: config.respostaPosAudienciaConfirmacao,
     mensagemPosPergunta2: config.mensagemPosPergunta2,
     mensagemPosPergunta3: config.mensagemPosPergunta3,
     mensagemPosPergunta4: config.mensagemPosPergunta4,
@@ -131,6 +151,10 @@ export interface AtualizarConfiguracoesInput {
   mensagemReiteracao?: string | null
   mensagemCheckin?: string | null
   mensagemPosAudiencia?: string | null
+  respostaD1Confirmacao?: string | null
+  respostaReiteracaoConfirmacao?: string | null
+  respostaCheckinConfirmacao?: string | null
+  respostaPosAudienciaConfirmacao?: string | null
   mensagemPosPergunta2?: string | null
   mensagemPosPergunta3?: string | null
   mensagemPosPergunta4?: string | null

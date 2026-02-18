@@ -11,6 +11,7 @@ import {
   exportarAudiencias,
   reenviarConfirmacao,
   cancelarAudiencia,
+  deletarAudienciaDefinitiva,
   confirmarAudienciaPorTelefone,
   registrarCheckInAudiencia,
   registrarRelatorioAudiencia,
@@ -262,6 +263,27 @@ export default async function audienciasRoutes(app: FastifyInstance) {
     }
 
     return reply.send(audiencia)
+  })
+
+  // DELETE /api/v1/audiencias/:id (ADMIN)
+  app.delete('/:id', async (request, reply) => {
+    if (request.user.role !== 'ADMIN') {
+      return reply.status(403).send({ error: 'Apenas ADMIN pode deletar audiencia definitivamente' })
+    }
+
+    const { id } = request.params as { id: string }
+    const audiencia = await deletarAudienciaDefinitiva(id)
+
+    if (!audiencia) {
+      return reply.status(404).send({ error: 'Audiencia nao encontrada' })
+    }
+
+    return reply.send({
+      ok: true,
+      audienciaId: audiencia.id,
+      numeroProcesso: audiencia.numeroProcesso,
+      message: 'Audiencia removida definitivamente',
+    })
   })
 
   // POST /api/v1/audiencias/:id/confirmar-telefone

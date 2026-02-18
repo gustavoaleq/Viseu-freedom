@@ -11,6 +11,14 @@ function percentual(parte: number, total: number) {
   return Math.round((parte / total) * 100)
 }
 
+function formatarDuracaoMinutos(totalMinutos: number | null) {
+  if (totalMinutos === null) return '-'
+  if (totalMinutos < 60) return `${totalMinutos} min`
+  const horas = Math.floor(totalMinutos / 60)
+  const minutos = totalMinutos % 60
+  return minutos > 0 ? `${horas}h ${minutos}min` : `${horas}h`
+}
+
 function combinarDataHora(audiencia: Audiencia) {
   return new Date(`${audiencia.data.slice(0, 10)}T${audiencia.hora || '00:00'}:00`)
 }
@@ -130,6 +138,18 @@ export function DashboardPage() {
     advogadoPresente: { sim: 0, nao: 0 },
     advogadoDominioCaso: { sim: 0, nao: 0 },
     problemaRelevante: { sim: 0, nao: 0 },
+  }
+  const monitoramentoSemanal = dashboard.data.monitoramentoSemanal ?? {
+    periodoDias: 7,
+    audienciasSemana: dashboard.data.audienciasSemana,
+    semResposta: dashboard.data.semResposta,
+    substituicoes: {
+      abertas: substituicaoNecessaria,
+      resolvidas: 0,
+      mediaResolucaoMinutos: null,
+      dentroSla60Minutos: 0,
+      taxaDentroSla60Minutos: null,
+    },
   }
 
   const totalStatus = statusOperacionais.reduce((acc, item) => acc + item.total, 0)
@@ -302,89 +322,40 @@ export function DashboardPage() {
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-bold text-slate-900">Indicadores Pos-Audiencia</h2>
-          <span className="text-xs text-slate-500">Base: ultimos {posRelatorio.periodoDias} dias</span>
+          <h2 className="text-lg font-bold text-slate-900">Monitoramento semanal</h2>
+          <span className="text-xs text-slate-500">Base: ultimos {monitoramentoSemanal.periodoDias} dias</span>
         </div>
-
-        {posRelatorio.totalRelatorios === 0 ? (
-          <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-            Ainda nao ha relatorios pos-audiencia no periodo selecionado.
-          </div>
-        ) : (
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-4">
-            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Relatorios Fechados
-              </p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{posRelatorio.totalRelatorios}</p>
-              <p className="mt-1 text-xs text-slate-500">Checkouts finalizados no periodo.</p>
-            </article>
-
-            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Resultado</p>
-              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
-                <p>
-                  Acordo: <strong>{posRelatorio.resultado.acordo}</strong>{' '}
-                  <span className="text-slate-500">
-                    ({percentual(posRelatorio.resultado.acordo, totalResultados)}%)
-                  </span>
-                </p>
-                <p>
-                  Sem acordo: <strong>{posRelatorio.resultado.semAcordo}</strong>
-                </p>
-                <p>
-                  Ausencia: <strong>{posRelatorio.resultado.ausencia}</strong>
-                </p>
-                <p>
-                  Redesignada: <strong>{posRelatorio.resultado.redesignada}</strong>
-                </p>
-              </div>
-            </article>
-
-            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Advogado no Caso</p>
-              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
-                <p>
-                  Presente: <strong>{posRelatorio.advogadoPresente.sim}</strong>{' '}
-                  <span className="text-slate-500">
-                    ({percentual(posRelatorio.advogadoPresente.sim, totalPresenca)}%)
-                  </span>
-                </p>
-                <p>
-                  Ausente: <strong>{posRelatorio.advogadoPresente.nao}</strong>
-                </p>
-                <p>
-                  Dominio minimo: <strong>{posRelatorio.advogadoDominioCaso.sim}</strong>{' '}
-                  <span className="text-slate-500">
-                    ({percentual(posRelatorio.advogadoDominioCaso.sim, totalDominio)}%)
-                  </span>
-                </p>
-              </div>
-            </article>
-
-            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Risco Operacional</p>
-              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
-                <p>
-                  Problema relevante: <strong className="text-red-700">{posRelatorio.problemaRelevante.sim}</strong>{' '}
-                  <span className="text-slate-500">
-                    ({percentual(posRelatorio.problemaRelevante.sim, totalProblema)}%)
-                  </span>
-                </p>
-                <p>
-                  Sem problema: <strong>{posRelatorio.problemaRelevante.nao}</strong>
-                </p>
-                <p>
-                  Audiencia ocorreu: <strong>{posRelatorio.audienciaOcorreu.sim}</strong>
-                </p>
-                <p>
-                  Nao ocorreu/remarcada:{' '}
-                  <strong>{posRelatorio.audienciaOcorreu.nao + posRelatorio.audienciaOcorreu.remarcada}</strong>
-                </p>
-              </div>
-            </article>
-          </div>
-        )}
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Audiencias na semana</p>
+            <p className="mt-2 text-3xl font-bold text-slate-900">{monitoramentoSemanal.audienciasSemana}</p>
+            <p className="mt-1 text-xs text-slate-500">Total em agenda para os proximos 7 dias.</p>
+          </article>
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Em risco (sem resposta)</p>
+            <p className="mt-2 text-3xl font-bold text-slate-900">{monitoramentoSemanal.semResposta}</p>
+            <p className="mt-1 text-xs text-slate-500">Audiencias sem retorno do preposto no fluxo atual.</p>
+          </article>
+          <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">SLA substituicao</p>
+            <p className="mt-2 text-3xl font-bold text-slate-900">
+              {formatarDuracaoMinutos(monitoramentoSemanal.substituicoes.mediaResolucaoMinutos)}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Tempo medio entre alerta e troca do preposto.
+            </p>
+            <p className="mt-2 text-xs text-slate-600">
+              Resolvidas: <strong>{monitoramentoSemanal.substituicoes.resolvidas}</strong> | Abertas:{' '}
+              <strong>{monitoramentoSemanal.substituicoes.abertas}</strong>
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              Dentro de 60min: <strong>{monitoramentoSemanal.substituicoes.dentroSla60Minutos}</strong>{' '}
+              {monitoramentoSemanal.substituicoes.taxaDentroSla60Minutos !== null
+                ? `(${monitoramentoSemanal.substituicoes.taxaDentroSla60Minutos}%)`
+                : ''}
+            </p>
+          </article>
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -606,6 +577,93 @@ export function DashboardPage() {
             </Link>
           </article>
         </div>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-bold text-slate-900">Indicadores Pos-Audiencia</h2>
+          <span className="text-xs text-slate-500">Base: ultimos {posRelatorio.periodoDias} dias</span>
+        </div>
+
+        {posRelatorio.totalRelatorios === 0 ? (
+          <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+            Ainda nao ha relatorios pos-audiencia no periodo selecionado.
+          </div>
+        ) : (
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-4">
+            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Relatorios Fechados
+              </p>
+              <p className="mt-2 text-3xl font-bold text-slate-900">{posRelatorio.totalRelatorios}</p>
+              <p className="mt-1 text-xs text-slate-500">Checkouts finalizados no periodo.</p>
+            </article>
+
+            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Resultado</p>
+              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
+                <p>
+                  Acordo: <strong>{posRelatorio.resultado.acordo}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.resultado.acordo, totalResultados)}%)
+                  </span>
+                </p>
+                <p>
+                  Sem acordo: <strong>{posRelatorio.resultado.semAcordo}</strong>
+                </p>
+                <p>
+                  Ausencia: <strong>{posRelatorio.resultado.ausencia}</strong>
+                </p>
+                <p>
+                  Redesignada: <strong>{posRelatorio.resultado.redesignada}</strong>
+                </p>
+              </div>
+            </article>
+
+            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Advogado no Caso</p>
+              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
+                <p>
+                  Presente: <strong>{posRelatorio.advogadoPresente.sim}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.advogadoPresente.sim, totalPresenca)}%)
+                  </span>
+                </p>
+                <p>
+                  Ausente: <strong>{posRelatorio.advogadoPresente.nao}</strong>
+                </p>
+                <p>
+                  Dominio minimo: <strong>{posRelatorio.advogadoDominioCaso.sim}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.advogadoDominioCaso.sim, totalDominio)}%)
+                  </span>
+                </p>
+              </div>
+            </article>
+
+            <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Risco Operacional</p>
+              <div className="mt-2 space-y-1.5 text-xs text-slate-700">
+                <p>
+                  Problema relevante: <strong className="text-red-700">{posRelatorio.problemaRelevante.sim}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.problemaRelevante.sim, totalProblema)}%)
+                  </span>
+                </p>
+                <p>
+                  Sem problema: <strong>{posRelatorio.problemaRelevante.nao}</strong>
+                </p>
+                <p>
+                  Audiencia ocorreu: <strong>{posRelatorio.audienciaOcorreu.sim}</strong>
+                </p>
+                <p>
+                  Nao ocorreu/remarcada:{' '}
+                  <strong>{posRelatorio.audienciaOcorreu.nao + posRelatorio.audienciaOcorreu.remarcada}</strong>
+                </p>
+              </div>
+            </article>
+          </div>
+        )}
       </section>
 
       {proximasAudiencias.length > 0 ? (

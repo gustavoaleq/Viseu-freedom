@@ -15115,6 +15115,10 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    respostaD1Confirmacao: string | null
+    respostaReiteracaoConfirmacao: string | null
+    respostaCheckinConfirmacao: string | null
+    respostaPosAudienciaConfirmacao: string | null
     mensagemPosPergunta2: string | null
     mensagemPosPergunta3: string | null
     mensagemPosPergunta4: string | null
@@ -15136,6 +15140,10 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    respostaD1Confirmacao: string | null
+    respostaReiteracaoConfirmacao: string | null
+    respostaCheckinConfirmacao: string | null
+    respostaPosAudienciaConfirmacao: string | null
     mensagemPosPergunta2: string | null
     mensagemPosPergunta3: string | null
     mensagemPosPergunta4: string | null
@@ -15157,6 +15165,10 @@ export namespace Prisma {
     mensagemReiteracao: number
     mensagemCheckin: number
     mensagemPosAudiencia: number
+    respostaD1Confirmacao: number
+    respostaReiteracaoConfirmacao: number
+    respostaCheckinConfirmacao: number
+    respostaPosAudienciaConfirmacao: number
     mensagemPosPergunta2: number
     mensagemPosPergunta3: number
     mensagemPosPergunta4: number
@@ -15194,6 +15206,10 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    respostaD1Confirmacao?: true
+    respostaReiteracaoConfirmacao?: true
+    respostaCheckinConfirmacao?: true
+    respostaPosAudienciaConfirmacao?: true
     mensagemPosPergunta2?: true
     mensagemPosPergunta3?: true
     mensagemPosPergunta4?: true
@@ -15215,6 +15231,10 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    respostaD1Confirmacao?: true
+    respostaReiteracaoConfirmacao?: true
+    respostaCheckinConfirmacao?: true
+    respostaPosAudienciaConfirmacao?: true
     mensagemPosPergunta2?: true
     mensagemPosPergunta3?: true
     mensagemPosPergunta4?: true
@@ -15236,6 +15256,10 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    respostaD1Confirmacao?: true
+    respostaReiteracaoConfirmacao?: true
+    respostaCheckinConfirmacao?: true
+    respostaPosAudienciaConfirmacao?: true
     mensagemPosPergunta2?: true
     mensagemPosPergunta3?: true
     mensagemPosPergunta4?: true
@@ -15344,6 +15368,10 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    respostaD1Confirmacao: string | null
+    respostaReiteracaoConfirmacao: string | null
+    respostaCheckinConfirmacao: string | null
+    respostaPosAudienciaConfirmacao: string | null
     mensagemPosPergunta2: string | null
     mensagemPosPergunta3: string | null
     mensagemPosPergunta4: string | null
@@ -15384,6 +15412,10 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    respostaD1Confirmacao?: boolean
+    respostaReiteracaoConfirmacao?: boolean
+    respostaCheckinConfirmacao?: boolean
+    respostaPosAudienciaConfirmacao?: boolean
     mensagemPosPergunta2?: boolean
     mensagemPosPergunta3?: boolean
     mensagemPosPergunta4?: boolean
@@ -15405,6 +15437,10 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    respostaD1Confirmacao?: boolean
+    respostaReiteracaoConfirmacao?: boolean
+    respostaCheckinConfirmacao?: boolean
+    respostaPosAudienciaConfirmacao?: boolean
     mensagemPosPergunta2?: boolean
     mensagemPosPergunta3?: boolean
     mensagemPosPergunta4?: boolean
@@ -15426,6 +15462,10 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    respostaD1Confirmacao?: boolean
+    respostaReiteracaoConfirmacao?: boolean
+    respostaCheckinConfirmacao?: boolean
+    respostaPosAudienciaConfirmacao?: boolean
     mensagemPosPergunta2?: boolean
     mensagemPosPergunta3?: boolean
     mensagemPosPergunta4?: boolean
@@ -15447,6 +15487,10 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    respostaD1Confirmacao?: boolean
+    respostaReiteracaoConfirmacao?: boolean
+    respostaCheckinConfirmacao?: boolean
+    respostaPosAudienciaConfirmacao?: boolean
     mensagemPosPergunta2?: boolean
     mensagemPosPergunta3?: boolean
     mensagemPosPergunta4?: boolean
@@ -15455,7 +15499,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
+  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
 
   export type $ConfiguracaoGlobalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ConfiguracaoGlobal"
@@ -15473,6 +15517,10 @@ export namespace Prisma {
       mensagemReiteracao: string | null
       mensagemCheckin: string | null
       mensagemPosAudiencia: string | null
+      respostaD1Confirmacao: string | null
+      respostaReiteracaoConfirmacao: string | null
+      respostaCheckinConfirmacao: string | null
+      respostaPosAudienciaConfirmacao: string | null
       mensagemPosPergunta2: string | null
       mensagemPosPergunta3: string | null
       mensagemPosPergunta4: string | null
@@ -15914,6 +15962,10 @@ export namespace Prisma {
     readonly mensagemReiteracao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemCheckin: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosAudiencia: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly respostaD1Confirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly respostaReiteracaoConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly respostaCheckinConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly respostaPosAudienciaConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosPergunta2: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosPergunta3: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosPergunta4: FieldRef<"ConfiguracaoGlobal", 'String'>
@@ -17588,6 +17640,10 @@ export namespace Prisma {
     mensagemReiteracao: 'mensagemReiteracao',
     mensagemCheckin: 'mensagemCheckin',
     mensagemPosAudiencia: 'mensagemPosAudiencia',
+    respostaD1Confirmacao: 'respostaD1Confirmacao',
+    respostaReiteracaoConfirmacao: 'respostaReiteracaoConfirmacao',
+    respostaCheckinConfirmacao: 'respostaCheckinConfirmacao',
+    respostaPosAudienciaConfirmacao: 'respostaPosAudienciaConfirmacao',
     mensagemPosPergunta2: 'mensagemPosPergunta2',
     mensagemPosPergunta3: 'mensagemPosPergunta3',
     mensagemPosPergunta4: 'mensagemPosPergunta4',
@@ -18793,6 +18849,10 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaPosAudienciaConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta2?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta3?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18814,6 +18874,10 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrderInput | SortOrder
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
+    respostaD1Confirmacao?: SortOrderInput | SortOrder
+    respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
+    respostaCheckinConfirmacao?: SortOrderInput | SortOrder
+    respostaPosAudienciaConfirmacao?: SortOrderInput | SortOrder
     mensagemPosPergunta2?: SortOrderInput | SortOrder
     mensagemPosPergunta3?: SortOrderInput | SortOrder
     mensagemPosPergunta4?: SortOrderInput | SortOrder
@@ -18838,6 +18902,10 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaPosAudienciaConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta2?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta3?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18859,6 +18927,10 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrderInput | SortOrder
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
+    respostaD1Confirmacao?: SortOrderInput | SortOrder
+    respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
+    respostaCheckinConfirmacao?: SortOrderInput | SortOrder
+    respostaPosAudienciaConfirmacao?: SortOrderInput | SortOrder
     mensagemPosPergunta2?: SortOrderInput | SortOrder
     mensagemPosPergunta3?: SortOrderInput | SortOrder
     mensagemPosPergunta4?: SortOrderInput | SortOrder
@@ -18888,6 +18960,10 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    respostaD1Confirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    respostaReiteracaoConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    respostaCheckinConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    respostaPosAudienciaConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta2?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta3?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta4?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
@@ -19979,6 +20055,10 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    respostaD1Confirmacao?: string | null
+    respostaReiteracaoConfirmacao?: string | null
+    respostaCheckinConfirmacao?: string | null
+    respostaPosAudienciaConfirmacao?: string | null
     mensagemPosPergunta2?: string | null
     mensagemPosPergunta3?: string | null
     mensagemPosPergunta4?: string | null
@@ -20000,6 +20080,10 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    respostaD1Confirmacao?: string | null
+    respostaReiteracaoConfirmacao?: string | null
+    respostaCheckinConfirmacao?: string | null
+    respostaPosAudienciaConfirmacao?: string | null
     mensagemPosPergunta2?: string | null
     mensagemPosPergunta3?: string | null
     mensagemPosPergunta4?: string | null
@@ -20021,6 +20105,10 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaPosAudienciaConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20042,6 +20130,10 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaPosAudienciaConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20063,6 +20155,10 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    respostaD1Confirmacao?: string | null
+    respostaReiteracaoConfirmacao?: string | null
+    respostaCheckinConfirmacao?: string | null
+    respostaPosAudienciaConfirmacao?: string | null
     mensagemPosPergunta2?: string | null
     mensagemPosPergunta3?: string | null
     mensagemPosPergunta4?: string | null
@@ -20084,6 +20180,10 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaPosAudienciaConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20105,6 +20205,10 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaPosAudienciaConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta2?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta3?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21126,6 +21230,10 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    respostaD1Confirmacao?: SortOrder
+    respostaReiteracaoConfirmacao?: SortOrder
+    respostaCheckinConfirmacao?: SortOrder
+    respostaPosAudienciaConfirmacao?: SortOrder
     mensagemPosPergunta2?: SortOrder
     mensagemPosPergunta3?: SortOrder
     mensagemPosPergunta4?: SortOrder
@@ -21154,6 +21262,10 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    respostaD1Confirmacao?: SortOrder
+    respostaReiteracaoConfirmacao?: SortOrder
+    respostaCheckinConfirmacao?: SortOrder
+    respostaPosAudienciaConfirmacao?: SortOrder
     mensagemPosPergunta2?: SortOrder
     mensagemPosPergunta3?: SortOrder
     mensagemPosPergunta4?: SortOrder
@@ -21175,6 +21287,10 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    respostaD1Confirmacao?: SortOrder
+    respostaReiteracaoConfirmacao?: SortOrder
+    respostaCheckinConfirmacao?: SortOrder
+    respostaPosAudienciaConfirmacao?: SortOrder
     mensagemPosPergunta2?: SortOrder
     mensagemPosPergunta3?: SortOrder
     mensagemPosPergunta4?: SortOrder

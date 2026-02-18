@@ -212,6 +212,18 @@ export interface DashboardResponse {
     respostasWhatsapp24h: number
     substituicoesPorAutomacao24h: number
   }
+  monitoramentoSemanal?: {
+    periodoDias: number
+    audienciasSemana: number
+    semResposta: number
+    substituicoes: {
+      abertas: number
+      resolvidas: number
+      mediaResolucaoMinutos: number | null
+      dentroSla60Minutos: number
+      taxaDentroSla60Minutos: number | null
+    }
+  }
   posRelatorio?: {
     periodoDias: number
     totalRelatorios: number
@@ -302,6 +314,10 @@ export interface ConfiguracaoGlobal {
   mensagemReiteracao: string | null
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
+  respostaD1Confirmacao: string | null
+  respostaReiteracaoConfirmacao: string | null
+  respostaCheckinConfirmacao: string | null
+  respostaPosAudienciaConfirmacao: string | null
   mensagemPosPergunta2: string | null
   mensagemPosPergunta3: string | null
   mensagemPosPergunta4: string | null

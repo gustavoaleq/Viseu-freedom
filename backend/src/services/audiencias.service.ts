@@ -563,6 +563,7 @@ export async function buscarDashboard() {
   const fimSemana = new Date(hoje)
   fimSemana.setDate(fimSemana.getDate() + 7)
   const ultimas24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const ultimos7Dias = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   const periodoPosRelatorioDias = 30
   const inicioPosRelatorio = new Date(Date.now() - periodoPosRelatorioDias * 24 * 60 * 60 * 1000)
 
@@ -582,6 +583,8 @@ export async function buscarDashboard() {
     advogadoPresentePosPeriodo,
     advogadoDominioPosPeriodo,
     problemaRelevantePosPeriodo,
+    substituicoesAbertas,
+    substituicoesResolvidasUltimos7Dias,
   ] = await Promise.all([
     prisma.audiencia.count({
       where: { status: { notIn: ['CONCLUIDA', 'CANCELADA'] } },
@@ -660,6 +663,20 @@ export async function buscarDashboard() {
       },
       _count: { _all: true },
     }),
+    prisma.substituicao.count({
+      where: { status: 'ABERTA' },
+    }),
+    prisma.substituicao.findMany({
+      where: {
+        status: 'RESOLVIDA',
+        createdAt: { gte: ultimos7Dias },
+        resolvidoEm: { not: null },
+      },
+      select: {
+        createdAt: true,
+        resolvidoEm: true,
+      },
+    }),
   ])
 
   const ocorrenciaMap = new Map(
@@ -675,6 +692,24 @@ export async function buscarDashboard() {
   const problemaMap = new Map(
     problemaRelevantePosPeriodo.map((item) => [item.problemaRelevante, item._count._all]),
   )
+  const temposResolucaoMinutos = substituicoesResolvidasUltimos7Dias
+    .map((item) => {
+      if (!item.resolvidoEm) return null
+      return Math.round((item.resolvidoEm.getTime() - item.createdAt.getTime()) / (60 * 1000))
+    })
+    .filter((valor): valor is number => typeof valor === 'number' && valor >= 0)
+  const totalResolvidasSemana = temposResolucaoMinutos.length
+  const mediaResolucaoMinutos =
+    totalResolvidasSemana > 0
+      ? Math.round(
+          temposResolucaoMinutos.reduce((acc, minutos) => acc + minutos, 0) / totalResolvidasSemana,
+        )
+      : null
+  const dentroSla60Minutos = temposResolucaoMinutos.filter((minutos) => minutos <= 60).length
+  const taxaDentroSla60Minutos =
+    totalResolvidasSemana > 0
+      ? Math.round((dentroSla60Minutos / totalResolvidasSemana) * 100)
+      : null
 
   return {
     totalAtivas,
@@ -690,6 +725,18 @@ export async function buscarDashboard() {
       reiteracoesDisparadas24h,
       respostasWhatsapp24h,
       substituicoesPorAutomacao24h,
+    },
+    monitoramentoSemanal: {
+      periodoDias: 7,
+      audienciasSemana,
+      semResposta,
+      substituicoes: {
+        abertas: substituicoesAbertas,
+        resolvidas: totalResolvidasSemana,
+        mediaResolucaoMinutos,
+        dentroSla60Minutos,
+        taxaDentroSla60Minutos,
+      },
     },
     posRelatorio: {
       periodoDias: periodoPosRelatorioDias,
@@ -871,6 +918,30 @@ export async function cancelarAudiencia(audienciaId: string, motivo: string, usu
   await removerComTolerancia(audienciaId)
 
   return atualizada
+}
+
+export async function deletarAudienciaDefinitiva(audienciaId: string) {
+  const audiencia = await prisma.audiencia.findUnique({
+    where: { id: audienciaId },
+    select: {
+      id: true,
+      numeroProcesso: true,
+    },
+  })
+  if (!audiencia) return null
+
+  await removerComTolerancia(audienciaId)
+
+  await prisma.$transaction(async (tx) => {
+    await tx.logAutomacao.deleteMany({ where: { audienciaId } })
+    await tx.relatorioAudiencia.deleteMany({ where: { audienciaId } })
+    await tx.substituicao.deleteMany({ where: { audienciaId } })
+    await tx.historicoStatus.deleteMany({ where: { audienciaId } })
+    await tx.mensagem.deleteMany({ where: { audienciaId } })
+    await tx.audiencia.delete({ where: { id: audienciaId } })
+  })
+
+  return audiencia
 }
 
 export async function confirmarAudienciaPorTelefone(

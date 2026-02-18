@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { StatusBadge } from '../components/StatusBadge'
 import { formatarData, formatarDataHora, formatarTelefone } from '../lib/format'
 import { STATUS_LABEL } from '../lib/status'
-import { audienciasApi, prepostosApi } from '../services/hub'
+import { audienciasApi, authApi, prepostosApi } from '../services/hub'
 import type { StatusAudiencia } from '../types'
 
 type WorkflowEstado = 'CONCLUIDO' | 'ATIVO' | 'PENDENTE' | 'CRITICO'
@@ -269,12 +269,15 @@ function descobrirProximaAcaoWorkflow(params: {
 
 export function AudienciaDetalhePage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const [prepostoNovoId, setPrepostoNovoId] = useState('')
   const [motivoTroca, setMotivoTroca] = useState('')
   const [observacaoCheckIn, setObservacaoCheckIn] = useState('')
+  const [observacaoConfirmacaoTelefone, setObservacaoConfirmacaoTelefone] = useState('')
   const [motivoCancelamento, setMotivoCancelamento] = useState('')
+  const [confirmacaoDelete, setConfirmacaoDelete] = useState('')
   const [erroDownloadRelatorio, setErroDownloadRelatorio] = useState('')
   const [relatorio, setRelatorio] = useState({
     audienciaOcorreu: 'SIM' as 'SIM' | 'NAO' | 'REMARCADA',
@@ -289,6 +292,12 @@ export function AudienciaDetalhePage() {
     queryKey: ['audiencia-detalhe', id],
     queryFn: () => audienciasApi.buscarPorId(id || ''),
     enabled: !!id,
+  })
+
+  const auth = useQuery({
+    queryKey: ['auth-me'],
+    queryFn: authApi.me,
+    staleTime: 1000 * 60 * 5,
   })
 
   const prepostos = useQuery({
@@ -355,6 +364,15 @@ export function AudienciaDetalhePage() {
     },
   })
 
+  const confirmarTelefone = useMutation({
+    mutationFn: () =>
+      audienciasApi.confirmarPorTelefone(id || '', observacaoConfirmacaoTelefone.trim()),
+    onSuccess: () => {
+      setObservacaoConfirmacaoTelefone('')
+      refreshTudo()
+    },
+  })
+
   const checkIn = useMutation({
     mutationFn: ({
       evento,
@@ -394,6 +412,16 @@ export function AudienciaDetalhePage() {
     },
   })
 
+  const deletarDefinitivo = useMutation({
+    mutationFn: () => audienciasApi.deletarDefinitivo(id || ''),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['audiencias-lista'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: ['kanban'] })
+      navigate('/audiencias')
+    },
+  })
+
   function submitTroca(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     trocarPreposto.mutate()
@@ -404,9 +432,19 @@ export function AudienciaDetalhePage() {
     cancelar.mutate()
   }
 
+  function submitConfirmacaoTelefone(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    confirmarTelefone.mutate()
+  }
+
   function submitRelatorio(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     salvarRelatorio.mutate()
+  }
+
+  function submitDeleteDefinitivo(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    deletarDefinitivo.mutate()
   }
 
   const audiencia = detalhe.data
@@ -477,6 +515,8 @@ export function AudienciaDetalhePage() {
             errorText: 'Falha ao disparar pos-audiencia. Verifique a configuracao do WhatsApp.',
             blockedText: undefined,
           }
+  const isAdmin = auth.data?.role === 'ADMIN'
+  const deleteConfirmacaoValida = confirmacaoDelete.trim().toUpperCase() === 'DELETAR'
 
   if (!id) {
     return (
@@ -730,6 +770,35 @@ export function AudienciaDetalhePage() {
                 Reenviar confirmacao (legado)
               </button>
 
+              <form
+                onSubmit={submitConfirmacaoTelefone}
+                className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3"
+              >
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+                  Confirmacao manual por telefone
+                </h3>
+                <input
+                  required
+                  value={observacaoConfirmacaoTelefone}
+                  onChange={(event) => setObservacaoConfirmacaoTelefone(event.target.value)}
+                  placeholder="Ex.: Confirmado por telefone com o preposto as 10:15"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none ring-primary/25 focus:ring"
+                />
+                <button
+                  type="submit"
+                  disabled={confirmarTelefone.isPending}
+                  className="w-full rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-100 disabled:opacity-60"
+                >
+                  {confirmarTelefone.isPending ? 'Confirmando...' : 'Confirmar por telefone'}
+                </button>
+                {confirmarTelefone.isError ? (
+                  <p className="text-xs text-rose-600">Falha ao registrar confirmacao por telefone.</p>
+                ) : null}
+                {confirmarTelefone.isSuccess ? (
+                  <p className="text-xs text-emerald-600">Confirmacao por telefone registrada.</p>
+                ) : null}
+              </form>
+
               <label className="block text-xs text-slate-500">
                 Observacao de check-in
                 <textarea
@@ -796,6 +865,38 @@ export function AudienciaDetalhePage() {
                   Cancelar
                 </button>
               </form>
+
+              {isAdmin ? (
+                <form
+                  onSubmit={submitDeleteDefinitivo}
+                  className="space-y-2 rounded-lg border border-rose-300 bg-rose-100 p-3"
+                >
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-800">
+                    Deletar audiencia (definitivo)
+                  </h3>
+                  <p className="text-xs text-rose-700">
+                    Remove permanentemente a audiencia e todos os registros vinculados (mensagens,
+                    historico, substituicoes, relatorio e logs).
+                  </p>
+                  <input
+                    required
+                    value={confirmacaoDelete}
+                    onChange={(event) => setConfirmacaoDelete(event.target.value)}
+                    placeholder="Digite DELETAR para confirmar"
+                    className="w-full rounded-lg border border-rose-300 bg-white px-3 py-2 text-sm outline-none ring-rose-200 focus:ring"
+                  />
+                  <button
+                    type="submit"
+                    disabled={deletarDefinitivo.isPending || !deleteConfirmacaoValida}
+                    className="w-full rounded-lg bg-rose-700 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-800 disabled:opacity-60"
+                  >
+                    {deletarDefinitivo.isPending ? 'Deletando...' : 'Deletar audiencia'}
+                  </button>
+                  {deletarDefinitivo.isError ? (
+                    <p className="text-xs text-rose-700">Falha ao deletar audiencia.</p>
+                  ) : null}
+                </form>
+              ) : null}
             </div>
           </CollapsibleCard>
         </aside>

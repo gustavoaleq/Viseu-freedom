@@ -633,3 +633,25 @@ Pendencias objetivas para fechar o fluxo end-to-end:
 - 18:42 - Criado guia de integracao `endpoints-agent.md` com autenticacao, contratos de request/response, exemplos cURL e mapeamento de perguntas do advogado para cada endpoint.
 - 18:42 - Validacao tecnica concluida: `backend npm run build` com sucesso.
 - 18:45 - Decisao arquitetural para consumo por agente (Dify): manter consulta via endpoints do backend (`/api/v1/agent`) como padrao, evitando exposicao direta do banco para IA. Exposicao SQL direta so considerada em modo controlado (usuario read-only + views dedicadas + whitelist de consultas + sem escrita).
+- 18:52 - Auditoria de aderencia ao escopo oficial `docs/ESCOPO POC VIZEU (1).docx` concluida (extracao do DOCX via XML + cruzamento com backend/frontend atuais).
+- 18:52 - Resultado da auditoria: fluxo principal da POC esta funcional (importacao com filtro TRT 2/15, D-1, reiteração, check-in, substituicao automatizada com notificacao Viseu/parceiro, checkout pos-audiencia, trilhas de historico/mensagens/logs e exportacao).
+- 18:52 - Gaps para aceite formal identificados: (1) limite contratual `30 dias ou 500 audiencias` ainda nao esta tecnicamente bloqueado no sistema; (2) dashboard nao expoe explicitamente `SLA de substituicao` e contagem semanal conforme escopo; (3) acao manual `confirmado por telefone` existe na API, mas nao esta exposta na UI atual.
+- 18:52 - Validacao tecnica de saude executada durante a auditoria: `backend npm run build` OK, `frontend npm run lint` OK, `frontend npm run build` OK.
+- 18:52 - Implementado monitoramento semanal no dashboard backend (`backend/src/services/audiencias.service.ts`): novo bloco `monitoramentoSemanal` com `periodoDias`, `audienciasSemana`, `semResposta` e metricas de SLA de substituicao (`abertas`, `resolvidas`, `mediaResolucaoMinutos`, `dentroSla60Minutos`, `taxaDentroSla60Minutos`).
+- 18:52 - Frontend atualizado para consumir e exibir leitura semanal + SLA em `frontend/src/pages/DashboardPage.tsx` e contrato tipado em `frontend/src/types/index.ts`.
+- 18:52 - Verificacao funcional do ponto "confirmado por telefone": endpoint segue ativo no backend (`POST /audiencias/:id/confirmar-telefone`), mas nao ha acao exposta na UI atual de `AudienciaDetalhePage`.
+- 18:52 - Validacoes tecnicas apos ajuste: `backend npm run build` OK, `frontend npm run lint` OK, `frontend npm run build` OK.
+- 19:00 - Reexposta na UI a acao manual `Confirmacao por telefone` em `frontend/src/pages/AudienciaDetalhePage.tsx`, dentro de `Acoes manuais (sistema)`, com campo de observacao obrigatoria, botao de envio e feedback de sucesso/erro.
+- 19:00 - Integracao frontend conectada ao endpoint existente `POST /audiencias/:id/confirmar-telefone` via `audienciasApi.confirmarPorTelefone`, com invalidacao de queries e refresh dos paines apos sucesso.
+- 19:00 - Validacao tecnica apos ajuste: `frontend npm run lint` OK e `frontend npm run build` OK.
+- 19:07 - Ajuste de ordem no dashboard (`frontend/src/pages/DashboardPage.tsx`): secao `Indicadores Pos-Audiencia` movida para abaixo de `Prioridades do Dia` + `Alertas operacionais` e acima de `Proximas audiencias`, conforme solicitacao de usabilidade.
+- 19:07 - Validacao tecnica apos ajuste visual: `frontend npm run lint` OK e `frontend npm run build` OK.
+- 19:16 - Busca global do cabecalho ativada em `frontend/src/components/AppShell.tsx`: input deixou de ser readonly e agora envia pesquisa para `/audiencias?busca=...` ao pressionar Enter.
+- 19:16 - Integracao da busca com a lista em `frontend/src/pages/AudienciasListPage.tsx`: adicionado listener de evento `audiencias:buscar-global` para atualizar filtro `busca` em tempo real quando a pesquisa e disparada pelo cabecalho.
+- 19:16 - Validacao tecnica apos ajuste: `frontend npm run lint` OK e `frontend npm run build` OK.
+- 21:37 - Login corrigido em `frontend/src/pages/LoginPage.tsx`: removidos valores hardcoded de credenciais (`admin@freedom.ai` / `admin123`), mantendo campos vazios por padrao e ajustes de `autocomplete` no formulario/campos.
+- 21:37 - Banco limpo para estado zero conforme solicitado: truncadas todas as tabelas de aplicacao no schema `public` (13 tabelas), preservando apenas `_prisma_migrations` para manter historico de migracoes.
+- 21:37 - Criado guia operacional `como-subir-vps.md` com passo a passo de deploy em VPS (pre-requisitos, env, subida via Docker Compose, migrate, seed opcional, webhook, SSL e checklist de go-live).
+- 21:37 - Validacao tecnica executada: `frontend npm run build` OK. (lint do frontend apresentou travamento no ambiente de execucao sem retorno conclusivo).
+- 21:45 - Validacao de credenciais pos-limpeza: consulta direta na tabela `usuarios` retornou lista vazia (`[]`). Nao existe login/senha ativa no banco neste momento.
+- 21:45 - Confirmado no seed padrao (`backend/src/prisma/seed.ts`) que as credenciais de bootstrap permanecem: `admin@freedom.ai` / `admin123` (necessario rodar seed para recriar).

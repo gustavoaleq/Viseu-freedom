@@ -158,6 +158,12 @@ export const audienciasApi = {
     const { data } = await api.post<Audiencia>(`/audiencias/${id}/cancelar`, { motivo })
     return data
   },
+  async deletarDefinitivo(id: string) {
+    const { data } = await api.delete<{ ok: boolean; audienciaId: string; numeroProcesso: string; message: string }>(
+      `/audiencias/${id}`,
+    )
+    return data
+  },
   async checkIn(
     id: string,
     evento: 'ESTOU_A_CAMINHO' | 'JA_CHEGUEI' | 'ESTOU_COM_PROBLEMA',
