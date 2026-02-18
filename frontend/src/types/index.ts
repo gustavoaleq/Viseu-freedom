@@ -199,6 +199,7 @@ export interface AudienciaDetalhe extends Audiencia {
 
 export interface DashboardResponse {
   totalAtivas: number
+  totalAudiencias: number
   audienciasHoje: number
   audienciasSemana: number
   aguardandoConfirmacao: number

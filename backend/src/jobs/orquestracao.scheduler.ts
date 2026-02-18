@@ -13,6 +13,7 @@ interface AgendarParams {
   audienciaId: string
   data: Date
   hora: string
+  dispararD1Imediato?: boolean
 }
 
 export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
@@ -36,12 +37,74 @@ export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
   )
   const pos = new Date(dataAudiencia.getTime() + config.posAudienciaMinutosDepois * 60 * 1000)
 
-  const jobs = await Promise.all([
-    upsertJob('CONFIRMACAO_D1', params.audienciaId, d1),
-    upsertJob('REITERACAO_6H', params.audienciaId, reiteracao),
-    upsertJob('CHECKIN_DIA', params.audienciaId, checkIn),
-    upsertJob('RELATORIO_POS', params.audienciaId, pos),
-  ])
+  const pares: [TipoJobOrquestracao, Date][] = [
+    ['CONFIRMACAO_D1', d1],
+    ['REITERACAO_6H', reiteracao],
+    ['CHECKIN_DIA', checkIn],
+    ['RELATORIO_POS', pos],
+  ]
+
+  const agora = Date.now()
+  const audienciaNoFuturo = dataAudiencia.getTime() > agora
+  const jobs: Awaited<ReturnType<typeof upsertJob>>[] = []
+  let jaAgendouCatchup = false
+
+  for (const [tipo, quando] of pares) {
+    // Flag dispararD1Imediato: forca D-1 com delay minimo (criacao/importacao com toggle ativado)
+    if (params.dispararD1Imediato && tipo === 'CONFIRMACAO_D1') {
+      jobs.push(await upsertJob(tipo, params.audienciaId, new Date(agora + DELAY_MINIMO_MS)))
+
+      await registrarLogAutomacao({
+        audienciaId: params.audienciaId,
+        origem: 'SCHEDULER',
+        evento: 'AGENDAMENTO',
+        etapa: tipo,
+        status: 'PENDENTE',
+        mensagem: 'D-1 agendado para disparo imediato (criacao/importacao)',
+        metadados: { scheduledFor: quando.toISOString(), imediato: true },
+      })
+      continue
+    }
+
+    if (quando.getTime() < agora) {
+      // Momento já passou — remove job antigo se existir
+      const id = jobIdOrquestracao(tipo, params.audienciaId)
+      const existente = await filaOrquestracaoAudiencias.getJob(id)
+      if (existente) await existente.remove()
+
+      // Se a audiencia ainda e futura e nenhum catch-up foi agendado,
+      // disparar este job imediatamente (primeiro contato com preposto).
+      // Exclui RELATORIO_POS que so faz sentido apos a audiencia.
+      if (audienciaNoFuturo && !jaAgendouCatchup && tipo !== 'RELATORIO_POS') {
+        jobs.push(await upsertJob(tipo, params.audienciaId, new Date(agora + DELAY_MINIMO_MS)))
+        jaAgendouCatchup = true
+
+        await registrarLogAutomacao({
+          audienciaId: params.audienciaId,
+          origem: 'SCHEDULER',
+          evento: 'AGENDAMENTO',
+          etapa: tipo,
+          status: 'PENDENTE',
+          mensagem: `Catch-up: horario original ja passou (${quando.toISOString()}), agendado para disparo imediato`,
+          metadados: { scheduledFor: quando.toISOString(), catchup: true },
+        })
+        continue
+      }
+
+      await registrarLogAutomacao({
+        audienciaId: params.audienciaId,
+        origem: 'SCHEDULER',
+        evento: 'DISPARO_IGNORADO',
+        etapa: tipo,
+        status: 'IGNORADO',
+        mensagem: `Horario ja passou (${quando.toISOString()}), job nao agendado`,
+        metadados: { scheduledFor: quando.toISOString() },
+      })
+      continue
+    }
+
+    jobs.push(await upsertJob(tipo, params.audienciaId, quando))
+  }
 
   await Promise.all(
     jobs.map((job) =>

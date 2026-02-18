@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { toast_erro } from '../components/Toast'
 import { authApi } from '../services/hub'
 
 function lerDestinoPadrao(valor: unknown): string {
@@ -28,6 +29,9 @@ export function LoginPage() {
         sessionStorage.setItem('token-temp', dados.token)
       }
       navigate(destino, { replace: true })
+    },
+    onError: () => {
+      toast_erro('E-mail ou senha invalidos.')
     },
   })
 
@@ -84,9 +88,9 @@ export function LoginPage() {
                   <label htmlFor="password" className="block text-sm font-semibold text-neutral-800">
                     Senha
                   </label>
-                  <button type="button" className="text-xs font-medium text-primary-700 hover:underline">
+                  <Link to="/esqueci-senha" className="text-xs font-medium text-primary-700 hover:underline">
                     Esqueci minha senha
-                  </button>
+                  </Link>
                 </div>
                 <div className="relative">                  
                   <input

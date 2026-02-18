@@ -1,6 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod/v4'
-import { verificarCredenciais, buscarUsuarioPorId } from '../services/auth.service.js'
+import {
+  verificarCredenciais,
+  buscarUsuarioPorId,
+  solicitarRedefinicaoSenha,
+  redefinirSenha,
+} from '../services/auth.service.js'
 
 const loginSchema = z.object({
   email: z.email('E-mail inválido'),
@@ -51,5 +56,55 @@ export default async function authRoutes(app: FastifyInstance) {
     // Na POC, logout é client-side (remove o token).
     // Numa versão futura, pode-se usar blacklist de tokens no Redis.
     return reply.send({ message: 'Logout realizado' })
+  })
+
+  // POST /api/v1/auth/esqueci-senha
+  const esqueciSenhaSchema = z.object({
+    email: z.email('E-mail inválido'),
+  })
+
+  app.post('/esqueci-senha', async (request, reply) => {
+    const parse = esqueciSenhaSchema.safeParse(request.body)
+    if (!parse.success) {
+      return reply.status(400).send({
+        error: 'Dados inválidos',
+        detalhes: parse.error.issues,
+      })
+    }
+
+    try {
+      await solicitarRedefinicaoSenha(parse.data.email)
+    } catch (err) {
+      app.log.error(err, 'Erro ao enviar e-mail de redefinição')
+    }
+
+    // Sempre retorna sucesso (segurança: não revela se o e-mail existe)
+    return reply.send({
+      message: 'Se o e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.',
+    })
+  })
+
+  // POST /api/v1/auth/redefinir-senha
+  const redefinirSenhaSchema = z.object({
+    token: z.string().min(1, 'Token é obrigatório'),
+    novaSenha: z.string().min(6, 'A nova senha deve ter no mínimo 6 caracteres'),
+  })
+
+  app.post('/redefinir-senha', async (request, reply) => {
+    const parse = redefinirSenhaSchema.safeParse(request.body)
+    if (!parse.success) {
+      return reply.status(400).send({
+        error: 'Dados inválidos',
+        detalhes: parse.error.issues,
+      })
+    }
+
+    const resultado = await redefinirSenha(parse.data.token, parse.data.novaSenha)
+
+    if (!resultado.ok) {
+      return reply.status(400).send({ error: resultado.motivo })
+    }
+
+    return reply.send({ message: 'Senha redefinida com sucesso.' })
   })
 }

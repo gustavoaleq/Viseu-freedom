@@ -24,4 +24,8 @@ export const env = {
   ORQ_TIMEZONE: process.env.ORQ_TIMEZONE ?? 'America/Sao_Paulo',
   PORT: Number(process.env.PORT ?? 3001),
   HOST: process.env.HOST ?? '0.0.0.0',
+
+  // Resend (e-mail)
+  RESEND_API_KEY: process.env.RESEND_API_KEY ?? '',
+  EMAIL_FROM: process.env.EMAIL_FROM ?? 'Freedom.AI Hub <onboarding@resend.dev>',
 }

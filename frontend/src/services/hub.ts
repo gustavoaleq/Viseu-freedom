@@ -110,6 +110,14 @@ export const authApi = {
     const { data } = await api.post<{ message: string }>('/auth/logout')
     return data
   },
+  async esqueciSenha(email: string) {
+    const { data } = await api.post<{ message: string }>('/auth/esqueci-senha', { email })
+    return data
+  },
+  async redefinirSenha(token: string, novaSenha: string) {
+    const { data } = await api.post<{ message: string }>('/auth/redefinir-senha', { token, novaSenha })
+    return data
+  },
 }
 
 export const audienciasApi = {

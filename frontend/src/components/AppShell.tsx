@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { authApi } from '../services/hub'
+import { authApi, audienciasApi } from '../services/hub'
 import { obterIniciais } from '../lib/format'
 
 const itensMenu = [
@@ -27,6 +27,12 @@ export function AppShell() {
     queryKey: ['auth-me'],
     queryFn: authApi.me,
     staleTime: 1000 * 60 * 5,
+  })
+
+  const { data: dashData } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: audienciasApi.dashboard,
+    staleTime: 1000 * 60 * 2,
   })
 
   async function logout() {
@@ -99,12 +105,7 @@ export function AppShell() {
             ))}
           </nav>
 
-          <div className="mt-10 rounded-xl border border-border bg-neutral-50 p-4 shadow-1">
-            <p className="text-overline text-muted-foreground">Escopo POC</p>
-            <p className="mt-2 text-caption text-neutral-700">
-              Operacao manual-first com importacao assistida de planilhas (TRT 2 e TRT 15).
-            </p>
-          </div>
+          <EscopoPoc totalAudiencias={dashData?.totalAudiencias ?? 0} />
 
           <div className="mt-auto hidden lg:block">
             <button
@@ -165,6 +166,59 @@ export function AppShell() {
             <Outlet />
           </main>
         </section>
+      </div>
+    </div>
+  )
+}
+
+const POC_LIMITE = 500
+const POC_INICIO = new Date('2026-02-25T00:00:00')
+const POC_DIAS = 30
+const POC_FIM = new Date(POC_INICIO.getTime() + POC_DIAS * 24 * 60 * 60 * 1000)
+
+function EscopoPoc({ totalAudiencias }: { totalAudiencias: number }) {
+  const agora = Date.now()
+  const iniciou = agora >= POC_INICIO.getTime()
+  const diasCorridos = iniciou ? Math.floor((agora - POC_INICIO.getTime()) / (86400000)) : 0
+  const diasRestantes = iniciou ? Math.max(0, POC_DIAS - diasCorridos) : POC_DIAS
+  const pctAud = Math.min(Math.round((totalAudiencias / POC_LIMITE) * 100), 100)
+  const pctDias = iniciou ? Math.min(Math.round((diasCorridos / POC_DIAS) * 100), 100) : 0
+
+  const corAud = pctAud >= 90 ? 'bg-red-500' : pctAud >= 70 ? 'bg-amber-500' : 'bg-emerald-500'
+  const corDias = pctDias >= 90 ? 'bg-red-500' : pctDias >= 70 ? 'bg-amber-500' : 'bg-blue-500'
+
+  return (
+    <div className="mt-10 rounded-xl border border-border bg-neutral-50 p-4 shadow-1">
+      <p className="text-overline text-muted-foreground">Escopo POC</p>
+      <p className="mt-1.5 text-caption text-neutral-700">
+        Operacao manual-first com importacao assistida de planilhas (TRT 2 e TRT 15).
+      </p>
+
+      <div className="mt-3 space-y-2.5">
+        <div>
+          <div className="flex items-center justify-between text-[11px] text-neutral-600">
+            <span>Audiencias</span>
+            <span className="font-semibold">{totalAudiencias}/{POC_LIMITE}</span>
+          </div>
+          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200">
+            <div className={`h-full rounded-full ${corAud}`} style={{ width: `${Math.max(pctAud, 1)}%` }} />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between text-[11px] text-neutral-600">
+            <span>Prazo</span>
+            <span className="font-semibold">
+              {iniciou ? `${diasRestantes}d restante${diasRestantes !== 1 ? 's' : ''}` : 'Inicia 25/02'}
+            </span>
+          </div>
+          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200">
+            <div className={`h-full rounded-full ${corDias}`} style={{ width: `${Math.max(pctDias, 1)}%` }} />
+          </div>
+          <p className="mt-0.5 text-[10px] text-neutral-400">
+            25/02 — {POC_FIM.toLocaleDateString('pt-BR')}
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import {
   agendarOrquestracaoAudiencia,
   removerOrquestracaoAudiencia,
 } from '../jobs/orquestracao.scheduler.js'
+import { obterConfiguracoes } from './configuracoes.service.js'
 import { registrarLogAutomacao } from './automacao-log.service.js'
 import {
   dispararEscalonamentoSubstituicao,
@@ -429,7 +430,8 @@ export async function criarAudiencia(dados: DadosCriarAudiencia, usuarioId: stri
     usuarioId,
   )
 
-  await agendarComTolerancia(audiencia.id, audiencia.data, audiencia.hora)
+  const config = await obterConfiguracoes()
+  await agendarComTolerancia(audiencia.id, audiencia.data, audiencia.hora, config.enviarAvisoNaImportacao)
 
   return audiencia
 }
@@ -569,6 +571,7 @@ export async function buscarDashboard() {
 
   const [
     totalAtivas,
+    totalAudiencias,
     audienciasHoje,
     audienciasSemana,
     porStatus,
@@ -589,6 +592,7 @@ export async function buscarDashboard() {
     prisma.audiencia.count({
       where: { status: { notIn: ['CONCLUIDA', 'CANCELADA'] } },
     }),
+    prisma.audiencia.count(),
     prisma.audiencia.count({
       where: { data: { gte: hoje, lt: amanha } },
     }),
@@ -713,6 +717,7 @@ export async function buscarDashboard() {
 
   return {
     totalAtivas,
+    totalAudiencias,
     audienciasHoje,
     audienciasSemana,
     aguardandoConfirmacao,
@@ -1284,9 +1289,9 @@ async function validarTrtAtivo(trtId: string) {
   }
 }
 
-async function agendarComTolerancia(audienciaId: string, data: Date, hora: string) {
+async function agendarComTolerancia(audienciaId: string, data: Date, hora: string, dispararD1Imediato = false) {
   try {
-    await agendarOrquestracaoAudiencia({ audienciaId, data, hora })
+    await agendarOrquestracaoAudiencia({ audienciaId, data, hora, dispararD1Imediato })
   } catch (error) {
     console.error('[orquestracao] falha ao agendar audiencia', {
       audienciaId,

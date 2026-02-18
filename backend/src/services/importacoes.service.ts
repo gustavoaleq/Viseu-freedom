@@ -292,6 +292,7 @@ export async function confirmarImportacao(importacaoId: string, usuarioId: strin
           audienciaId: audiencia.id,
           data: audiencia.data,
           hora: audiencia.hora,
+          dispararD1Imediato: true,
         })
       } catch (error) {
         console.error('[orquestracao] falha ao agendar audiencia importada', {

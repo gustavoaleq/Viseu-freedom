@@ -1,8 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { toast_erro, toast_sucesso } from '../components/Toast'
 import { formatarTelefone } from '../lib/format'
 import { prepostosApi } from '../services/hub'
+
+function extrairMensagemErro(err: unknown, fallback: string): string {
+  const e = err as { response?: { data?: { error?: string; detalhes?: { message: string }[] } } }
+  return e?.response?.data?.error ?? e?.response?.data?.detalhes?.[0]?.message ?? fallback
+}
 
 export function PrepostosPage() {
   const queryClient = useQueryClient()
@@ -30,12 +36,17 @@ export function PrepostosPage() {
   })
 
   const criar = useMutation({
-    mutationFn: () => prepostosApi.criar(novo),
+    mutationFn: (payload: { nome: string; telefoneWhatsapp: string; email?: string; cpf?: string }) =>
+      prepostosApi.criar(payload),
     onSuccess: () => {
       setNovo({ nome: '', telefoneWhatsapp: '', email: '', cpf: '' })
       queryClient.invalidateQueries({ queryKey: ['prepostos-page'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-filtro'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-troca'] })
+      toast_sucesso('Preposto criado com sucesso.')
+    },
+    onError: (err) => {
+      toast_erro(extrairMensagemErro(err, 'Erro ao criar preposto.'))
     },
   })
 
@@ -51,6 +62,10 @@ export function PrepostosPage() {
       queryClient.invalidateQueries({ queryKey: ['prepostos-page'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-filtro'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-troca'] })
+      toast_sucesso('Preposto atualizado.')
+    },
+    onError: (err) => {
+      toast_erro(extrairMensagemErro(err, 'Erro ao atualizar preposto.'))
     },
   })
 
@@ -60,12 +75,22 @@ export function PrepostosPage() {
       queryClient.invalidateQueries({ queryKey: ['prepostos-page'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-filtro'] })
       queryClient.invalidateQueries({ queryKey: ['prepostos-troca'] })
+      toast_sucesso('Preposto removido.')
+    },
+    onError: (err) => {
+      toast_erro(extrairMensagemErro(err, 'Erro ao remover preposto.'))
     },
   })
 
   function submitNovo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    criar.mutate()
+    const payload = {
+      nome: novo.nome.trim(),
+      telefoneWhatsapp: novo.telefoneWhatsapp.trim(),
+      email: novo.email.trim() || undefined,
+      cpf: novo.cpf.trim() || undefined,
+    }
+    criar.mutate(payload)
   }
 
   function iniciarEdicao(preposto: { id: string; nome: string; telefoneWhatsapp: string; email?: string | null }) {

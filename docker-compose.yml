@@ -1,33 +1,40 @@
 services:
   frontend:
     build: ./frontend
-    ports:
-      - "3000:80"
+    expose:
+      - "80"
     depends_on:
       - backend
+    networks:
+      default: {}
+      shared_proxy:
+        aliases:
+          - nginx_viseu
+    restart: unless-stopped
 
   backend:
     build: ./backend
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
     env_file:
       - ./backend/.env
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/freedom_hub?schema=public
+      DATABASE_URL: postgresql://postgres:Vis3u@Hub2026!@postgres:5432/freedom_hub?schema=public
       REDIS_URL: redis://redis:6379
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_started
+    restart: unless-stopped
 
   postgres:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: "Vis3u@Hub2026!"
       POSTGRES_DB: freedom_hub
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -36,14 +43,42 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     volumes:
       - redis_data:/data
+    restart: unless-stopped
+
+  db_backup:
+    image: postgres:16-alpine
+    environment:
+      PGPASSWORD: "Vis3u@Hub2026!"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - /etc/opt/backups/viseu:/backups
+    entrypoint: []
+    command: >
+      sh -c "set -eu;
+        mkdir -p /backups;
+        while true; do
+          ts=$$(date +%Y%m%d_%H%M%S);
+          pg_dump -h postgres -U postgres -d freedom_hub | gzip > /backups/viseu_$${ts}.sql.gz;
+          echo \"[backup] viseu_$${ts}.sql.gz criado\";
+          find /backups -name 'viseu_*.sql.gz' -mtime +7 -delete;
+          sleep 86400;
+        done"
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  shared_proxy:
+    external: true
