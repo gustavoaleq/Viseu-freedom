@@ -7,6 +7,7 @@ export const FILA_ORQUESTRACAO_AUDIENCIAS = 'orquestracao-audiencias'
 export type TipoJobOrquestracao =
   | 'CONFIRMACAO_D1'
   | 'REITERACAO_6H'
+  | 'SEM_RESPOSTA'
   | 'CHECKIN_DIA'
   | 'RELATORIO_POS'
 

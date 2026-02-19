@@ -19,6 +19,7 @@ export const env = {
   PARCEIRO_INTERNO_NOME: process.env.PARCEIRO_INTERNO_NOME ?? 'Viseu Advogados',
   ORQ_D1_HORAS_ANTES: Number(process.env.ORQ_D1_HORAS_ANTES ?? 24),
   ORQ_REITERACAO_HORAS_ANTES: Number(process.env.ORQ_REITERACAO_HORAS_ANTES ?? 6),
+  ORQ_SEM_RESPOSTA_MINUTOS_DEPOIS: Number(process.env.ORQ_SEM_RESPOSTA_MINUTOS_DEPOIS ?? 60),
   ORQ_CHECKIN_MINUTOS_ANTES: Number(process.env.ORQ_CHECKIN_MINUTOS_ANTES ?? 60),
   ORQ_POS_MINUTOS_DEPOIS: Number(process.env.ORQ_POS_MINUTOS_DEPOIS ?? 30),
   ORQ_TIMEZONE: process.env.ORQ_TIMEZONE ?? 'America/Sao_Paulo',

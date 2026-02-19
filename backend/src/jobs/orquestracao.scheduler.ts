@@ -9,7 +9,7 @@ import {
 
 const DELAY_MINIMO_MS = 5000
 
-interface AgendarParams {
+  interface AgendarParams {
   audienciaId: string
   data: Date
   hora: string
@@ -34,6 +34,9 @@ export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
   const reiteracao = new Date(
     dataAudiencia.getTime() - config.antecedenciaReiteracaoHoras * 60 * 60 * 1000,
   )
+  const semResposta = new Date(
+    reiteracao.getTime() + config.atrasoSemRespostaMinutos * 60 * 1000,
+  )
   const checkIn = new Date(
     dataAudiencia.getTime() - config.antecedenciaCheckinMinutos * 60 * 1000,
   )
@@ -42,6 +45,7 @@ export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
   const pares: [TipoJobOrquestracao, Date][] = [
     ['CONFIRMACAO_D1', d1],
     ['REITERACAO_6H', reiteracao],
+    ['SEM_RESPOSTA', semResposta],
     ['CHECKIN_DIA', checkIn],
     ['RELATORIO_POS', pos],
   ]

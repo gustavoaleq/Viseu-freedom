@@ -320,6 +320,7 @@ model ConfiguracaoGlobal {
   horarioD1                       String? // HH:mm — se null, usa antecedenciaD1Horas
   antecedenciaD1Horas             Int      @default(24)
   antecedenciaReiteracaoHoras     Int      @default(6)
+  atrasoSemRespostaMinutos        Int      @default(60)
   antecedenciaCheckinMinutos      Int      @default(60)
   posAudienciaMinutosDepois       Int      @default(30)
   fusoHorario                     String   @default("America/Sao_Paulo")

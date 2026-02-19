@@ -323,6 +323,7 @@ export interface ConfiguracaoGlobal {
   horarioD1: string | null
   antecedenciaD1Horas: number
   antecedenciaReiteracaoHoras: number
+  atrasoSemRespostaMinutos: number
   antecedenciaCheckinMinutos: number
   posAudienciaMinutosDepois: number
   fusoHorario: string

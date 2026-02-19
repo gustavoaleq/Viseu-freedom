@@ -115,6 +115,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
     horarioD1: dados.horarioD1,
     antecedenciaD1Horas: dados.antecedenciaD1Horas,
     antecedenciaReiteracaoHoras: dados.antecedenciaReiteracaoHoras,
+    atrasoSemRespostaMinutos: dados.atrasoSemRespostaMinutos,
     antecedenciaCheckinMinutos: dados.antecedenciaCheckinMinutos,
     posAudienciaMinutosDepois: dados.posAudienciaMinutosDepois,
     fusoHorario: dados.fusoHorario,
@@ -307,6 +308,28 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
             />
             <p className="mt-1 text-xs text-slate-400">
               Horas antes da audiencia para reenviar a confirmacao.
+            </p>
+          </div>
+
+          <div className="mt-4 max-w-xs">
+            <label className="block text-sm font-medium text-slate-700">
+              Atraso para substituicao por sem resposta (minutos)
+            </label>
+            <input
+              type="number"
+              min={5}
+              max={1440}
+              value={form.atrasoSemRespostaMinutos ?? 60}
+              onChange={(e) =>
+                setForm((f) => ({
+                  ...f,
+                  atrasoSemRespostaMinutos: Number(e.target.value),
+                }))
+              }
+              className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-400"
+            />
+            <p className="mt-1 text-xs text-slate-400">
+              Minutos apos a reiteracao para abrir substituicao necessaria se nao houver resposta.
             </p>
           </div>
         </section>

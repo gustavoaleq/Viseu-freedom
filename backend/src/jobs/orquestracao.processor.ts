@@ -6,6 +6,7 @@ import {
   aplicarTemplate,
   TEMPLATES_DEFAULT,
 } from '../services/configuracoes.service.js'
+import { dispararEscalonamentoSubstituicao } from '../services/substituicao-automacao.service.js'
 import type { StatusAudiencia, TipoMensagem } from '../generated/prisma/client.js'
 import type { TipoJobOrquestracao } from './orquestracao.queue.js'
 
@@ -36,6 +37,10 @@ export async function processarOrquestracaoAudiencia(
   opcoes: OpcoesProcessamento = {},
 ): Promise<ResultadoProcessamento> {
   const origem = opcoes.origem ?? 'WORKER'
+  if (tipo === 'SEM_RESPOSTA') {
+    return processarSemResposta(audienciaId, atualizadoPor, origem)
+  }
+
   const audiencia = await prisma.audiencia.findUnique({
     where: { id: audienciaId },
     include: {
@@ -179,6 +184,150 @@ export async function processarOrquestracaoAudiencia(
     })
     throw error
   }
+}
+
+async function processarSemResposta(
+  audienciaId: string,
+  atualizadoPor: string,
+  origem: 'WORKER' | 'MANUAL',
+): Promise<ResultadoProcessamento> {
+  const audiencia = await prisma.audiencia.findUnique({
+    where: { id: audienciaId },
+    include: { preposto: { select: { id: true, nome: true, telefoneWhatsapp: true } } },
+  })
+
+  if (!audiencia) {
+    return { ok: false, reason: 'AUDIENCIA_NAO_ENCONTRADA' }
+  }
+
+  if (!audiencia.preposto) {
+    await registrarLogAutomacao({
+      audienciaId,
+      origem,
+      evento: 'DISPARO_IGNORADO',
+      etapa: 'SEM_RESPOSTA',
+      status: 'IGNORADO',
+      mensagem: 'Sem resposta ignorado: audiencia sem preposto',
+    })
+    return { ok: false, reason: 'SEM_PREPOSTO' }
+  }
+
+  if (['CANCELADA', 'CONCLUIDA', 'SUBSTITUICAO_NECESSARIA'].includes(audiencia.status)) {
+    await registrarLogAutomacao({
+      audienciaId,
+      origem,
+      evento: 'DISPARO_IGNORADO',
+      etapa: 'SEM_RESPOSTA',
+      status: 'IGNORADO',
+      mensagem: 'Sem resposta ignorado: audiencia finalizada ou em substituicao',
+      metadados: { status: audiencia.status },
+    })
+    return { ok: false, reason: 'STATUS_FINAL' }
+  }
+
+  const resposta = await prisma.mensagem.findFirst({
+    where: {
+      audienciaId,
+      direcao: 'RECEBIDA',
+      tipo: { in: ['CONFIRMACAO_D1', 'REITERACAO_H1H30'] },
+    },
+    select: { id: true, respostaBotao: true, createdAt: true },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  if (resposta) {
+    await registrarLogAutomacao({
+      audienciaId,
+      origem,
+      evento: 'DISPARO_IGNORADO',
+      etapa: 'SEM_RESPOSTA',
+      status: 'IGNORADO',
+      mensagem: 'Sem resposta ignorado: resposta ja recebida',
+      metadados: { respostaBotao: resposta.respostaBotao ?? null, respondedAt: resposta.createdAt.toISOString() },
+    })
+    return { ok: false, reason: 'JA_ENVIADA' }
+  }
+
+  const motivo = 'Sem resposta do preposto'
+
+  const aplicado = await prisma.$transaction(async (tx) => {
+    const atual = await tx.audiencia.findUnique({
+      where: { id: audienciaId },
+      select: { status: true, prepostoId: true },
+    })
+
+    if (!atual) return null
+    if (atual.status === 'CANCELADA' || atual.status === 'CONCLUIDA') return null
+
+    await tx.audiencia.update({
+      where: { id: audienciaId },
+      data: { status: 'SUBSTITUICAO_NECESSARIA' },
+    })
+    await tx.historicoStatus.create({
+      data: {
+        audienciaId,
+        statusAnterior: atual.status,
+        statusNovo: 'SUBSTITUICAO_NECESSARIA',
+        motivo,
+        atualizadoPor,
+      },
+    })
+
+    const aberta = await tx.substituicao.findFirst({
+      where: { audienciaId, status: 'ABERTA' },
+      select: { id: true },
+    })
+    let substituicaoCriada = false
+    if (!aberta) {
+      await tx.substituicao.create({
+        data: {
+          audienciaId,
+          prepostoAnteriorId: atual.prepostoId,
+          motivo,
+          status: 'ABERTA',
+        },
+      })
+      substituicaoCriada = true
+    }
+
+    return { statusAnterior: atual.status, substituicaoCriada }
+  })
+
+  if (!aplicado) {
+    return { ok: false, reason: 'AUDIENCIA_NAO_ENCONTRADA' }
+  }
+
+  await registrarLogAutomacao({
+    audienciaId,
+    origem,
+    evento: 'SUBSTITUICAO_ABERTA',
+    etapa: 'SEM_RESPOSTA',
+    status: 'SUCESSO',
+    mensagem: 'Substituicao aberta por sem resposta ao D1 e reiteracao',
+    metadados: {
+      statusAnterior: aplicado.statusAnterior,
+      statusNovo: 'SUBSTITUICAO_NECESSARIA',
+      substituicaoCriada: aplicado.substituicaoCriada,
+    },
+  })
+
+  try {
+    await dispararEscalonamentoSubstituicao(audienciaId, motivo, 'MANUAL')
+  } catch (error) {
+    await registrarLogAutomacao({
+      audienciaId,
+      origem,
+      evento: 'ERRO',
+      etapa: 'ESCALONAMENTO',
+      status: 'ERRO',
+      mensagem: 'Falha ao disparar escalonamento de substituicao',
+      metadados: {
+        erro: error instanceof Error ? error.message : String(error),
+      },
+    })
+  }
+
+  return { ok: true, audienciaId, tipo: 'SEM_RESPOSTA' }
 }
 
 function montarMensagem(

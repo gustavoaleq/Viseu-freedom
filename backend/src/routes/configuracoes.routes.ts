@@ -29,6 +29,7 @@ const atualizarSchema = z
       .optional(),
     antecedenciaD1Horas: z.number().int().min(1).max(72).optional(),
     antecedenciaReiteracaoHoras: z.number().int().min(1).max(48).optional(),
+    atrasoSemRespostaMinutos: z.number().int().min(5).max(1440).optional(),
     antecedenciaCheckinMinutos: z.number().int().min(10).max(360).optional(),
     posAudienciaMinutosDepois: z.number().int().min(5).max(180).optional(),
     fusoHorario: z.enum(FUSOS_VALIDOS).optional(),

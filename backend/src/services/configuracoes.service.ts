@@ -53,6 +53,7 @@ export interface ConfiguracaoGlobalDTO {
   horarioD1: string | null
   antecedenciaD1Horas: number
   antecedenciaReiteracaoHoras: number
+  atrasoSemRespostaMinutos: number
   antecedenciaCheckinMinutos: number
   posAudienciaMinutosDepois: number
   fusoHorario: string
@@ -82,6 +83,7 @@ function configParaDTO(config: {
   horarioD1: string | null
   antecedenciaD1Horas: number
   antecedenciaReiteracaoHoras: number
+  atrasoSemRespostaMinutos: number
   antecedenciaCheckinMinutos: number
   posAudienciaMinutosDepois: number
   fusoHorario: string
@@ -110,6 +112,7 @@ function configParaDTO(config: {
     horarioD1: config.horarioD1,
     antecedenciaD1Horas: config.antecedenciaD1Horas,
     antecedenciaReiteracaoHoras: config.antecedenciaReiteracaoHoras,
+    atrasoSemRespostaMinutos: config.atrasoSemRespostaMinutos,
     antecedenciaCheckinMinutos: config.antecedenciaCheckinMinutos,
     posAudienciaMinutosDepois: config.posAudienciaMinutosDepois,
     fusoHorario: config.fusoHorario,
@@ -150,6 +153,7 @@ export async function obterConfiguracoes(): Promise<ConfiguracaoGlobalDTO> {
         id: SINGLETON_ID,
         antecedenciaD1Horas: env.ORQ_D1_HORAS_ANTES,
         antecedenciaReiteracaoHoras: env.ORQ_REITERACAO_HORAS_ANTES,
+        atrasoSemRespostaMinutos: env.ORQ_SEM_RESPOSTA_MINUTOS_DEPOIS,
         antecedenciaCheckinMinutos: env.ORQ_CHECKIN_MINUTOS_ANTES,
         posAudienciaMinutosDepois: env.ORQ_POS_MINUTOS_DEPOIS,
         fusoHorario: env.ORQ_TIMEZONE,
@@ -169,6 +173,7 @@ export interface AtualizarConfiguracoesInput {
   horarioD1?: string | null
   antecedenciaD1Horas?: number
   antecedenciaReiteracaoHoras?: number
+  atrasoSemRespostaMinutos?: number
   antecedenciaCheckinMinutos?: number
   posAudienciaMinutosDepois?: number
   fusoHorario?: string

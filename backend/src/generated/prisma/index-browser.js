@@ -275,6 +275,7 @@ exports.Prisma.ConfiguracaoGlobalScalarFieldEnum = {
   horarioD1: 'horarioD1',
   antecedenciaD1Horas: 'antecedenciaD1Horas',
   antecedenciaReiteracaoHoras: 'antecedenciaReiteracaoHoras',
+  atrasoSemRespostaMinutos: 'atrasoSemRespostaMinutos',
   antecedenciaCheckinMinutos: 'antecedenciaCheckinMinutos',
   posAudienciaMinutosDepois: 'posAudienciaMinutosDepois',
   fusoHorario: 'fusoHorario',

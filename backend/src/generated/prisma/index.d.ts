@@ -15287,6 +15287,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalAvgAggregateOutputType = {
     antecedenciaD1Horas: number | null
     antecedenciaReiteracaoHoras: number | null
+    atrasoSemRespostaMinutos: number | null
     antecedenciaCheckinMinutos: number | null
     posAudienciaMinutosDepois: number | null
   }
@@ -15294,6 +15295,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalSumAggregateOutputType = {
     antecedenciaD1Horas: number | null
     antecedenciaReiteracaoHoras: number | null
+    atrasoSemRespostaMinutos: number | null
     antecedenciaCheckinMinutos: number | null
     posAudienciaMinutosDepois: number | null
   }
@@ -15304,6 +15306,7 @@ export namespace Prisma {
     horarioD1: string | null
     antecedenciaD1Horas: number | null
     antecedenciaReiteracaoHoras: number | null
+    atrasoSemRespostaMinutos: number | null
     antecedenciaCheckinMinutos: number | null
     posAudienciaMinutosDepois: number | null
     fusoHorario: string | null
@@ -15334,6 +15337,7 @@ export namespace Prisma {
     horarioD1: string | null
     antecedenciaD1Horas: number | null
     antecedenciaReiteracaoHoras: number | null
+    atrasoSemRespostaMinutos: number | null
     antecedenciaCheckinMinutos: number | null
     posAudienciaMinutosDepois: number | null
     fusoHorario: string | null
@@ -15364,6 +15368,7 @@ export namespace Prisma {
     horarioD1: number
     antecedenciaD1Horas: number
     antecedenciaReiteracaoHoras: number
+    atrasoSemRespostaMinutos: number
     antecedenciaCheckinMinutos: number
     posAudienciaMinutosDepois: number
     fusoHorario: number
@@ -15393,6 +15398,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalAvgAggregateInputType = {
     antecedenciaD1Horas?: true
     antecedenciaReiteracaoHoras?: true
+    atrasoSemRespostaMinutos?: true
     antecedenciaCheckinMinutos?: true
     posAudienciaMinutosDepois?: true
   }
@@ -15400,6 +15406,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalSumAggregateInputType = {
     antecedenciaD1Horas?: true
     antecedenciaReiteracaoHoras?: true
+    atrasoSemRespostaMinutos?: true
     antecedenciaCheckinMinutos?: true
     posAudienciaMinutosDepois?: true
   }
@@ -15410,6 +15417,7 @@ export namespace Prisma {
     horarioD1?: true
     antecedenciaD1Horas?: true
     antecedenciaReiteracaoHoras?: true
+    atrasoSemRespostaMinutos?: true
     antecedenciaCheckinMinutos?: true
     posAudienciaMinutosDepois?: true
     fusoHorario?: true
@@ -15440,6 +15448,7 @@ export namespace Prisma {
     horarioD1?: true
     antecedenciaD1Horas?: true
     antecedenciaReiteracaoHoras?: true
+    atrasoSemRespostaMinutos?: true
     antecedenciaCheckinMinutos?: true
     posAudienciaMinutosDepois?: true
     fusoHorario?: true
@@ -15470,6 +15479,7 @@ export namespace Prisma {
     horarioD1?: true
     antecedenciaD1Horas?: true
     antecedenciaReiteracaoHoras?: true
+    atrasoSemRespostaMinutos?: true
     antecedenciaCheckinMinutos?: true
     posAudienciaMinutosDepois?: true
     fusoHorario?: true
@@ -15587,6 +15597,7 @@ export namespace Prisma {
     horarioD1: string | null
     antecedenciaD1Horas: number
     antecedenciaReiteracaoHoras: number
+    atrasoSemRespostaMinutos: number
     antecedenciaCheckinMinutos: number
     posAudienciaMinutosDepois: number
     fusoHorario: string
@@ -15636,6 +15647,7 @@ export namespace Prisma {
     horarioD1?: boolean
     antecedenciaD1Horas?: boolean
     antecedenciaReiteracaoHoras?: boolean
+    atrasoSemRespostaMinutos?: boolean
     antecedenciaCheckinMinutos?: boolean
     posAudienciaMinutosDepois?: boolean
     fusoHorario?: boolean
@@ -15666,6 +15678,7 @@ export namespace Prisma {
     horarioD1?: boolean
     antecedenciaD1Horas?: boolean
     antecedenciaReiteracaoHoras?: boolean
+    atrasoSemRespostaMinutos?: boolean
     antecedenciaCheckinMinutos?: boolean
     posAudienciaMinutosDepois?: boolean
     fusoHorario?: boolean
@@ -15696,6 +15709,7 @@ export namespace Prisma {
     horarioD1?: boolean
     antecedenciaD1Horas?: boolean
     antecedenciaReiteracaoHoras?: boolean
+    atrasoSemRespostaMinutos?: boolean
     antecedenciaCheckinMinutos?: boolean
     posAudienciaMinutosDepois?: boolean
     fusoHorario?: boolean
@@ -15726,6 +15740,7 @@ export namespace Prisma {
     horarioD1?: boolean
     antecedenciaD1Horas?: boolean
     antecedenciaReiteracaoHoras?: boolean
+    atrasoSemRespostaMinutos?: boolean
     antecedenciaCheckinMinutos?: boolean
     posAudienciaMinutosDepois?: boolean
     fusoHorario?: boolean
@@ -15750,7 +15765,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemCancelamento" | "respostaNaoPosso" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "mensagemPosPergunta7" | "mensagemPosPergunta8" | "mensagemPosPergunta9" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
+  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "atrasoSemRespostaMinutos" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemCancelamento" | "respostaNaoPosso" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "mensagemPosPergunta7" | "mensagemPosPergunta8" | "mensagemPosPergunta9" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
 
   export type $ConfiguracaoGlobalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ConfiguracaoGlobal"
@@ -15761,6 +15776,7 @@ export namespace Prisma {
       horarioD1: string | null
       antecedenciaD1Horas: number
       antecedenciaReiteracaoHoras: number
+      atrasoSemRespostaMinutos: number
       antecedenciaCheckinMinutos: number
       posAudienciaMinutosDepois: number
       fusoHorario: string
@@ -16211,6 +16227,7 @@ export namespace Prisma {
     readonly horarioD1: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly antecedenciaD1Horas: FieldRef<"ConfiguracaoGlobal", 'Int'>
     readonly antecedenciaReiteracaoHoras: FieldRef<"ConfiguracaoGlobal", 'Int'>
+    readonly atrasoSemRespostaMinutos: FieldRef<"ConfiguracaoGlobal", 'Int'>
     readonly antecedenciaCheckinMinutos: FieldRef<"ConfiguracaoGlobal", 'Int'>
     readonly posAudienciaMinutosDepois: FieldRef<"ConfiguracaoGlobal", 'Int'>
     readonly fusoHorario: FieldRef<"ConfiguracaoGlobal", 'String'>
@@ -17907,6 +17924,7 @@ export namespace Prisma {
     horarioD1: 'horarioD1',
     antecedenciaD1Horas: 'antecedenciaD1Horas',
     antecedenciaReiteracaoHoras: 'antecedenciaReiteracaoHoras',
+    atrasoSemRespostaMinutos: 'atrasoSemRespostaMinutos',
     antecedenciaCheckinMinutos: 'antecedenciaCheckinMinutos',
     posAudienciaMinutosDepois: 'posAudienciaMinutosDepois',
     fusoHorario: 'fusoHorario',
@@ -19214,6 +19232,7 @@ export namespace Prisma {
     horarioD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     antecedenciaD1Horas?: IntFilter<"ConfiguracaoGlobal"> | number
     antecedenciaReiteracaoHoras?: IntFilter<"ConfiguracaoGlobal"> | number
+    atrasoSemRespostaMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
     antecedenciaCheckinMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
     posAudienciaMinutosDepois?: IntFilter<"ConfiguracaoGlobal"> | number
     fusoHorario?: StringFilter<"ConfiguracaoGlobal"> | string
@@ -19244,6 +19263,7 @@ export namespace Prisma {
     horarioD1?: SortOrderInput | SortOrder
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
     fusoHorario?: SortOrder
@@ -19277,6 +19297,7 @@ export namespace Prisma {
     horarioD1?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     antecedenciaD1Horas?: IntFilter<"ConfiguracaoGlobal"> | number
     antecedenciaReiteracaoHoras?: IntFilter<"ConfiguracaoGlobal"> | number
+    atrasoSemRespostaMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
     antecedenciaCheckinMinutos?: IntFilter<"ConfiguracaoGlobal"> | number
     posAudienciaMinutosDepois?: IntFilter<"ConfiguracaoGlobal"> | number
     fusoHorario?: StringFilter<"ConfiguracaoGlobal"> | string
@@ -19307,6 +19328,7 @@ export namespace Prisma {
     horarioD1?: SortOrderInput | SortOrder
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
     fusoHorario?: SortOrder
@@ -19345,6 +19367,7 @@ export namespace Prisma {
     horarioD1?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     antecedenciaD1Horas?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
     antecedenciaReiteracaoHoras?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
+    atrasoSemRespostaMinutos?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
     antecedenciaCheckinMinutos?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
     posAudienciaMinutosDepois?: IntWithAggregatesFilter<"ConfiguracaoGlobal"> | number
     fusoHorario?: StringWithAggregatesFilter<"ConfiguracaoGlobal"> | string
@@ -20536,6 +20559,7 @@ export namespace Prisma {
     horarioD1?: string | null
     antecedenciaD1Horas?: number
     antecedenciaReiteracaoHoras?: number
+    atrasoSemRespostaMinutos?: number
     antecedenciaCheckinMinutos?: number
     posAudienciaMinutosDepois?: number
     fusoHorario?: string
@@ -20566,6 +20590,7 @@ export namespace Prisma {
     horarioD1?: string | null
     antecedenciaD1Horas?: number
     antecedenciaReiteracaoHoras?: number
+    atrasoSemRespostaMinutos?: number
     antecedenciaCheckinMinutos?: number
     posAudienciaMinutosDepois?: number
     fusoHorario?: string
@@ -20596,6 +20621,7 @@ export namespace Prisma {
     horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
     antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
     antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    atrasoSemRespostaMinutos?: IntFieldUpdateOperationsInput | number
     antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
     posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
     fusoHorario?: StringFieldUpdateOperationsInput | string
@@ -20626,6 +20652,7 @@ export namespace Prisma {
     horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
     antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
     antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    atrasoSemRespostaMinutos?: IntFieldUpdateOperationsInput | number
     antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
     posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
     fusoHorario?: StringFieldUpdateOperationsInput | string
@@ -20656,6 +20683,7 @@ export namespace Prisma {
     horarioD1?: string | null
     antecedenciaD1Horas?: number
     antecedenciaReiteracaoHoras?: number
+    atrasoSemRespostaMinutos?: number
     antecedenciaCheckinMinutos?: number
     posAudienciaMinutosDepois?: number
     fusoHorario?: string
@@ -20686,6 +20714,7 @@ export namespace Prisma {
     horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
     antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
     antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    atrasoSemRespostaMinutos?: IntFieldUpdateOperationsInput | number
     antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
     posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
     fusoHorario?: StringFieldUpdateOperationsInput | string
@@ -20716,6 +20745,7 @@ export namespace Prisma {
     horarioD1?: NullableStringFieldUpdateOperationsInput | string | null
     antecedenciaD1Horas?: IntFieldUpdateOperationsInput | number
     antecedenciaReiteracaoHoras?: IntFieldUpdateOperationsInput | number
+    atrasoSemRespostaMinutos?: IntFieldUpdateOperationsInput | number
     antecedenciaCheckinMinutos?: IntFieldUpdateOperationsInput | number
     posAudienciaMinutosDepois?: IntFieldUpdateOperationsInput | number
     fusoHorario?: StringFieldUpdateOperationsInput | string
@@ -21819,6 +21849,7 @@ export namespace Prisma {
     horarioD1?: SortOrder
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
     fusoHorario?: SortOrder
@@ -21846,6 +21877,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalAvgOrderByAggregateInput = {
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
   }
@@ -21856,6 +21888,7 @@ export namespace Prisma {
     horarioD1?: SortOrder
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
     fusoHorario?: SortOrder
@@ -21886,6 +21919,7 @@ export namespace Prisma {
     horarioD1?: SortOrder
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
     fusoHorario?: SortOrder
@@ -21913,6 +21947,7 @@ export namespace Prisma {
   export type ConfiguracaoGlobalSumOrderByAggregateInput = {
     antecedenciaD1Horas?: SortOrder
     antecedenciaReiteracaoHoras?: SortOrder
+    atrasoSemRespostaMinutos?: SortOrder
     antecedenciaCheckinMinutos?: SortOrder
     posAudienciaMinutosDepois?: SortOrder
   }
