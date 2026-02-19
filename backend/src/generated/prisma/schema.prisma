@@ -71,6 +71,18 @@ enum ResultadoAudiencia {
   REDESIGNADA
 }
 
+enum InfoCompleta {
+  SIM
+  NAO
+  OUTRA
+}
+
+enum AvaliacaoAtuacao {
+  BOM
+  REGULAR
+  RUIM
+}
+
 enum StatusSubstituicao {
   ABERTA
   RESOLVIDA
@@ -244,15 +256,26 @@ model Mensagem {
 }
 
 model RelatorioAudiencia {
-  id                  String               @id @default(uuid())
-  audienciaId         String               @unique
-  audienciaOcorreu    OcorrenciaAudiencia?
-  resultado           ResultadoAudiencia?
-  advogadoPresente    Boolean?
-  advogadoDominioCaso Boolean?
-  problemaRelevante   Boolean?
-  relato              String?
-  createdAt           DateTime             @default(now())
+  id                                String               @id @default(uuid())
+  audienciaId                       String               @unique
+  audienciaOcorreu                  OcorrenciaAudiencia?
+  resultado                         ResultadoAudiencia?
+  advogadoPresente                  Boolean?
+  advogadoDominioCaso               Boolean?
+  problemaRelevante                 Boolean?
+  relato                            String?
+  docAntecedencia                   Boolean?
+  docAntecedenciaJustificativa      String?
+  advogadoAntecedencia              Boolean?
+  advogadoAntecedenciaJustificativa String?
+  infoCompleta                      InfoCompleta?
+  infoFaltante                      String?
+  conhecimentoAdvogado              Boolean?
+  comentarioConhecimento            String?
+  avaliacaoAtuacao                  AvaliacaoAtuacao?
+  comentarioAvaliacao               String?
+  comentarioFinal                   String?
+  createdAt                         DateTime             @default(now())
 
   audiencia Audiencia @relation(fields: [audienciaId], references: [id])
 
@@ -305,6 +328,7 @@ model ConfiguracaoGlobal {
   mensagemCheckin                 String?
   mensagemPosAudiencia            String?
   mensagemCancelamento            String?
+  respostaNaoPosso                String?
   respostaD1Confirmacao           String?
   respostaReiteracaoConfirmacao   String?
   respostaCheckinConfirmacao      String?
@@ -314,6 +338,9 @@ model ConfiguracaoGlobal {
   mensagemPosPergunta4            String?
   mensagemPosPergunta5            String?
   mensagemPosPergunta6            String?
+  mensagemPosPergunta7            String?
+  mensagemPosPergunta8            String?
+  mensagemPosPergunta9            String?
   updatedAt                       DateTime @updatedAt
 
   @@map("configuracao_global")

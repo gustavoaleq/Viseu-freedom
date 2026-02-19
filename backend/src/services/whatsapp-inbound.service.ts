@@ -29,17 +29,23 @@ type RespostaId =
   | 'AUDIENCIA_SIM'
   | 'AUDIENCIA_NAO'
   | 'AUDIENCIA_REMARCADA'
-  | 'RESULTADO_ACORDO'
-  | 'RESULTADO_SEM_ACORDO'
-  | 'RESULTADO_AUSENCIA'
-  | 'RESULTADO_REDESIGNADA'
-  | 'ADVOGADO_PRESENTE_SIM'
-  | 'ADVOGADO_PRESENTE_NAO'
-  | 'ADVOGADO_DOMINIO_SIM'
-  | 'ADVOGADO_DOMINIO_NAO'
-  | 'PROBLEMA_RELEVANTE_SIM'
-  | 'PROBLEMA_RELEVANTE_NAO'
-  | 'RELATORIO_OBSERVACAO'
+  | 'DOC_ANTECEDENCIA_SIM'
+  | 'DOC_ANTECEDENCIA_NAO'
+  | 'DOC_ANTECEDENCIA_TEXTO'
+  | 'ADV_ANTECEDENCIA_SIM'
+  | 'ADV_ANTECEDENCIA_NAO'
+  | 'ADV_ANTECEDENCIA_TEXTO'
+  | 'INFO_COMPLETA_SIM'
+  | 'INFO_COMPLETA_NAO'
+  | 'INFO_FALTANTE_TEXTO'
+  | 'CONHECIMENTO_SIM'
+  | 'CONHECIMENTO_NAO'
+  | 'COMENTARIO_CONHECIMENTO'
+  | 'AVALIACAO_BOM'
+  | 'AVALIACAO_REGULAR'
+  | 'AVALIACAO_RUIM'
+  | 'COMENTARIO_AVALIACAO'
+  | 'COMENTARIO_FINAL'
 
 interface RegraResposta {
   id: RespostaId
@@ -141,82 +147,124 @@ const RESPOSTAS: Record<RespostaId, RegraResposta> = {
     motivo: 'Resposta WhatsApp: relatorio pos - audiencia remarcada',
     label: 'Foi remarcada',
   },
-  RESULTADO_ACORDO: {
-    id: 'RESULTADO_ACORDO',
+  DOC_ANTECEDENCIA_SIM: {
+    id: 'DOC_ANTECEDENCIA_SIM',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - resultado acordo',
-    label: 'Acordo',
+    motivo: 'Resposta WhatsApp: relatorio pos - doc antecedencia sim',
+    label: 'Sim',
   },
-  RESULTADO_SEM_ACORDO: {
-    id: 'RESULTADO_SEM_ACORDO',
+  DOC_ANTECEDENCIA_NAO: {
+    id: 'DOC_ANTECEDENCIA_NAO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - resultado sem acordo',
-    label: 'Sem acordo',
+    motivo: 'Resposta WhatsApp: relatorio pos - doc antecedencia nao',
+    label: 'Nao',
   },
-  RESULTADO_AUSENCIA: {
-    id: 'RESULTADO_AUSENCIA',
+  DOC_ANTECEDENCIA_TEXTO: {
+    id: 'DOC_ANTECEDENCIA_TEXTO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - encerrada por ausencia',
-    label: 'Encerrada por ausencia',
+    motivo: 'Resposta WhatsApp: relatorio pos - doc antecedencia justificativa',
+    label: 'Justificativa doc antecedencia',
   },
-  RESULTADO_REDESIGNADA: {
-    id: 'RESULTADO_REDESIGNADA',
+  ADV_ANTECEDENCIA_SIM: {
+    id: 'ADV_ANTECEDENCIA_SIM',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - redesignada',
-    label: 'Redesignada',
+    motivo: 'Resposta WhatsApp: relatorio pos - advogado antecedencia sim',
+    label: 'Sim',
   },
-  ADVOGADO_PRESENTE_SIM: {
-    id: 'ADVOGADO_PRESENTE_SIM',
+  ADV_ANTECEDENCIA_NAO: {
+    id: 'ADV_ANTECEDENCIA_NAO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - advogado presente',
-    label: 'Advogado presente: sim',
+    motivo: 'Resposta WhatsApp: relatorio pos - advogado antecedencia nao',
+    label: 'Nao',
   },
-  ADVOGADO_PRESENTE_NAO: {
-    id: 'ADVOGADO_PRESENTE_NAO',
+  ADV_ANTECEDENCIA_TEXTO: {
+    id: 'ADV_ANTECEDENCIA_TEXTO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - advogado ausente',
-    label: 'Advogado presente: nao',
+    motivo: 'Resposta WhatsApp: relatorio pos - advogado antecedencia justificativa',
+    label: 'Justificativa advogado antecedencia',
   },
-  ADVOGADO_DOMINIO_SIM: {
-    id: 'ADVOGADO_DOMINIO_SIM',
+  INFO_COMPLETA_SIM: {
+    id: 'INFO_COMPLETA_SIM',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - dominio do caso adequado',
-    label: 'Dominio do caso: sim',
+    motivo: 'Resposta WhatsApp: relatorio pos - info completa sim',
+    label: 'Sim',
   },
-  ADVOGADO_DOMINIO_NAO: {
-    id: 'ADVOGADO_DOMINIO_NAO',
+  INFO_COMPLETA_NAO: {
+    id: 'INFO_COMPLETA_NAO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - dominio do caso insuficiente',
-    label: 'Dominio do caso: nao',
+    motivo: 'Resposta WhatsApp: relatorio pos - info completa nao',
+    label: 'Nao',
   },
-  PROBLEMA_RELEVANTE_SIM: {
-    id: 'PROBLEMA_RELEVANTE_SIM',
+  INFO_FALTANTE_TEXTO: {
+    id: 'INFO_FALTANTE_TEXTO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - houve problema relevante',
-    label: 'Problema relevante: sim',
+    motivo: 'Resposta WhatsApp: relatorio pos - info faltante',
+    label: 'Info faltante',
   },
-  PROBLEMA_RELEVANTE_NAO: {
-    id: 'PROBLEMA_RELEVANTE_NAO',
+  CONHECIMENTO_SIM: {
+    id: 'CONHECIMENTO_SIM',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - sem problema relevante',
-    label: 'Problema relevante: nao',
+    motivo: 'Resposta WhatsApp: relatorio pos - conhecimento sim',
+    label: 'Sim',
   },
-  RELATORIO_OBSERVACAO: {
-    id: 'RELATORIO_OBSERVACAO',
+  CONHECIMENTO_NAO: {
+    id: 'CONHECIMENTO_NAO',
     tipoMensagem: 'RELATORIO_POS',
     statusNovo: 'RELATORIO_PENDENTE',
-    motivo: 'Resposta WhatsApp: relatorio pos - observacao final',
-    label: 'Observacao do relatorio',
+    motivo: 'Resposta WhatsApp: relatorio pos - conhecimento nao',
+    label: 'Nao',
+  },
+  COMENTARIO_CONHECIMENTO: {
+    id: 'COMENTARIO_CONHECIMENTO',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - comentario conhecimento',
+    label: 'Comentario conhecimento',
+  },
+  AVALIACAO_BOM: {
+    id: 'AVALIACAO_BOM',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - avaliacao bom',
+    label: 'Bom',
+  },
+  AVALIACAO_REGULAR: {
+    id: 'AVALIACAO_REGULAR',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - avaliacao regular',
+    label: 'Regular',
+  },
+  AVALIACAO_RUIM: {
+    id: 'AVALIACAO_RUIM',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - avaliacao ruim',
+    label: 'Ruim',
+  },
+  COMENTARIO_AVALIACAO: {
+    id: 'COMENTARIO_AVALIACAO',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - comentario avaliacao',
+    label: 'Comentario avaliacao',
+  },
+  COMENTARIO_FINAL: {
+    id: 'COMENTARIO_FINAL',
+    tipoMensagem: 'RELATORIO_POS',
+    statusNovo: 'RELATORIO_PENDENTE',
+    motivo: 'Resposta WhatsApp: relatorio pos - comentario final',
+    label: 'Comentario final',
   },
 }
 
@@ -261,17 +309,23 @@ const STATUS_VALIDOS_POR_RESPOSTA: Record<RespostaId, StatusAudiencia[]> = {
     'EM_ANDAMENTO',
     'RELATORIO_PENDENTE',
   ],
-  RESULTADO_ACORDO: ['RELATORIO_PENDENTE'],
-  RESULTADO_SEM_ACORDO: ['RELATORIO_PENDENTE'],
-  RESULTADO_AUSENCIA: ['RELATORIO_PENDENTE'],
-  RESULTADO_REDESIGNADA: ['RELATORIO_PENDENTE'],
-  ADVOGADO_PRESENTE_SIM: ['RELATORIO_PENDENTE'],
-  ADVOGADO_PRESENTE_NAO: ['RELATORIO_PENDENTE'],
-  ADVOGADO_DOMINIO_SIM: ['RELATORIO_PENDENTE'],
-  ADVOGADO_DOMINIO_NAO: ['RELATORIO_PENDENTE'],
-  PROBLEMA_RELEVANTE_SIM: ['RELATORIO_PENDENTE'],
-  PROBLEMA_RELEVANTE_NAO: ['RELATORIO_PENDENTE'],
-  RELATORIO_OBSERVACAO: ['RELATORIO_PENDENTE'],
+  DOC_ANTECEDENCIA_SIM: ['RELATORIO_PENDENTE'],
+  DOC_ANTECEDENCIA_NAO: ['RELATORIO_PENDENTE'],
+  DOC_ANTECEDENCIA_TEXTO: ['RELATORIO_PENDENTE'],
+  ADV_ANTECEDENCIA_SIM: ['RELATORIO_PENDENTE'],
+  ADV_ANTECEDENCIA_NAO: ['RELATORIO_PENDENTE'],
+  ADV_ANTECEDENCIA_TEXTO: ['RELATORIO_PENDENTE'],
+  INFO_COMPLETA_SIM: ['RELATORIO_PENDENTE'],
+  INFO_COMPLETA_NAO: ['RELATORIO_PENDENTE'],
+  INFO_FALTANTE_TEXTO: ['RELATORIO_PENDENTE'],
+  CONHECIMENTO_SIM: ['RELATORIO_PENDENTE'],
+  CONHECIMENTO_NAO: ['RELATORIO_PENDENTE'],
+  COMENTARIO_CONHECIMENTO: ['RELATORIO_PENDENTE'],
+  AVALIACAO_BOM: ['RELATORIO_PENDENTE'],
+  AVALIACAO_REGULAR: ['RELATORIO_PENDENTE'],
+  AVALIACAO_RUIM: ['RELATORIO_PENDENTE'],
+  COMENTARIO_AVALIACAO: ['RELATORIO_PENDENTE'],
+  COMENTARIO_FINAL: ['RELATORIO_PENDENTE'],
 }
 
 const CAMINHOS_TELEFONE_WEBHOOK = [
@@ -390,7 +444,16 @@ export async function processarRespostaWhatsApp(payload: unknown): Promise<Resul
   if (!respostaId && textoResposta) {
     const contextoRelatorio = await buscarContextoRelatorioPendente(preposto.id)
     if (contextoRelatorio) {
-      respostaId = 'RELATORIO_OBSERVACAO'
+      const pergunta = identificarPerguntaRelatorioPorContexto(
+        contextoRelatorio.conteudo,
+        contextoRelatorio.observacao,
+      )
+      if (pergunta === 'Q4T') respostaId = 'INFO_FALTANTE_TEXTO'
+      else if (pergunta === 'Q2T') respostaId = 'DOC_ANTECEDENCIA_TEXTO'
+      else if (pergunta === 'Q3T') respostaId = 'ADV_ANTECEDENCIA_TEXTO'
+      else if (pergunta === 'Q6') respostaId = 'COMENTARIO_CONHECIMENTO'
+      else if (pergunta === 'Q8') respostaId = 'COMENTARIO_AVALIACAO'
+      else if (pergunta === 'Q9') respostaId = 'COMENTARIO_FINAL'
       if (!contexto) contexto = contextoRelatorio
     }
   }
@@ -639,6 +702,7 @@ export async function processarRespostaWhatsApp(payload: unknown): Promise<Resul
         respostaD1Confirmacao: configMensagens.respostaD1Confirmacao,
         respostaReiteracaoConfirmacao: configMensagens.respostaReiteracaoConfirmacao,
         respostaCheckinConfirmacao: configMensagens.respostaCheckinConfirmacao,
+        respostaNaoPosso: configMensagens.respostaNaoPosso,
       },
     })
     const respostaAutomatica = aplicarTemplate(respostaAutomaticaTemplate, variaveisTemplate)
@@ -1185,11 +1249,17 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
     where: { audienciaId: params.audienciaId },
     select: {
       audienciaOcorreu: true,
-      resultado: true,
-      advogadoPresente: true,
-      advogadoDominioCaso: true,
-      problemaRelevante: true,
-      relato: true,
+      docAntecedencia: true,
+      advogadoAntecedencia: true,
+    infoCompleta: true,
+    infoFaltante: true,
+    docAntecedenciaJustificativa: true,
+    advogadoAntecedenciaJustificativa: true,
+      conhecimentoAdvogado: true,
+      comentarioConhecimento: true,
+      avaliacaoAtuacao: true,
+      comentarioAvaliacao: true,
+      comentarioFinal: true,
     },
   })
 
@@ -1234,6 +1304,9 @@ async function processarFluxoRelatorioPos(params: FluxoRelatorioPosParams) {
       mensagemPosPergunta4: config.mensagemPosPergunta4,
       mensagemPosPergunta5: config.mensagemPosPergunta5,
       mensagemPosPergunta6: config.mensagemPosPergunta6,
+      mensagemPosPergunta7: config.mensagemPosPergunta7,
+      mensagemPosPergunta8: config.mensagemPosPergunta8,
+      mensagemPosPergunta9: config.mensagemPosPergunta9,
     },
     variaveis,
   )
@@ -1291,19 +1364,40 @@ function montarUpdateRelatorioPos(respostaId: RespostaId, textoResposta?: string
   if (respostaId === 'AUDIENCIA_SIM') return { audienciaOcorreu: 'SIM' as const }
   if (respostaId === 'AUDIENCIA_NAO') return { audienciaOcorreu: 'NAO' as const }
   if (respostaId === 'AUDIENCIA_REMARCADA') return { audienciaOcorreu: 'REMARCADA' as const }
-  if (respostaId === 'RESULTADO_ACORDO') return { resultado: 'ACORDO' as const }
-  if (respostaId === 'RESULTADO_SEM_ACORDO') return { resultado: 'SEM_ACORDO' as const }
-  if (respostaId === 'RESULTADO_AUSENCIA') return { resultado: 'AUSENCIA' as const }
-  if (respostaId === 'RESULTADO_REDESIGNADA') return { resultado: 'REDESIGNADA' as const }
-  if (respostaId === 'ADVOGADO_PRESENTE_SIM') return { advogadoPresente: true }
-  if (respostaId === 'ADVOGADO_PRESENTE_NAO') return { advogadoPresente: false }
-  if (respostaId === 'ADVOGADO_DOMINIO_SIM') return { advogadoDominioCaso: true }
-  if (respostaId === 'ADVOGADO_DOMINIO_NAO') return { advogadoDominioCaso: false }
-  if (respostaId === 'PROBLEMA_RELEVANTE_SIM') return { problemaRelevante: true }
-  if (respostaId === 'PROBLEMA_RELEVANTE_NAO') return { problemaRelevante: false }
-  if (respostaId === 'RELATORIO_OBSERVACAO') {
-    const relato = (textoResposta ?? '').trim()
-    return { relato: relato || 'Sem observacoes' }
+  if (respostaId === 'DOC_ANTECEDENCIA_SIM') return { docAntecedencia: true }
+  if (respostaId === 'DOC_ANTECEDENCIA_NAO') return { docAntecedencia: false }
+  if (respostaId === 'ADV_ANTECEDENCIA_SIM') return { advogadoAntecedencia: true }
+  if (respostaId === 'ADV_ANTECEDENCIA_NAO') return { advogadoAntecedencia: false }
+  if (respostaId === 'INFO_COMPLETA_SIM') return { infoCompleta: 'SIM' as const }
+  if (respostaId === 'INFO_COMPLETA_NAO') return { infoCompleta: 'NAO' as const }
+  if (respostaId === 'DOC_ANTECEDENCIA_TEXTO') {
+    const texto = (textoResposta ?? '').trim()
+    return { docAntecedenciaJustificativa: texto || 'Nao informado' }
+  }
+  if (respostaId === 'ADV_ANTECEDENCIA_TEXTO') {
+    const texto = (textoResposta ?? '').trim()
+    return { advogadoAntecedenciaJustificativa: texto || 'Nao informado' }
+  }
+  if (respostaId === 'INFO_FALTANTE_TEXTO') {
+    const texto = (textoResposta ?? '').trim()
+    return { infoFaltante: texto || 'Nao informado' }
+  }
+  if (respostaId === 'CONHECIMENTO_SIM') return { conhecimentoAdvogado: true }
+  if (respostaId === 'CONHECIMENTO_NAO') return { conhecimentoAdvogado: false }
+  if (respostaId === 'COMENTARIO_CONHECIMENTO') {
+    const texto = (textoResposta ?? '').trim()
+    return { comentarioConhecimento: texto || 'Sem observacoes' }
+  }
+  if (respostaId === 'AVALIACAO_BOM') return { avaliacaoAtuacao: 'BOM' as const }
+  if (respostaId === 'AVALIACAO_REGULAR') return { avaliacaoAtuacao: 'REGULAR' as const }
+  if (respostaId === 'AVALIACAO_RUIM') return { avaliacaoAtuacao: 'RUIM' as const }
+  if (respostaId === 'COMENTARIO_AVALIACAO') {
+    const texto = (textoResposta ?? '').trim()
+    return { comentarioAvaliacao: texto || 'Sem observacoes' }
+  }
+  if (respostaId === 'COMENTARIO_FINAL') {
+    const texto = (textoResposta ?? '').trim()
+    return { comentarioFinal: texto || 'ok' }
   }
   return {}
 }
@@ -1312,11 +1406,17 @@ function obterProximaPerguntaRelatorio(
   relatorio:
     | {
         audienciaOcorreu: 'SIM' | 'NAO' | 'REMARCADA' | null
-        resultado: 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA' | null
-        advogadoPresente: boolean | null
-        advogadoDominioCaso: boolean | null
-        problemaRelevante: boolean | null
-        relato: string | null
+        docAntecedencia: boolean | null
+        docAntecedenciaJustificativa: string | null
+        advogadoAntecedencia: boolean | null
+        advogadoAntecedenciaJustificativa: string | null
+        infoCompleta: 'SIM' | 'NAO' | 'OUTRA' | null
+        infoFaltante: string | null
+        conhecimentoAdvogado: boolean | null
+        comentarioConhecimento: string | null
+        avaliacaoAtuacao: 'BOM' | 'REGULAR' | 'RUIM' | null
+        comentarioAvaliacao: string | null
+        comentarioFinal: string | null
       }
     | null,
   config: {
@@ -1327,6 +1427,9 @@ function obterProximaPerguntaRelatorio(
     mensagemPosPergunta4: string | null
     mensagemPosPergunta5: string | null
     mensagemPosPergunta6: string | null
+    mensagemPosPergunta7: string | null
+    mensagemPosPergunta8: string | null
+    mensagemPosPergunta9: string | null
   },
   variaveis: Record<string, string>,
 ) {
@@ -1343,60 +1446,114 @@ function obterProximaPerguntaRelatorio(
     }
   }
 
-  if (!relatorio.resultado) {
+  if (typeof relatorio.docAntecedencia !== 'boolean') {
     const template = config.mensagemPosPergunta2 || TEMPLATES_DEFAULT.mensagemPosPergunta2
     return {
       codigo: 'Q2' as const,
       texto: aplicarTemplate(template, variaveis),
       buttons: [
-        { id: 'RESULTADO_ACORDO', label: 'Acordo' },
-        { id: 'RESULTADO_SEM_ACORDO', label: 'Sem acordo' },
-        { id: 'RESULTADO_AUSENCIA', label: 'Encerrada por ausencia' },
-        { id: 'RESULTADO_REDESIGNADA', label: 'Redesignada' },
+        { id: 'DOC_ANTECEDENCIA_SIM', label: 'Sim' },
+        { id: 'DOC_ANTECEDENCIA_NAO', label: 'Nao' },
       ],
     }
   }
 
-  if (typeof relatorio.advogadoPresente !== 'boolean') {
+  if (
+    relatorio.docAntecedencia === false &&
+    (!relatorio.docAntecedenciaJustificativa || !relatorio.docAntecedenciaJustificativa.trim())
+  ) {
+    return {
+      codigo: 'Q2T' as const,
+      texto: 'Pergunta 2/9: Justifique sua resposta.',
+    }
+  }
+
+  if (typeof relatorio.advogadoAntecedencia !== 'boolean') {
     const template = config.mensagemPosPergunta3 || TEMPLATES_DEFAULT.mensagemPosPergunta3
     return {
       codigo: 'Q3' as const,
       texto: aplicarTemplate(template, variaveis),
       buttons: [
-        { id: 'ADVOGADO_PRESENTE_SIM', label: 'Sim' },
-        { id: 'ADVOGADO_PRESENTE_NAO', label: 'Nao' },
+        { id: 'ADV_ANTECEDENCIA_SIM', label: 'Sim' },
+        { id: 'ADV_ANTECEDENCIA_NAO', label: 'Nao' },
       ],
     }
   }
 
-  if (typeof relatorio.advogadoDominioCaso !== 'boolean') {
+  if (
+    relatorio.advogadoAntecedencia === false &&
+    (!relatorio.advogadoAntecedenciaJustificativa || !relatorio.advogadoAntecedenciaJustificativa.trim())
+  ) {
+    return {
+      codigo: 'Q3T' as const,
+      texto: 'Pergunta 3/9: Justifique sua resposta.',
+    }
+  }
+
+  if (!relatorio.infoCompleta) {
     const template = config.mensagemPosPergunta4 || TEMPLATES_DEFAULT.mensagemPosPergunta4
     return {
       codigo: 'Q4' as const,
       texto: aplicarTemplate(template, variaveis),
       buttons: [
-        { id: 'ADVOGADO_DOMINIO_SIM', label: 'Sim' },
-        { id: 'ADVOGADO_DOMINIO_NAO', label: 'Nao' },
+        { id: 'INFO_COMPLETA_SIM', label: 'Sim' },
+        { id: 'INFO_COMPLETA_NAO', label: 'Nao' },
       ],
     }
   }
 
-  if (typeof relatorio.problemaRelevante !== 'boolean') {
+  if (relatorio.infoCompleta === 'NAO' && (!relatorio.infoFaltante || !relatorio.infoFaltante.trim())) {
+    return {
+      codigo: 'Q4T' as const,
+      texto: 'Pergunta 4/9: Justifique sua resposta (o que faltou nas informacoes do processo ou do e-mail).',
+    }
+  }
+
+  if (typeof relatorio.conhecimentoAdvogado !== 'boolean') {
     const template = config.mensagemPosPergunta5 || TEMPLATES_DEFAULT.mensagemPosPergunta5
     return {
       codigo: 'Q5' as const,
       texto: aplicarTemplate(template, variaveis),
       buttons: [
-        { id: 'PROBLEMA_RELEVANTE_SIM', label: 'Sim' },
-        { id: 'PROBLEMA_RELEVANTE_NAO', label: 'Nao' },
+        { id: 'CONHECIMENTO_SIM', label: 'Sim' },
+        { id: 'CONHECIMENTO_NAO', label: 'Nao' },
       ],
     }
   }
 
-  if (!relatorio.relato || !relatorio.relato.trim()) {
+  if (!relatorio.comentarioConhecimento || !relatorio.comentarioConhecimento.trim()) {
     const template = config.mensagemPosPergunta6 || TEMPLATES_DEFAULT.mensagemPosPergunta6
     return {
       codigo: 'Q6' as const,
+      texto: aplicarTemplate(template, variaveis),
+    }
+  }
+
+  if (!relatorio.avaliacaoAtuacao) {
+    const template = config.mensagemPosPergunta7 || TEMPLATES_DEFAULT.mensagemPosPergunta7
+    return {
+      codigo: 'Q7' as const,
+      texto: aplicarTemplate(template, variaveis),
+      buttons: [
+        { id: 'AVALIACAO_BOM', label: 'Bom' },
+        { id: 'AVALIACAO_REGULAR', label: 'Regular' },
+        { id: 'AVALIACAO_RUIM', label: 'Ruim' },
+      ],
+    }
+  }
+
+  if (!relatorio.comentarioAvaliacao || !relatorio.comentarioAvaliacao.trim()) {
+    const template = config.mensagemPosPergunta8 || TEMPLATES_DEFAULT.mensagemPosPergunta8
+    return {
+      codigo: 'Q8' as const,
+      texto: aplicarTemplate(template, variaveis),
+    }
+  }
+
+  if (!relatorio.comentarioFinal || !relatorio.comentarioFinal.trim()) {
+    const template = config.mensagemPosPergunta9 || TEMPLATES_DEFAULT.mensagemPosPergunta9
+    return {
+      codigo: 'Q9' as const,
       texto: aplicarTemplate(template, variaveis),
     }
   }
@@ -1502,40 +1659,77 @@ function resolverResposta(
     }
 
     if (pergunta === 'Q2') {
-      if (texto === 'acordo') return 'RESULTADO_ACORDO'
-      if (texto === 'sem acordo') return 'RESULTADO_SEM_ACORDO'
-      if (texto === 'encerrada por ausencia' || texto === 'ausencia') return 'RESULTADO_AUSENCIA'
-      if (texto === 'redesignada') return 'RESULTADO_REDESIGNADA'
+      if (texto === 'sim') return 'DOC_ANTECEDENCIA_SIM'
+      if (texto === 'nao') return 'DOC_ANTECEDENCIA_NAO'
       return null
     }
 
     if (pergunta === 'Q3') {
-      if (texto === 'sim') return 'ADVOGADO_PRESENTE_SIM'
-      if (texto === 'nao') return 'ADVOGADO_PRESENTE_NAO'
+      if (texto === 'sim') return 'ADV_ANTECEDENCIA_SIM'
+      if (texto === 'nao') return 'ADV_ANTECEDENCIA_NAO'
       return null
     }
 
     if (pergunta === 'Q4') {
-      if (texto === 'sim') return 'ADVOGADO_DOMINIO_SIM'
-      if (texto === 'nao') return 'ADVOGADO_DOMINIO_NAO'
+      if (texto === 'sim') return 'INFO_COMPLETA_SIM'
+      if (texto === 'nao') return 'INFO_COMPLETA_NAO'
       return null
     }
 
+    if (pergunta === 'Q2T') {
+      return 'DOC_ANTECEDENCIA_TEXTO'
+    }
+
+    if (pergunta === 'Q3T') {
+      return 'ADV_ANTECEDENCIA_TEXTO'
+    }
+
+    if (pergunta === 'Q4T') {
+      return 'INFO_FALTANTE_TEXTO'
+    }
+
     if (pergunta === 'Q5') {
-      if (texto === 'sim') return 'PROBLEMA_RELEVANTE_SIM'
-      if (texto === 'nao') return 'PROBLEMA_RELEVANTE_NAO'
+      if (texto === 'sim') return 'CONHECIMENTO_SIM'
+      if (texto === 'nao') return 'CONHECIMENTO_NAO'
       return null
     }
 
     if (pergunta === 'Q6') {
-      return 'RELATORIO_OBSERVACAO'
+      return 'COMENTARIO_CONHECIMENTO'
+    }
+
+    if (pergunta === 'Q7') {
+      if (texto === 'bom') return 'AVALIACAO_BOM'
+      if (texto === 'regular') return 'AVALIACAO_REGULAR'
+      if (texto === 'ruim') return 'AVALIACAO_RUIM'
+      return null
+    }
+
+    if (pergunta === 'Q8') {
+      return 'COMENTARIO_AVALIACAO'
+    }
+
+    if (pergunta === 'Q9') {
+      return 'COMENTARIO_FINAL'
     }
   }
 
   return null
 }
 
-type PerguntaRelatorioCodigo = 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'Q5' | 'Q6'
+type PerguntaRelatorioCodigo =
+  | 'Q1'
+  | 'Q2'
+  | 'Q2T'
+  | 'Q3'
+  | 'Q3T'
+  | 'Q4'
+  | 'Q4T'
+  | 'Q5'
+  | 'Q6'
+  | 'Q7'
+  | 'Q8'
+  | 'Q9'
 
 function identificarPerguntaRelatorioPorContexto(
   conteudoContexto?: string,
@@ -1545,11 +1739,16 @@ function identificarPerguntaRelatorioPorContexto(
   if (porObservacao) return porObservacao
 
   const texto = normalizarTexto(conteudoContexto)
-  if (texto.includes('pergunta 2 6')) return 'Q2'
-  if (texto.includes('pergunta 3 6')) return 'Q3'
-  if (texto.includes('pergunta 4 6')) return 'Q4'
-  if (texto.includes('pergunta 5 6')) return 'Q5'
-  if (texto.includes('pergunta 6 6')) return 'Q6'
+  if (texto.includes('pergunta 2 9')) return 'Q2'
+  if (texto.includes('justifique sua resposta') && texto.includes('pergunta 2')) return 'Q2T'
+  if (texto.includes('pergunta 3 9')) return 'Q3'
+  if (texto.includes('justifique sua resposta') && texto.includes('pergunta 3')) return 'Q3T'
+  if (texto.includes('pergunta 4 9')) return 'Q4'
+  if (texto.includes('pergunta 5 9')) return 'Q5'
+  if (texto.includes('pergunta 6 9')) return 'Q6'
+  if (texto.includes('pergunta 7 9')) return 'Q7'
+  if (texto.includes('pergunta 8 9')) return 'Q8'
+  if (texto.includes('pergunta 9 9')) return 'Q9'
   return 'Q1'
 }
 
@@ -1557,17 +1756,25 @@ function identificarPerguntaRelatorioPorObservacao(
   observacaoContexto?: string | null,
 ): PerguntaRelatorioCodigo | null {
   if (!observacaoContexto) return null
-  const match = observacaoContexto.trim().match(/^RELATORIO_PERGUNTA:(Q[1-6])$/i)
+  const match = observacaoContexto
+    .trim()
+    .match(/^RELATORIO_PERGUNTA:(Q[1-9]|Q2T|Q3T|Q4T)$/i)
   if (!match) return null
 
   const codigo = match[1]?.toUpperCase()
   if (
     codigo === 'Q1' ||
     codigo === 'Q2' ||
+    codigo === 'Q2T' ||
     codigo === 'Q3' ||
+    codigo === 'Q3T' ||
     codigo === 'Q4' ||
     codigo === 'Q5' ||
-    codigo === 'Q6'
+    codigo === 'Q6' ||
+    codigo === 'Q7' ||
+    codigo === 'Q8' ||
+    codigo === 'Q9' ||
+    codigo === 'Q4T'
   ) {
     return codigo
   }
@@ -1589,32 +1796,33 @@ function respostaRelatorioPorOpcao(
 
   if (pergunta === 'Q2') {
     return (
-      ([
-        'RESULTADO_ACORDO',
-        'RESULTADO_SEM_ACORDO',
-        'RESULTADO_AUSENCIA',
-        'RESULTADO_REDESIGNADA',
-      ][opcao - 1] as RespostaId | undefined) ?? null
+      (['DOC_ANTECEDENCIA_SIM', 'DOC_ANTECEDENCIA_NAO'][opcao - 1] as RespostaId | undefined) ??
+      null
     )
   }
 
   if (pergunta === 'Q3') {
     return (
-      (['ADVOGADO_PRESENTE_SIM', 'ADVOGADO_PRESENTE_NAO'][opcao - 1] as RespostaId | undefined) ??
+      (['ADV_ANTECEDENCIA_SIM', 'ADV_ANTECEDENCIA_NAO'][opcao - 1] as RespostaId | undefined) ??
       null
     )
   }
 
   if (pergunta === 'Q4') {
     return (
-      (['ADVOGADO_DOMINIO_SIM', 'ADVOGADO_DOMINIO_NAO'][opcao - 1] as RespostaId | undefined) ??
-      null
+      (['INFO_COMPLETA_SIM', 'INFO_COMPLETA_NAO'][opcao - 1] as RespostaId | undefined) ?? null
     )
   }
 
   if (pergunta === 'Q5') {
     return (
-      (['PROBLEMA_RELEVANTE_SIM', 'PROBLEMA_RELEVANTE_NAO'][opcao - 1] as
+      (['CONHECIMENTO_SIM', 'CONHECIMENTO_NAO'][opcao - 1] as RespostaId | undefined) ?? null
+    )
+  }
+
+  if (pergunta === 'Q7') {
+    return (
+      (['AVALIACAO_BOM', 'AVALIACAO_REGULAR', 'AVALIACAO_RUIM'][opcao - 1] as
         | RespostaId
         | undefined) ?? null
     )
@@ -1981,6 +2189,7 @@ function montarRespostaAutomaticaPreposto(params: {
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
+    respostaNaoPosso: string | null
   }
 }) {
   if (params.respostaId === 'CONFIRMO') {
@@ -1995,7 +2204,7 @@ function montarRespostaAutomaticaPreposto(params: {
   }
 
   if (params.respostaId === 'NAO_POSSO') {
-    return 'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.'
+    return params.config.respostaNaoPosso || TEMPLATES_DEFAULT.respostaNaoPosso
   }
 
   if (params.respostaId === 'ESTOU_A_CAMINHO' || params.respostaId === 'JA_CHEGUEI') {

@@ -169,6 +169,24 @@ export const ResultadoAudiencia: {
 export type ResultadoAudiencia = (typeof ResultadoAudiencia)[keyof typeof ResultadoAudiencia]
 
 
+export const InfoCompleta: {
+  SIM: 'SIM',
+  NAO: 'NAO',
+  OUTRA: 'OUTRA'
+};
+
+export type InfoCompleta = (typeof InfoCompleta)[keyof typeof InfoCompleta]
+
+
+export const AvaliacaoAtuacao: {
+  BOM: 'BOM',
+  REGULAR: 'REGULAR',
+  RUIM: 'RUIM'
+};
+
+export type AvaliacaoAtuacao = (typeof AvaliacaoAtuacao)[keyof typeof AvaliacaoAtuacao]
+
+
 export const StatusSubstituicao: {
   ABERTA: 'ABERTA',
   RESOLVIDA: 'RESOLVIDA',
@@ -219,6 +237,14 @@ export const OcorrenciaAudiencia: typeof $Enums.OcorrenciaAudiencia
 export type ResultadoAudiencia = $Enums.ResultadoAudiencia
 
 export const ResultadoAudiencia: typeof $Enums.ResultadoAudiencia
+
+export type InfoCompleta = $Enums.InfoCompleta
+
+export const InfoCompleta: typeof $Enums.InfoCompleta
+
+export type AvaliacaoAtuacao = $Enums.AvaliacaoAtuacao
+
+export const AvaliacaoAtuacao: typeof $Enums.AvaliacaoAtuacao
 
 export type StatusSubstituicao = $Enums.StatusSubstituicao
 
@@ -11796,6 +11822,17 @@ export namespace Prisma {
     advogadoDominioCaso: boolean | null
     problemaRelevante: boolean | null
     relato: string | null
+    docAntecedencia: boolean | null
+    docAntecedenciaJustificativa: string | null
+    advogadoAntecedencia: boolean | null
+    advogadoAntecedenciaJustificativa: string | null
+    infoCompleta: $Enums.InfoCompleta | null
+    infoFaltante: string | null
+    conhecimentoAdvogado: boolean | null
+    comentarioConhecimento: string | null
+    avaliacaoAtuacao: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao: string | null
+    comentarioFinal: string | null
     createdAt: Date | null
   }
 
@@ -11808,6 +11845,17 @@ export namespace Prisma {
     advogadoDominioCaso: boolean | null
     problemaRelevante: boolean | null
     relato: string | null
+    docAntecedencia: boolean | null
+    docAntecedenciaJustificativa: string | null
+    advogadoAntecedencia: boolean | null
+    advogadoAntecedenciaJustificativa: string | null
+    infoCompleta: $Enums.InfoCompleta | null
+    infoFaltante: string | null
+    conhecimentoAdvogado: boolean | null
+    comentarioConhecimento: string | null
+    avaliacaoAtuacao: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao: string | null
+    comentarioFinal: string | null
     createdAt: Date | null
   }
 
@@ -11820,6 +11868,17 @@ export namespace Prisma {
     advogadoDominioCaso: number
     problemaRelevante: number
     relato: number
+    docAntecedencia: number
+    docAntecedenciaJustificativa: number
+    advogadoAntecedencia: number
+    advogadoAntecedenciaJustificativa: number
+    infoCompleta: number
+    infoFaltante: number
+    conhecimentoAdvogado: number
+    comentarioConhecimento: number
+    avaliacaoAtuacao: number
+    comentarioAvaliacao: number
+    comentarioFinal: number
     createdAt: number
     _all: number
   }
@@ -11834,6 +11893,17 @@ export namespace Prisma {
     advogadoDominioCaso?: true
     problemaRelevante?: true
     relato?: true
+    docAntecedencia?: true
+    docAntecedenciaJustificativa?: true
+    advogadoAntecedencia?: true
+    advogadoAntecedenciaJustificativa?: true
+    infoCompleta?: true
+    infoFaltante?: true
+    conhecimentoAdvogado?: true
+    comentarioConhecimento?: true
+    avaliacaoAtuacao?: true
+    comentarioAvaliacao?: true
+    comentarioFinal?: true
     createdAt?: true
   }
 
@@ -11846,6 +11916,17 @@ export namespace Prisma {
     advogadoDominioCaso?: true
     problemaRelevante?: true
     relato?: true
+    docAntecedencia?: true
+    docAntecedenciaJustificativa?: true
+    advogadoAntecedencia?: true
+    advogadoAntecedenciaJustificativa?: true
+    infoCompleta?: true
+    infoFaltante?: true
+    conhecimentoAdvogado?: true
+    comentarioConhecimento?: true
+    avaliacaoAtuacao?: true
+    comentarioAvaliacao?: true
+    comentarioFinal?: true
     createdAt?: true
   }
 
@@ -11858,6 +11939,17 @@ export namespace Prisma {
     advogadoDominioCaso?: true
     problemaRelevante?: true
     relato?: true
+    docAntecedencia?: true
+    docAntecedenciaJustificativa?: true
+    advogadoAntecedencia?: true
+    advogadoAntecedenciaJustificativa?: true
+    infoCompleta?: true
+    infoFaltante?: true
+    conhecimentoAdvogado?: true
+    comentarioConhecimento?: true
+    avaliacaoAtuacao?: true
+    comentarioAvaliacao?: true
+    comentarioFinal?: true
     createdAt?: true
     _all?: true
   }
@@ -11943,6 +12035,17 @@ export namespace Prisma {
     advogadoDominioCaso: boolean | null
     problemaRelevante: boolean | null
     relato: string | null
+    docAntecedencia: boolean | null
+    docAntecedenciaJustificativa: string | null
+    advogadoAntecedencia: boolean | null
+    advogadoAntecedenciaJustificativa: string | null
+    infoCompleta: $Enums.InfoCompleta | null
+    infoFaltante: string | null
+    conhecimentoAdvogado: boolean | null
+    comentarioConhecimento: string | null
+    avaliacaoAtuacao: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao: string | null
+    comentarioFinal: string | null
     createdAt: Date
     _count: RelatorioAudienciaCountAggregateOutputType | null
     _min: RelatorioAudienciaMinAggregateOutputType | null
@@ -11972,6 +12075,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean
     problemaRelevante?: boolean
     relato?: boolean
+    docAntecedencia?: boolean
+    docAntecedenciaJustificativa?: boolean
+    advogadoAntecedencia?: boolean
+    advogadoAntecedenciaJustificativa?: boolean
+    infoCompleta?: boolean
+    infoFaltante?: boolean
+    conhecimentoAdvogado?: boolean
+    comentarioConhecimento?: boolean
+    avaliacaoAtuacao?: boolean
+    comentarioAvaliacao?: boolean
+    comentarioFinal?: boolean
     createdAt?: boolean
     audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["relatorioAudiencia"]>
@@ -11985,6 +12099,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean
     problemaRelevante?: boolean
     relato?: boolean
+    docAntecedencia?: boolean
+    docAntecedenciaJustificativa?: boolean
+    advogadoAntecedencia?: boolean
+    advogadoAntecedenciaJustificativa?: boolean
+    infoCompleta?: boolean
+    infoFaltante?: boolean
+    conhecimentoAdvogado?: boolean
+    comentarioConhecimento?: boolean
+    avaliacaoAtuacao?: boolean
+    comentarioAvaliacao?: boolean
+    comentarioFinal?: boolean
     createdAt?: boolean
     audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["relatorioAudiencia"]>
@@ -11998,6 +12123,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean
     problemaRelevante?: boolean
     relato?: boolean
+    docAntecedencia?: boolean
+    docAntecedenciaJustificativa?: boolean
+    advogadoAntecedencia?: boolean
+    advogadoAntecedenciaJustificativa?: boolean
+    infoCompleta?: boolean
+    infoFaltante?: boolean
+    conhecimentoAdvogado?: boolean
+    comentarioConhecimento?: boolean
+    avaliacaoAtuacao?: boolean
+    comentarioAvaliacao?: boolean
+    comentarioFinal?: boolean
     createdAt?: boolean
     audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["relatorioAudiencia"]>
@@ -12011,10 +12147,21 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean
     problemaRelevante?: boolean
     relato?: boolean
+    docAntecedencia?: boolean
+    docAntecedenciaJustificativa?: boolean
+    advogadoAntecedencia?: boolean
+    advogadoAntecedenciaJustificativa?: boolean
+    infoCompleta?: boolean
+    infoFaltante?: boolean
+    conhecimentoAdvogado?: boolean
+    comentarioConhecimento?: boolean
+    avaliacaoAtuacao?: boolean
+    comentarioAvaliacao?: boolean
+    comentarioFinal?: boolean
     createdAt?: boolean
   }
 
-  export type RelatorioAudienciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "audienciaId" | "audienciaOcorreu" | "resultado" | "advogadoPresente" | "advogadoDominioCaso" | "problemaRelevante" | "relato" | "createdAt", ExtArgs["result"]["relatorioAudiencia"]>
+  export type RelatorioAudienciaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "audienciaId" | "audienciaOcorreu" | "resultado" | "advogadoPresente" | "advogadoDominioCaso" | "problemaRelevante" | "relato" | "docAntecedencia" | "docAntecedenciaJustificativa" | "advogadoAntecedencia" | "advogadoAntecedenciaJustificativa" | "infoCompleta" | "infoFaltante" | "conhecimentoAdvogado" | "comentarioConhecimento" | "avaliacaoAtuacao" | "comentarioAvaliacao" | "comentarioFinal" | "createdAt", ExtArgs["result"]["relatorioAudiencia"]>
   export type RelatorioAudienciaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audiencia?: boolean | AudienciaDefaultArgs<ExtArgs>
   }
@@ -12039,6 +12186,17 @@ export namespace Prisma {
       advogadoDominioCaso: boolean | null
       problemaRelevante: boolean | null
       relato: string | null
+      docAntecedencia: boolean | null
+      docAntecedenciaJustificativa: string | null
+      advogadoAntecedencia: boolean | null
+      advogadoAntecedenciaJustificativa: string | null
+      infoCompleta: $Enums.InfoCompleta | null
+      infoFaltante: string | null
+      conhecimentoAdvogado: boolean | null
+      comentarioConhecimento: string | null
+      avaliacaoAtuacao: $Enums.AvaliacaoAtuacao | null
+      comentarioAvaliacao: string | null
+      comentarioFinal: string | null
       createdAt: Date
     }, ExtArgs["result"]["relatorioAudiencia"]>
     composites: {}
@@ -12472,6 +12630,17 @@ export namespace Prisma {
     readonly advogadoDominioCaso: FieldRef<"RelatorioAudiencia", 'Boolean'>
     readonly problemaRelevante: FieldRef<"RelatorioAudiencia", 'Boolean'>
     readonly relato: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly docAntecedencia: FieldRef<"RelatorioAudiencia", 'Boolean'>
+    readonly docAntecedenciaJustificativa: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly advogadoAntecedencia: FieldRef<"RelatorioAudiencia", 'Boolean'>
+    readonly advogadoAntecedenciaJustificativa: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly infoCompleta: FieldRef<"RelatorioAudiencia", 'InfoCompleta'>
+    readonly infoFaltante: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly conhecimentoAdvogado: FieldRef<"RelatorioAudiencia", 'Boolean'>
+    readonly comentarioConhecimento: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly avaliacaoAtuacao: FieldRef<"RelatorioAudiencia", 'AvaliacaoAtuacao'>
+    readonly comentarioAvaliacao: FieldRef<"RelatorioAudiencia", 'String'>
+    readonly comentarioFinal: FieldRef<"RelatorioAudiencia", 'String'>
     readonly createdAt: FieldRef<"RelatorioAudiencia", 'DateTime'>
   }
     
@@ -15143,6 +15312,7 @@ export namespace Prisma {
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
     mensagemCancelamento: string | null
+    respostaNaoPosso: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15152,6 +15322,9 @@ export namespace Prisma {
     mensagemPosPergunta4: string | null
     mensagemPosPergunta5: string | null
     mensagemPosPergunta6: string | null
+    mensagemPosPergunta7: string | null
+    mensagemPosPergunta8: string | null
+    mensagemPosPergunta9: string | null
     updatedAt: Date | null
   }
 
@@ -15169,6 +15342,7 @@ export namespace Prisma {
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
     mensagemCancelamento: string | null
+    respostaNaoPosso: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15178,6 +15352,9 @@ export namespace Prisma {
     mensagemPosPergunta4: string | null
     mensagemPosPergunta5: string | null
     mensagemPosPergunta6: string | null
+    mensagemPosPergunta7: string | null
+    mensagemPosPergunta8: string | null
+    mensagemPosPergunta9: string | null
     updatedAt: Date | null
   }
 
@@ -15195,6 +15372,7 @@ export namespace Prisma {
     mensagemCheckin: number
     mensagemPosAudiencia: number
     mensagemCancelamento: number
+    respostaNaoPosso: number
     respostaD1Confirmacao: number
     respostaReiteracaoConfirmacao: number
     respostaCheckinConfirmacao: number
@@ -15204,6 +15382,9 @@ export namespace Prisma {
     mensagemPosPergunta4: number
     mensagemPosPergunta5: number
     mensagemPosPergunta6: number
+    mensagemPosPergunta7: number
+    mensagemPosPergunta8: number
+    mensagemPosPergunta9: number
     updatedAt: number
     _all: number
   }
@@ -15237,6 +15418,7 @@ export namespace Prisma {
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
     mensagemCancelamento?: true
+    respostaNaoPosso?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15246,6 +15428,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: true
     mensagemPosPergunta5?: true
     mensagemPosPergunta6?: true
+    mensagemPosPergunta7?: true
+    mensagemPosPergunta8?: true
+    mensagemPosPergunta9?: true
     updatedAt?: true
   }
 
@@ -15263,6 +15448,7 @@ export namespace Prisma {
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
     mensagemCancelamento?: true
+    respostaNaoPosso?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15272,6 +15458,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: true
     mensagemPosPergunta5?: true
     mensagemPosPergunta6?: true
+    mensagemPosPergunta7?: true
+    mensagemPosPergunta8?: true
+    mensagemPosPergunta9?: true
     updatedAt?: true
   }
 
@@ -15289,6 +15478,7 @@ export namespace Prisma {
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
     mensagemCancelamento?: true
+    respostaNaoPosso?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15298,6 +15488,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: true
     mensagemPosPergunta5?: true
     mensagemPosPergunta6?: true
+    mensagemPosPergunta7?: true
+    mensagemPosPergunta8?: true
+    mensagemPosPergunta9?: true
     updatedAt?: true
     _all?: true
   }
@@ -15402,6 +15595,7 @@ export namespace Prisma {
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
     mensagemCancelamento: string | null
+    respostaNaoPosso: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15411,6 +15605,9 @@ export namespace Prisma {
     mensagemPosPergunta4: string | null
     mensagemPosPergunta5: string | null
     mensagemPosPergunta6: string | null
+    mensagemPosPergunta7: string | null
+    mensagemPosPergunta8: string | null
+    mensagemPosPergunta9: string | null
     updatedAt: Date
     _count: ConfiguracaoGlobalCountAggregateOutputType | null
     _avg: ConfiguracaoGlobalAvgAggregateOutputType | null
@@ -15447,6 +15644,7 @@ export namespace Prisma {
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
     mensagemCancelamento?: boolean
+    respostaNaoPosso?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15456,6 +15654,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: boolean
     mensagemPosPergunta5?: boolean
     mensagemPosPergunta6?: boolean
+    mensagemPosPergunta7?: boolean
+    mensagemPosPergunta8?: boolean
+    mensagemPosPergunta9?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracaoGlobal"]>
 
@@ -15473,6 +15674,7 @@ export namespace Prisma {
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
     mensagemCancelamento?: boolean
+    respostaNaoPosso?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15482,6 +15684,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: boolean
     mensagemPosPergunta5?: boolean
     mensagemPosPergunta6?: boolean
+    mensagemPosPergunta7?: boolean
+    mensagemPosPergunta8?: boolean
+    mensagemPosPergunta9?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracaoGlobal"]>
 
@@ -15499,6 +15704,7 @@ export namespace Prisma {
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
     mensagemCancelamento?: boolean
+    respostaNaoPosso?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15508,6 +15714,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: boolean
     mensagemPosPergunta5?: boolean
     mensagemPosPergunta6?: boolean
+    mensagemPosPergunta7?: boolean
+    mensagemPosPergunta8?: boolean
+    mensagemPosPergunta9?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["configuracaoGlobal"]>
 
@@ -15525,6 +15734,7 @@ export namespace Prisma {
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
     mensagemCancelamento?: boolean
+    respostaNaoPosso?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15534,10 +15744,13 @@ export namespace Prisma {
     mensagemPosPergunta4?: boolean
     mensagemPosPergunta5?: boolean
     mensagemPosPergunta6?: boolean
+    mensagemPosPergunta7?: boolean
+    mensagemPosPergunta8?: boolean
+    mensagemPosPergunta9?: boolean
     updatedAt?: boolean
   }
 
-  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemCancelamento" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
+  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemCancelamento" | "respostaNaoPosso" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "mensagemPosPergunta7" | "mensagemPosPergunta8" | "mensagemPosPergunta9" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
 
   export type $ConfiguracaoGlobalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ConfiguracaoGlobal"
@@ -15556,6 +15769,7 @@ export namespace Prisma {
       mensagemCheckin: string | null
       mensagemPosAudiencia: string | null
       mensagemCancelamento: string | null
+      respostaNaoPosso: string | null
       respostaD1Confirmacao: string | null
       respostaReiteracaoConfirmacao: string | null
       respostaCheckinConfirmacao: string | null
@@ -15565,6 +15779,9 @@ export namespace Prisma {
       mensagemPosPergunta4: string | null
       mensagemPosPergunta5: string | null
       mensagemPosPergunta6: string | null
+      mensagemPosPergunta7: string | null
+      mensagemPosPergunta8: string | null
+      mensagemPosPergunta9: string | null
       updatedAt: Date
     }, ExtArgs["result"]["configuracaoGlobal"]>
     composites: {}
@@ -16002,6 +16219,7 @@ export namespace Prisma {
     readonly mensagemCheckin: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosAudiencia: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemCancelamento: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly respostaNaoPosso: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaD1Confirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaReiteracaoConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaCheckinConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
@@ -16011,6 +16229,9 @@ export namespace Prisma {
     readonly mensagemPosPergunta4: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosPergunta5: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosPergunta6: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta7: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta8: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemPosPergunta9: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly updatedAt: FieldRef<"ConfiguracaoGlobal", 'DateTime'>
   }
     
@@ -17636,6 +17857,17 @@ export namespace Prisma {
     advogadoDominioCaso: 'advogadoDominioCaso',
     problemaRelevante: 'problemaRelevante',
     relato: 'relato',
+    docAntecedencia: 'docAntecedencia',
+    docAntecedenciaJustificativa: 'docAntecedenciaJustificativa',
+    advogadoAntecedencia: 'advogadoAntecedencia',
+    advogadoAntecedenciaJustificativa: 'advogadoAntecedenciaJustificativa',
+    infoCompleta: 'infoCompleta',
+    infoFaltante: 'infoFaltante',
+    conhecimentoAdvogado: 'conhecimentoAdvogado',
+    comentarioConhecimento: 'comentarioConhecimento',
+    avaliacaoAtuacao: 'avaliacaoAtuacao',
+    comentarioAvaliacao: 'comentarioAvaliacao',
+    comentarioFinal: 'comentarioFinal',
     createdAt: 'createdAt'
   };
 
@@ -17683,6 +17915,7 @@ export namespace Prisma {
     mensagemCheckin: 'mensagemCheckin',
     mensagemPosAudiencia: 'mensagemPosAudiencia',
     mensagemCancelamento: 'mensagemCancelamento',
+    respostaNaoPosso: 'respostaNaoPosso',
     respostaD1Confirmacao: 'respostaD1Confirmacao',
     respostaReiteracaoConfirmacao: 'respostaReiteracaoConfirmacao',
     respostaCheckinConfirmacao: 'respostaCheckinConfirmacao',
@@ -17692,6 +17925,9 @@ export namespace Prisma {
     mensagemPosPergunta4: 'mensagemPosPergunta4',
     mensagemPosPergunta5: 'mensagemPosPergunta5',
     mensagemPosPergunta6: 'mensagemPosPergunta6',
+    mensagemPosPergunta7: 'mensagemPosPergunta7',
+    mensagemPosPergunta8: 'mensagemPosPergunta8',
+    mensagemPosPergunta9: 'mensagemPosPergunta9',
     updatedAt: 'updatedAt'
   };
 
@@ -17945,6 +18181,34 @@ export namespace Prisma {
    * Reference to a field of type 'ResultadoAudiencia[]'
    */
   export type ListEnumResultadoAudienciaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResultadoAudiencia[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'InfoCompleta'
+   */
+  export type EnumInfoCompletaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InfoCompleta'>
+    
+
+
+  /**
+   * Reference to a field of type 'InfoCompleta[]'
+   */
+  export type ListEnumInfoCompletaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InfoCompleta[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AvaliacaoAtuacao'
+   */
+  export type EnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AvaliacaoAtuacao'>
+    
+
+
+  /**
+   * Reference to a field of type 'AvaliacaoAtuacao[]'
+   */
+  export type ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AvaliacaoAtuacao[]'>
     
 
 
@@ -18682,6 +18946,17 @@ export namespace Prisma {
     advogadoDominioCaso?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
     problemaRelevante?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
     relato?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    docAntecedencia?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    docAntecedenciaJustificativa?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    advogadoAntecedencia?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    advogadoAntecedenciaJustificativa?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    infoCompleta?: EnumInfoCompletaNullableFilter<"RelatorioAudiencia"> | $Enums.InfoCompleta | null
+    infoFaltante?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    conhecimentoAdvogado?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    comentarioConhecimento?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    avaliacaoAtuacao?: EnumAvaliacaoAtuacaoNullableFilter<"RelatorioAudiencia"> | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    comentarioFinal?: StringNullableFilter<"RelatorioAudiencia"> | string | null
     createdAt?: DateTimeFilter<"RelatorioAudiencia"> | Date | string
     audiencia?: XOR<AudienciaScalarRelationFilter, AudienciaWhereInput>
   }
@@ -18695,6 +18970,17 @@ export namespace Prisma {
     advogadoDominioCaso?: SortOrderInput | SortOrder
     problemaRelevante?: SortOrderInput | SortOrder
     relato?: SortOrderInput | SortOrder
+    docAntecedencia?: SortOrderInput | SortOrder
+    docAntecedenciaJustificativa?: SortOrderInput | SortOrder
+    advogadoAntecedencia?: SortOrderInput | SortOrder
+    advogadoAntecedenciaJustificativa?: SortOrderInput | SortOrder
+    infoCompleta?: SortOrderInput | SortOrder
+    infoFaltante?: SortOrderInput | SortOrder
+    conhecimentoAdvogado?: SortOrderInput | SortOrder
+    comentarioConhecimento?: SortOrderInput | SortOrder
+    avaliacaoAtuacao?: SortOrderInput | SortOrder
+    comentarioAvaliacao?: SortOrderInput | SortOrder
+    comentarioFinal?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     audiencia?: AudienciaOrderByWithRelationInput
   }
@@ -18711,6 +18997,17 @@ export namespace Prisma {
     advogadoDominioCaso?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
     problemaRelevante?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
     relato?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    docAntecedencia?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    docAntecedenciaJustificativa?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    advogadoAntecedencia?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    advogadoAntecedenciaJustificativa?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    infoCompleta?: EnumInfoCompletaNullableFilter<"RelatorioAudiencia"> | $Enums.InfoCompleta | null
+    infoFaltante?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    conhecimentoAdvogado?: BoolNullableFilter<"RelatorioAudiencia"> | boolean | null
+    comentarioConhecimento?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    avaliacaoAtuacao?: EnumAvaliacaoAtuacaoNullableFilter<"RelatorioAudiencia"> | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: StringNullableFilter<"RelatorioAudiencia"> | string | null
+    comentarioFinal?: StringNullableFilter<"RelatorioAudiencia"> | string | null
     createdAt?: DateTimeFilter<"RelatorioAudiencia"> | Date | string
     audiencia?: XOR<AudienciaScalarRelationFilter, AudienciaWhereInput>
   }, "id" | "audienciaId">
@@ -18724,6 +19021,17 @@ export namespace Prisma {
     advogadoDominioCaso?: SortOrderInput | SortOrder
     problemaRelevante?: SortOrderInput | SortOrder
     relato?: SortOrderInput | SortOrder
+    docAntecedencia?: SortOrderInput | SortOrder
+    docAntecedenciaJustificativa?: SortOrderInput | SortOrder
+    advogadoAntecedencia?: SortOrderInput | SortOrder
+    advogadoAntecedenciaJustificativa?: SortOrderInput | SortOrder
+    infoCompleta?: SortOrderInput | SortOrder
+    infoFaltante?: SortOrderInput | SortOrder
+    conhecimentoAdvogado?: SortOrderInput | SortOrder
+    comentarioConhecimento?: SortOrderInput | SortOrder
+    avaliacaoAtuacao?: SortOrderInput | SortOrder
+    comentarioAvaliacao?: SortOrderInput | SortOrder
+    comentarioFinal?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: RelatorioAudienciaCountOrderByAggregateInput
     _max?: RelatorioAudienciaMaxOrderByAggregateInput
@@ -18742,6 +19050,17 @@ export namespace Prisma {
     advogadoDominioCaso?: BoolNullableWithAggregatesFilter<"RelatorioAudiencia"> | boolean | null
     problemaRelevante?: BoolNullableWithAggregatesFilter<"RelatorioAudiencia"> | boolean | null
     relato?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    docAntecedencia?: BoolNullableWithAggregatesFilter<"RelatorioAudiencia"> | boolean | null
+    docAntecedenciaJustificativa?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    advogadoAntecedencia?: BoolNullableWithAggregatesFilter<"RelatorioAudiencia"> | boolean | null
+    advogadoAntecedenciaJustificativa?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    infoCompleta?: EnumInfoCompletaNullableWithAggregatesFilter<"RelatorioAudiencia"> | $Enums.InfoCompleta | null
+    infoFaltante?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    conhecimentoAdvogado?: BoolNullableWithAggregatesFilter<"RelatorioAudiencia"> | boolean | null
+    comentarioConhecimento?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    avaliacaoAtuacao?: EnumAvaliacaoAtuacaoNullableWithAggregatesFilter<"RelatorioAudiencia"> | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
+    comentarioFinal?: StringNullableWithAggregatesFilter<"RelatorioAudiencia"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RelatorioAudiencia"> | Date | string
   }
 
@@ -18903,6 +19222,7 @@ export namespace Prisma {
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCancelamento?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaNaoPosso?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18912,6 +19232,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta5?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta6?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta7?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta8?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta9?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     updatedAt?: DateTimeFilter<"ConfiguracaoGlobal"> | Date | string
   }
 
@@ -18929,6 +19252,7 @@ export namespace Prisma {
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
     mensagemCancelamento?: SortOrderInput | SortOrder
+    respostaNaoPosso?: SortOrderInput | SortOrder
     respostaD1Confirmacao?: SortOrderInput | SortOrder
     respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
     respostaCheckinConfirmacao?: SortOrderInput | SortOrder
@@ -18938,6 +19262,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: SortOrderInput | SortOrder
     mensagemPosPergunta5?: SortOrderInput | SortOrder
     mensagemPosPergunta6?: SortOrderInput | SortOrder
+    mensagemPosPergunta7?: SortOrderInput | SortOrder
+    mensagemPosPergunta8?: SortOrderInput | SortOrder
+    mensagemPosPergunta9?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -18958,6 +19285,7 @@ export namespace Prisma {
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCancelamento?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    respostaNaoPosso?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18967,6 +19295,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta5?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta6?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta7?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta8?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta9?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     updatedAt?: DateTimeFilter<"ConfiguracaoGlobal"> | Date | string
   }, "id">
 
@@ -18984,6 +19315,7 @@ export namespace Prisma {
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
     mensagemCancelamento?: SortOrderInput | SortOrder
+    respostaNaoPosso?: SortOrderInput | SortOrder
     respostaD1Confirmacao?: SortOrderInput | SortOrder
     respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
     respostaCheckinConfirmacao?: SortOrderInput | SortOrder
@@ -18993,6 +19325,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: SortOrderInput | SortOrder
     mensagemPosPergunta5?: SortOrderInput | SortOrder
     mensagemPosPergunta6?: SortOrderInput | SortOrder
+    mensagemPosPergunta7?: SortOrderInput | SortOrder
+    mensagemPosPergunta8?: SortOrderInput | SortOrder
+    mensagemPosPergunta9?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: ConfiguracaoGlobalCountOrderByAggregateInput
     _avg?: ConfiguracaoGlobalAvgOrderByAggregateInput
@@ -19018,6 +19353,7 @@ export namespace Prisma {
     mensagemCheckin?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCancelamento?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    respostaNaoPosso?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
@@ -19027,6 +19363,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta5?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosPergunta6?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta7?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta8?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemPosPergunta9?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"ConfiguracaoGlobal"> | Date | string
   }
 
@@ -19896,6 +20235,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean | null
     problemaRelevante?: boolean | null
     relato?: string | null
+    docAntecedencia?: boolean | null
+    docAntecedenciaJustificativa?: string | null
+    advogadoAntecedencia?: boolean | null
+    advogadoAntecedenciaJustificativa?: string | null
+    infoCompleta?: $Enums.InfoCompleta | null
+    infoFaltante?: string | null
+    conhecimentoAdvogado?: boolean | null
+    comentarioConhecimento?: string | null
+    avaliacaoAtuacao?: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: string | null
+    comentarioFinal?: string | null
     createdAt?: Date | string
     audiencia: AudienciaCreateNestedOneWithoutRelatorioInput
   }
@@ -19909,6 +20259,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean | null
     problemaRelevante?: boolean | null
     relato?: string | null
+    docAntecedencia?: boolean | null
+    docAntecedenciaJustificativa?: string | null
+    advogadoAntecedencia?: boolean | null
+    advogadoAntecedenciaJustificativa?: string | null
+    infoCompleta?: $Enums.InfoCompleta | null
+    infoFaltante?: string | null
+    conhecimentoAdvogado?: boolean | null
+    comentarioConhecimento?: string | null
+    avaliacaoAtuacao?: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: string | null
+    comentarioFinal?: string | null
     createdAt?: Date | string
   }
 
@@ -19920,6 +20281,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     audiencia?: AudienciaUpdateOneRequiredWithoutRelatorioNestedInput
   }
@@ -19933,6 +20305,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19945,6 +20328,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean | null
     problemaRelevante?: boolean | null
     relato?: string | null
+    docAntecedencia?: boolean | null
+    docAntecedenciaJustificativa?: string | null
+    advogadoAntecedencia?: boolean | null
+    advogadoAntecedenciaJustificativa?: string | null
+    infoCompleta?: $Enums.InfoCompleta | null
+    infoFaltante?: string | null
+    conhecimentoAdvogado?: boolean | null
+    comentarioConhecimento?: string | null
+    avaliacaoAtuacao?: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: string | null
+    comentarioFinal?: string | null
     createdAt?: Date | string
   }
 
@@ -19956,6 +20350,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19968,6 +20373,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20128,6 +20544,7 @@ export namespace Prisma {
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
     mensagemCancelamento?: string | null
+    respostaNaoPosso?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20137,6 +20554,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: string | null
     mensagemPosPergunta5?: string | null
     mensagemPosPergunta6?: string | null
+    mensagemPosPergunta7?: string | null
+    mensagemPosPergunta8?: string | null
+    mensagemPosPergunta9?: string | null
     updatedAt?: Date | string
   }
 
@@ -20154,6 +20574,7 @@ export namespace Prisma {
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
     mensagemCancelamento?: string | null
+    respostaNaoPosso?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20163,6 +20584,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: string | null
     mensagemPosPergunta5?: string | null
     mensagemPosPergunta6?: string | null
+    mensagemPosPergunta7?: string | null
+    mensagemPosPergunta8?: string | null
+    mensagemPosPergunta9?: string | null
     updatedAt?: Date | string
   }
 
@@ -20180,6 +20604,7 @@ export namespace Prisma {
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaNaoPosso?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20189,6 +20614,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta7?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta8?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta9?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20206,6 +20634,7 @@ export namespace Prisma {
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaNaoPosso?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20215,6 +20644,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta7?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta8?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta9?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20232,6 +20664,7 @@ export namespace Prisma {
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
     mensagemCancelamento?: string | null
+    respostaNaoPosso?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20241,6 +20674,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: string | null
     mensagemPosPergunta5?: string | null
     mensagemPosPergunta6?: string | null
+    mensagemPosPergunta7?: string | null
+    mensagemPosPergunta8?: string | null
+    mensagemPosPergunta9?: string | null
     updatedAt?: Date | string
   }
 
@@ -20258,6 +20694,7 @@ export namespace Prisma {
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaNaoPosso?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20267,6 +20704,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta7?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta8?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta9?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20284,6 +20724,7 @@ export namespace Prisma {
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
+    respostaNaoPosso?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20293,6 +20734,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta5?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosPergunta6?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta7?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta8?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemPosPergunta9?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21158,6 +21602,20 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
+  export type EnumInfoCompletaNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.InfoCompleta | EnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInfoCompletaNullableFilter<$PrismaModel> | $Enums.InfoCompleta | null
+  }
+
+  export type EnumAvaliacaoAtuacaoNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AvaliacaoAtuacao | EnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel> | $Enums.AvaliacaoAtuacao | null
+  }
+
   export type RelatorioAudienciaCountOrderByAggregateInput = {
     id?: SortOrder
     audienciaId?: SortOrder
@@ -21167,6 +21625,17 @@ export namespace Prisma {
     advogadoDominioCaso?: SortOrder
     problemaRelevante?: SortOrder
     relato?: SortOrder
+    docAntecedencia?: SortOrder
+    docAntecedenciaJustificativa?: SortOrder
+    advogadoAntecedencia?: SortOrder
+    advogadoAntecedenciaJustificativa?: SortOrder
+    infoCompleta?: SortOrder
+    infoFaltante?: SortOrder
+    conhecimentoAdvogado?: SortOrder
+    comentarioConhecimento?: SortOrder
+    avaliacaoAtuacao?: SortOrder
+    comentarioAvaliacao?: SortOrder
+    comentarioFinal?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21179,6 +21648,17 @@ export namespace Prisma {
     advogadoDominioCaso?: SortOrder
     problemaRelevante?: SortOrder
     relato?: SortOrder
+    docAntecedencia?: SortOrder
+    docAntecedenciaJustificativa?: SortOrder
+    advogadoAntecedencia?: SortOrder
+    advogadoAntecedenciaJustificativa?: SortOrder
+    infoCompleta?: SortOrder
+    infoFaltante?: SortOrder
+    conhecimentoAdvogado?: SortOrder
+    comentarioConhecimento?: SortOrder
+    avaliacaoAtuacao?: SortOrder
+    comentarioAvaliacao?: SortOrder
+    comentarioFinal?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21191,6 +21671,17 @@ export namespace Prisma {
     advogadoDominioCaso?: SortOrder
     problemaRelevante?: SortOrder
     relato?: SortOrder
+    docAntecedencia?: SortOrder
+    docAntecedenciaJustificativa?: SortOrder
+    advogadoAntecedencia?: SortOrder
+    advogadoAntecedenciaJustificativa?: SortOrder
+    infoCompleta?: SortOrder
+    infoFaltante?: SortOrder
+    conhecimentoAdvogado?: SortOrder
+    comentarioConhecimento?: SortOrder
+    avaliacaoAtuacao?: SortOrder
+    comentarioAvaliacao?: SortOrder
+    comentarioFinal?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21220,6 +21711,26 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type EnumInfoCompletaNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InfoCompleta | EnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInfoCompletaNullableWithAggregatesFilter<$PrismaModel> | $Enums.InfoCompleta | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumInfoCompletaNullableFilter<$PrismaModel>
+    _max?: NestedEnumInfoCompletaNullableFilter<$PrismaModel>
+  }
+
+  export type EnumAvaliacaoAtuacaoNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AvaliacaoAtuacao | EnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAvaliacaoAtuacaoNullableWithAggregatesFilter<$PrismaModel> | $Enums.AvaliacaoAtuacao | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel>
+    _max?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel>
   }
 
   export type HistoricoStatusCountOrderByAggregateInput = {
@@ -21316,6 +21827,7 @@ export namespace Prisma {
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
     mensagemCancelamento?: SortOrder
+    respostaNaoPosso?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21325,6 +21837,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: SortOrder
     mensagemPosPergunta5?: SortOrder
     mensagemPosPergunta6?: SortOrder
+    mensagemPosPergunta7?: SortOrder
+    mensagemPosPergunta8?: SortOrder
+    mensagemPosPergunta9?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -21349,6 +21864,7 @@ export namespace Prisma {
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
     mensagemCancelamento?: SortOrder
+    respostaNaoPosso?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21358,6 +21874,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: SortOrder
     mensagemPosPergunta5?: SortOrder
     mensagemPosPergunta6?: SortOrder
+    mensagemPosPergunta7?: SortOrder
+    mensagemPosPergunta8?: SortOrder
+    mensagemPosPergunta9?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -21375,6 +21894,7 @@ export namespace Prisma {
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
     mensagemCancelamento?: SortOrder
+    respostaNaoPosso?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21384,6 +21904,9 @@ export namespace Prisma {
     mensagemPosPergunta4?: SortOrder
     mensagemPosPergunta5?: SortOrder
     mensagemPosPergunta6?: SortOrder
+    mensagemPosPergunta7?: SortOrder
+    mensagemPosPergunta8?: SortOrder
+    mensagemPosPergunta9?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -22198,6 +22721,14 @@ export namespace Prisma {
     set?: boolean | null
   }
 
+  export type NullableEnumInfoCompletaFieldUpdateOperationsInput = {
+    set?: $Enums.InfoCompleta | null
+  }
+
+  export type NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput = {
+    set?: $Enums.AvaliacaoAtuacao | null
+  }
+
   export type AudienciaUpdateOneRequiredWithoutRelatorioNestedInput = {
     create?: XOR<AudienciaCreateWithoutRelatorioInput, AudienciaUncheckedCreateWithoutRelatorioInput>
     connectOrCreate?: AudienciaCreateOrConnectWithoutRelatorioInput
@@ -22617,6 +23148,20 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
+  export type NestedEnumInfoCompletaNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.InfoCompleta | EnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInfoCompletaNullableFilter<$PrismaModel> | $Enums.InfoCompleta | null
+  }
+
+  export type NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AvaliacaoAtuacao | EnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel> | $Enums.AvaliacaoAtuacao | null
+  }
+
   export type NestedEnumOcorrenciaAudienciaNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OcorrenciaAudiencia | EnumOcorrenciaAudienciaFieldRefInput<$PrismaModel> | null
     in?: $Enums.OcorrenciaAudiencia[] | ListEnumOcorrenciaAudienciaFieldRefInput<$PrismaModel> | null
@@ -22643,6 +23188,26 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInfoCompletaNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InfoCompleta | EnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    in?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.InfoCompleta[] | ListEnumInfoCompletaFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumInfoCompletaNullableWithAggregatesFilter<$PrismaModel> | $Enums.InfoCompleta | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumInfoCompletaNullableFilter<$PrismaModel>
+    _max?: NestedEnumInfoCompletaNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAvaliacaoAtuacaoNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AvaliacaoAtuacao | EnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AvaliacaoAtuacao[] | ListEnumAvaliacaoAtuacaoFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAvaliacaoAtuacaoNullableWithAggregatesFilter<$PrismaModel> | $Enums.AvaliacaoAtuacao | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel>
+    _max?: NestedEnumAvaliacaoAtuacaoNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumStatusSubstituicaoFilter<$PrismaModel = never> = {
@@ -23563,6 +24128,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean | null
     problemaRelevante?: boolean | null
     relato?: string | null
+    docAntecedencia?: boolean | null
+    docAntecedenciaJustificativa?: string | null
+    advogadoAntecedencia?: boolean | null
+    advogadoAntecedenciaJustificativa?: string | null
+    infoCompleta?: $Enums.InfoCompleta | null
+    infoFaltante?: string | null
+    conhecimentoAdvogado?: boolean | null
+    comentarioConhecimento?: string | null
+    avaliacaoAtuacao?: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: string | null
+    comentarioFinal?: string | null
     createdAt?: Date | string
   }
 
@@ -23574,6 +24150,17 @@ export namespace Prisma {
     advogadoDominioCaso?: boolean | null
     problemaRelevante?: boolean | null
     relato?: string | null
+    docAntecedencia?: boolean | null
+    docAntecedenciaJustificativa?: string | null
+    advogadoAntecedencia?: boolean | null
+    advogadoAntecedenciaJustificativa?: string | null
+    infoCompleta?: $Enums.InfoCompleta | null
+    infoFaltante?: string | null
+    conhecimentoAdvogado?: boolean | null
+    comentarioConhecimento?: string | null
+    avaliacaoAtuacao?: $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: string | null
+    comentarioFinal?: string | null
     createdAt?: Date | string
   }
 
@@ -23840,6 +24427,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -23851,6 +24449,17 @@ export namespace Prisma {
     advogadoDominioCaso?: NullableBoolFieldUpdateOperationsInput | boolean | null
     problemaRelevante?: NullableBoolFieldUpdateOperationsInput | boolean | null
     relato?: NullableStringFieldUpdateOperationsInput | string | null
+    docAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    docAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    advogadoAntecedencia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    advogadoAntecedenciaJustificativa?: NullableStringFieldUpdateOperationsInput | string | null
+    infoCompleta?: NullableEnumInfoCompletaFieldUpdateOperationsInput | $Enums.InfoCompleta | null
+    infoFaltante?: NullableStringFieldUpdateOperationsInput | string | null
+    conhecimentoAdvogado?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    comentarioConhecimento?: NullableStringFieldUpdateOperationsInput | string | null
+    avaliacaoAtuacao?: NullableEnumAvaliacaoAtuacaoFieldUpdateOperationsInput | $Enums.AvaliacaoAtuacao | null
+    comentarioAvaliacao?: NullableStringFieldUpdateOperationsInput | string | null
+    comentarioFinal?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

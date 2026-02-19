@@ -91,14 +91,43 @@ const checkInSchema = z.object({
   observacao: z.string().optional(),
 })
 
-const relatorioSchema = z.object({
-  audienciaOcorreu: z.enum(OCORRENCIAS_AUDIENCIA),
-  resultado: z.enum(RESULTADOS_AUDIENCIA),
-  advogadoPresente: z.boolean(),
-  advogadoDominioCaso: z.boolean(),
-  problemaRelevante: z.boolean(),
-  relato: z.string().optional(),
-})
+const relatorioSchema = z
+  .object({
+    audienciaOcorreu: z.enum(OCORRENCIAS_AUDIENCIA),
+    docAntecedencia: z.boolean(),
+    docAntecedenciaJustificativa: z.string().optional(),
+    advogadoAntecedencia: z.boolean(),
+    advogadoAntecedenciaJustificativa: z.string().optional(),
+    infoCompleta: z.enum(['SIM', 'NAO']),
+    infoFaltante: z.string().optional(),
+    conhecimentoAdvogado: z.boolean(),
+    comentarioConhecimento: z.string().min(1, 'Comentario e obrigatorio'),
+    avaliacaoAtuacao: z.enum(['BOM', 'REGULAR', 'RUIM']),
+    comentarioAvaliacao: z.string().min(1, 'Comentario e obrigatorio'),
+    comentarioFinal: z.string().min(1, 'Comentario final e obrigatorio'),
+  })
+  .refine(
+    (dados) => (dados.docAntecedencia ? true : Boolean(dados.docAntecedenciaJustificativa?.trim())),
+    {
+      message: 'Informe a justificativa quando selecionar "Nao".',
+      path: ['docAntecedenciaJustificativa'],
+    },
+  )
+  .refine(
+    (dados) =>
+      dados.advogadoAntecedencia ? true : Boolean(dados.advogadoAntecedenciaJustificativa?.trim()),
+    {
+      message: 'Informe a justificativa quando selecionar "Nao".',
+      path: ['advogadoAntecedenciaJustificativa'],
+    },
+  )
+  .refine(
+    (dados) => (dados.infoCompleta === 'NAO' ? Boolean(dados.infoFaltante?.trim()) : true),
+    {
+      message: 'Informe o que faltou nas informacoes quando selecionar "Nao".',
+      path: ['infoFaltante'],
+    },
+  )
 
 export default async function audienciasRoutes(app: FastifyInstance) {
   app.addHook('onRequest', app.autenticar)

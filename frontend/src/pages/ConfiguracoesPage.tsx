@@ -24,9 +24,11 @@ const TEMPLATES_DEFAULT = {
   mensagemCheckin:
     'Check-in da audiencia {{numeroProcesso}} hoje as {{hora}}. Chegou no local?',
   mensagemPosAudiencia:
-    'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+    'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/9: A audiencia ocorreu?',
   mensagemCancelamento:
     'Aviso: a audiencia do processo {{numeroProcesso}} em {{data}} as {{hora}} foi cancelada. Qualquer duvida, contate o escritorio.',
+  respostaNaoPosso:
+    'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.',
   respostaD1Confirmacao:
     'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.',
   respostaReiteracaoConfirmacao:
@@ -36,15 +38,21 @@ const TEMPLATES_DEFAULT = {
   respostaPosAudienciaConfirmacao:
     'Obrigado. Relatorio pos-audiencia finalizado com sucesso.',
   mensagemPosPergunta2:
-    'Pergunta 2/6 do processo {{numeroProcesso}}: Qual foi o resultado?',
+    'Pergunta 2/9 do processo {{numeroProcesso}}: Voce teve acesso a documentacao do processo e link da audiencia com antecedencia (48h antes da audiencia)?',
   mensagemPosPergunta3:
-    'Pergunta 3/6 do processo {{numeroProcesso}}: O advogado estava presente no horario?',
+    'Pergunta 3/9 do processo {{numeroProcesso}}: O advogado chegou com no minimo 1h de antecedencia? (Se virtual, entrou em contato com 30min de antecedencia)',
   mensagemPosPergunta4:
-    'Pergunta 4/6 do processo {{numeroProcesso}}: O advogado demonstrou dominio minimo do caso?',
+    'Pergunta 4/9 do processo {{numeroProcesso}}: Todas as informacoes estavam disponiveis no roteiro de audiencia ou no corpo do e-mail?',
   mensagemPosPergunta5:
-    'Pergunta 5/6 do processo {{numeroProcesso}}: Houve algum problema relevante?',
+    'Pergunta 5/9 do processo {{numeroProcesso}}: O advogado mostrou conhecimento sobre o caso e/ou lhe instruiu adequadamente?',
   mensagemPosPergunta6:
-    'Pergunta 6/6 do processo {{numeroProcesso}}: Deixe uma observacao curta sobre o que aconteceu. Se nao houver, responda: Sem observacoes.',
+    'Pergunta 6/9 do processo {{numeroProcesso}}: Comente a avaliacao sobre a resposta da pergunta anterior.',
+  mensagemPosPergunta7:
+    'Pergunta 7/9 do processo {{numeroProcesso}}: Qual a sua avaliacao quanto a atuacao do advogado na conducao da audiencia?',
+  mensagemPosPergunta8:
+    'Pergunta 8/9 do processo {{numeroProcesso}}: Comente a avaliacao sobre a resposta da pergunta anterior.',
+  mensagemPosPergunta9:
+    'Pergunta 9/9 do processo {{numeroProcesso}}: Espaco aberto para comentarios e sugestoes de melhorias. Se nao tiver nada, responda "ok".',
 } as const
 
 const VARIAVEIS_DISPONIVEIS = [
@@ -115,6 +123,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
     mensagemCheckin: dados.mensagemCheckin,
     mensagemPosAudiencia: dados.mensagemPosAudiencia,
     mensagemCancelamento: dados.mensagemCancelamento,
+    respostaNaoPosso: dados.respostaNaoPosso,
     respostaD1Confirmacao: dados.respostaD1Confirmacao,
     respostaReiteracaoConfirmacao: dados.respostaReiteracaoConfirmacao,
     respostaCheckinConfirmacao: dados.respostaCheckinConfirmacao,
@@ -124,6 +133,9 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
     mensagemPosPergunta4: dados.mensagemPosPergunta4,
     mensagemPosPergunta5: dados.mensagemPosPergunta5,
     mensagemPosPergunta6: dados.mensagemPosPergunta6,
+    mensagemPosPergunta7: dados.mensagemPosPergunta7,
+    mensagemPosPergunta8: dados.mensagemPosPergunta8,
+    mensagemPosPergunta9: dados.mensagemPosPergunta9,
   })
 
   const [feedback, setFeedback] = useState<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(
@@ -502,6 +514,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               rows={2}
             />
             <TemplateField
+              label="Resposta para Substituicao Necessaria"
+              value={form.respostaNaoPosso}
+              defaultValue={TEMPLATES_DEFAULT.respostaNaoPosso}
+              onChange={(v) => setForm((f) => ({ ...f, respostaNaoPosso: v }))}
+              onRestaurar={() => restaurarTemplate('respostaNaoPosso')}
+              rows={2}
+            />
+            <TemplateField
               label="Resposta de checkout (confirmacao final)"
               value={form.respostaPosAudienciaConfirmacao}
               defaultValue={TEMPLATES_DEFAULT.respostaPosAudienciaConfirmacao}
@@ -512,7 +532,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
 
             <details className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
               <summary className="cursor-pointer list-none text-sm font-semibold text-slate-700">
-                Checkout avancado (Perguntas 2/6 a 6/6)
+                Checkout avancado (Perguntas 2/9 a 9/9)
               </summary>
               <p className="mt-2 text-xs text-slate-500">
                 Opcional. Personalize apenas se precisar ajustar o roteiro detalhado do pos-audiencia.
@@ -520,7 +540,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
 
               <div className="mt-4 space-y-4">
                 <TemplateField
-                  label="Pergunta 2/6 (resultado)"
+                  label="Pergunta 2/9 (documentacao 48h)"
                   value={form.mensagemPosPergunta2}
                   defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta2}
                   onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta2: v }))}
@@ -529,7 +549,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
                 />
 
                 <TemplateField
-                  label="Pergunta 3/6 (advogado presente)"
+                  label="Pergunta 3/9 (antecedencia advogado)"
                   value={form.mensagemPosPergunta3}
                   defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta3}
                   onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta3: v }))}
@@ -538,7 +558,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
                 />
 
                 <TemplateField
-                  label="Pergunta 4/6 (dominio do caso)"
+                  label="Pergunta 4/9 (informacoes completas)"
                   value={form.mensagemPosPergunta4}
                   defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta4}
                   onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta4: v }))}
@@ -547,7 +567,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
                 />
 
                 <TemplateField
-                  label="Pergunta 5/6 (problema relevante)"
+                  label="Pergunta 5/9 (conhecimento do caso)"
                   value={form.mensagemPosPergunta5}
                   defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta5}
                   onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta5: v }))}
@@ -556,11 +576,38 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
                 />
 
                 <TemplateField
-                  label="Pergunta 6/6 (observacoes)"
+                  label="Pergunta 6/9 (comentario conhecimento)"
                   value={form.mensagemPosPergunta6}
                   defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta6}
                   onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta6: v }))}
                   onRestaurar={() => restaurarTemplate('mensagemPosPergunta6')}
+                  rows={3}
+                />
+
+                <TemplateField
+                  label="Pergunta 7/9 (avaliacao atuacao)"
+                  value={form.mensagemPosPergunta7}
+                  defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta7}
+                  onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta7: v }))}
+                  onRestaurar={() => restaurarTemplate('mensagemPosPergunta7')}
+                  rows={2}
+                />
+
+                <TemplateField
+                  label="Pergunta 8/9 (comentario avaliacao)"
+                  value={form.mensagemPosPergunta8}
+                  defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta8}
+                  onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta8: v }))}
+                  onRestaurar={() => restaurarTemplate('mensagemPosPergunta8')}
+                  rows={3}
+                />
+
+                <TemplateField
+                  label="Pergunta 9/9 (comentarios finais)"
+                  value={form.mensagemPosPergunta9}
+                  defaultValue={TEMPLATES_DEFAULT.mensagemPosPergunta9}
+                  onChange={(v) => setForm((f) => ({ ...f, mensagemPosPergunta9: v }))}
+                  onRestaurar={() => restaurarTemplate('mensagemPosPergunta9')}
                   rows={3}
                 />
               </div>

@@ -39,6 +39,7 @@ const atualizarSchema = z
     mensagemCancelamento: z
       .union([z.string().min(10, 'Mensagem muito curta'), z.null()])
       .optional(),
+    respostaNaoPosso: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     respostaD1Confirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     respostaReiteracaoConfirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     respostaCheckinConfirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
@@ -48,6 +49,9 @@ const atualizarSchema = z
     mensagemPosPergunta4: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     mensagemPosPergunta5: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     mensagemPosPergunta6: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
+    mensagemPosPergunta7: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
+    mensagemPosPergunta8: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
+    mensagemPosPergunta9: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
   })
   .refine((dados) => Object.keys(dados).length > 0, {
     message: 'Informe ao menos um campo para atualizar',

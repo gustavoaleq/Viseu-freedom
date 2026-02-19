@@ -1,7 +1,8 @@
 import { prisma } from '../config/database.js'
 import type {
+  AvaliacaoAtuacao,
+  InfoCompleta,
   OcorrenciaAudiencia,
-  ResultadoAudiencia,
   StatusAudiencia,
 } from '../generated/prisma/client.js'
 
@@ -253,10 +254,11 @@ export async function buscarIndicadoresPosRelatorio(dias = 30) {
   const [
     totalRelatorios,
     ocorrencia,
-    resultado,
-    advogadoPresente,
-    advogadoDominioCaso,
-    problemaRelevante,
+    docAntecedencia,
+    advogadoAntecedencia,
+    infoCompleta,
+    conhecimentoAdvogado,
+    avaliacaoAtuacao,
   ] = await Promise.all([
     prisma.relatorioAudiencia.count({
       where: { createdAt: { gte: inicio } },
@@ -270,34 +272,42 @@ export async function buscarIndicadoresPosRelatorio(dias = 30) {
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['resultado'],
+      by: ['docAntecedencia'],
       where: {
         createdAt: { gte: inicio },
-        resultado: { not: null },
+        docAntecedencia: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['advogadoPresente'],
+      by: ['advogadoAntecedencia'],
       where: {
         createdAt: { gte: inicio },
-        advogadoPresente: { not: null },
+        advogadoAntecedencia: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['advogadoDominioCaso'],
+      by: ['infoCompleta'],
       where: {
         createdAt: { gte: inicio },
-        advogadoDominioCaso: { not: null },
+        infoCompleta: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['problemaRelevante'],
+      by: ['conhecimentoAdvogado'],
       where: {
         createdAt: { gte: inicio },
-        problemaRelevante: { not: null },
+        conhecimentoAdvogado: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['avaliacaoAtuacao'],
+      where: {
+        createdAt: { gte: inicio },
+        avaliacaoAtuacao: { not: null },
       },
       _count: { _all: true },
     }),
@@ -306,17 +316,20 @@ export async function buscarIndicadoresPosRelatorio(dias = 30) {
   const ocorrenciaMap = new Map<OcorrenciaAudiencia | null, number>(
     ocorrencia.map((item) => [item.audienciaOcorreu, item._count._all]),
   )
-  const resultadoMap = new Map<ResultadoAudiencia | null, number>(
-    resultado.map((item) => [item.resultado, item._count._all]),
+  const docAntecedenciaMap = new Map<boolean | null, number>(
+    docAntecedencia.map((item) => [item.docAntecedencia, item._count._all]),
   )
-  const advogadoPresenteMap = new Map<boolean | null, number>(
-    advogadoPresente.map((item) => [item.advogadoPresente, item._count._all]),
+  const advogadoAntecedenciaMap = new Map<boolean | null, number>(
+    advogadoAntecedencia.map((item) => [item.advogadoAntecedencia, item._count._all]),
   )
-  const advogadoDominioMap = new Map<boolean | null, number>(
-    advogadoDominioCaso.map((item) => [item.advogadoDominioCaso, item._count._all]),
+  const infoCompletaMap = new Map<InfoCompleta | null, number>(
+    infoCompleta.map((item) => [item.infoCompleta, item._count._all]),
   )
-  const problemaMap = new Map<boolean | null, number>(
-    problemaRelevante.map((item) => [item.problemaRelevante, item._count._all]),
+  const conhecimentoMap = new Map<boolean | null, number>(
+    conhecimentoAdvogado.map((item) => [item.conhecimentoAdvogado, item._count._all]),
+  )
+  const avaliacaoMap = new Map<AvaliacaoAtuacao | null, number>(
+    avaliacaoAtuacao.map((item) => [item.avaliacaoAtuacao, item._count._all]),
   )
 
   return {
@@ -328,23 +341,27 @@ export async function buscarIndicadoresPosRelatorio(dias = 30) {
       nao: ocorrenciaMap.get('NAO') ?? 0,
       remarcada: ocorrenciaMap.get('REMARCADA') ?? 0,
     },
-    resultado: {
-      acordo: resultadoMap.get('ACORDO') ?? 0,
-      semAcordo: resultadoMap.get('SEM_ACORDO') ?? 0,
-      ausencia: resultadoMap.get('AUSENCIA') ?? 0,
-      redesignada: resultadoMap.get('REDESIGNADA') ?? 0,
+    docAntecedencia: {
+      sim: docAntecedenciaMap.get(true) ?? 0,
+      nao: docAntecedenciaMap.get(false) ?? 0,
     },
-    advogadoPresente: {
-      sim: advogadoPresenteMap.get(true) ?? 0,
-      nao: advogadoPresenteMap.get(false) ?? 0,
+    advogadoAntecedencia: {
+      sim: advogadoAntecedenciaMap.get(true) ?? 0,
+      nao: advogadoAntecedenciaMap.get(false) ?? 0,
     },
-    advogadoDominioCaso: {
-      sim: advogadoDominioMap.get(true) ?? 0,
-      nao: advogadoDominioMap.get(false) ?? 0,
+    infoCompleta: {
+      sim: infoCompletaMap.get('SIM') ?? 0,
+      nao: infoCompletaMap.get('NAO') ?? 0,
+      outra: infoCompletaMap.get('OUTRA') ?? 0,
     },
-    problemaRelevante: {
-      sim: problemaMap.get(true) ?? 0,
-      nao: problemaMap.get(false) ?? 0,
+    conhecimentoAdvogado: {
+      sim: conhecimentoMap.get(true) ?? 0,
+      nao: conhecimentoMap.get(false) ?? 0,
+    },
+    avaliacaoAtuacao: {
+      bom: avaliacaoMap.get('BOM') ?? 0,
+      regular: avaliacaoMap.get('REGULAR') ?? 0,
+      ruim: avaliacaoMap.get('RUIM') ?? 0,
     },
   }
 }

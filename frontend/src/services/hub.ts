@@ -184,11 +184,17 @@ export const audienciasApi = {
     id: string,
     payload: {
       audienciaOcorreu: 'SIM' | 'NAO' | 'REMARCADA'
-      resultado: 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA'
-      advogadoPresente: boolean
-      advogadoDominioCaso: boolean
-      problemaRelevante: boolean
-      relato?: string
+      docAntecedencia: boolean
+      docAntecedenciaJustificativa?: string
+      advogadoAntecedencia: boolean
+      advogadoAntecedenciaJustificativa?: string
+      infoCompleta: 'SIM' | 'NAO'
+      infoFaltante?: string
+      conhecimentoAdvogado: boolean
+      comentarioConhecimento?: string
+      avaliacaoAtuacao: 'BOM' | 'REGULAR' | 'RUIM'
+      comentarioAvaliacao?: string
+      comentarioFinal?: string
     },
   ) {
     const { data } = await api.post(`/audiencias/${id}/relatorio`, payload)

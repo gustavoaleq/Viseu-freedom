@@ -281,11 +281,17 @@ export function AudienciaDetalhePage() {
   const [erroDownloadRelatorio, setErroDownloadRelatorio] = useState('')
   const [relatorio, setRelatorio] = useState({
     audienciaOcorreu: 'SIM' as 'SIM' | 'NAO' | 'REMARCADA',
-    resultado: 'ACORDO' as 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA',
-    advogadoPresente: true,
-    advogadoDominioCaso: true,
-    problemaRelevante: false,
-    relato: '',
+    docAntecedencia: true,
+    docAntecedenciaJustificativa: '',
+    advogadoAntecedencia: true,
+    advogadoAntecedenciaJustificativa: '',
+    infoCompleta: 'SIM' as 'SIM' | 'NAO',
+    infoFaltante: '',
+    conhecimentoAdvogado: true,
+    comentarioConhecimento: '',
+    avaliacaoAtuacao: 'BOM' as 'BOM' | 'REGULAR' | 'RUIM',
+    comentarioAvaliacao: '',
+    comentarioFinal: '',
   })
 
   const detalhe = useQuery({
@@ -1020,7 +1026,7 @@ export function AudienciaDetalhePage() {
           >
             <form onSubmit={submitRelatorio} className="grid gap-3 md:grid-cols-2">
               <label className="text-sm">
-                <span className="mb-1 block text-xs text-slate-500">Audiencia ocorreu</span>
+                <span className="mb-1 block text-xs text-slate-500">1. A audiencia ocorreu?</span>
                 <select
                   value={relatorio.audienciaOcorreu}
                   onChange={(event) =>
@@ -1038,58 +1044,176 @@ export function AudienciaDetalhePage() {
               </label>
 
               <label className="text-sm">
-                <span className="mb-1 block text-xs text-slate-500">Resultado</span>
+                <span className="mb-1 block text-xs text-slate-500">
+                  2. Voce teve acesso a documentacao do processo e link da audiencia com antecedencia? (48h antes)
+                </span>
                 <select
-                  value={relatorio.resultado}
+                  value={relatorio.docAntecedencia ? 'SIM' : 'NAO'}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({ ...anterior, docAntecedencia: event.target.value === 'SIM' }))
+                  }
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                >
+                  <option value="SIM">Sim</option>
+                  <option value="NAO">Nao</option>
+                </select>
+              </label>
+
+              {!relatorio.docAntecedencia ? (
+                <label className="text-sm md:col-span-2">
+                  <span className="mb-1 block text-xs text-slate-500">2.1 Justifique sua resposta</span>
+                  <textarea
+                    value={relatorio.docAntecedenciaJustificativa}
+                    onChange={(event) =>
+                      setRelatorio((anterior) => ({ ...anterior, docAntecedenciaJustificativa: event.target.value }))
+                    }
+                    className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                    required={!relatorio.docAntecedencia}
+                  />
+                </label>
+              ) : null}
+
+              <label className="text-sm">
+                <span className="mb-1 block text-xs text-slate-500">
+                  3. O advogado chegou com no minimo 1h de antecedencia? (virtual: contato 30 min antes)
+                </span>
+                <select
+                  value={relatorio.advogadoAntecedencia ? 'SIM' : 'NAO'}
                   onChange={(event) =>
                     setRelatorio((anterior) => ({
                       ...anterior,
-                      resultado: event.target.value as 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA',
+                      advogadoAntecedencia: event.target.value === 'SIM',
                     }))
                   }
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
                 >
-                  <option value="ACORDO">ACORDO</option>
-                  <option value="SEM_ACORDO">SEM_ACORDO</option>
-                  <option value="AUSENCIA">AUSENCIA</option>
-                  <option value="REDESIGNADA">REDESIGNADA</option>
+                  <option value="SIM">Sim</option>
+                  <option value="NAO">Nao</option>
                 </select>
               </label>
 
-              <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={relatorio.advogadoPresente}
-                  onChange={(event) => setRelatorio((anterior) => ({ ...anterior, advogadoPresente: event.target.checked }))}
-                />
-                Advogado presente
-              </label>
+              {!relatorio.advogadoAntecedencia ? (
+                <label className="text-sm md:col-span-2">
+                  <span className="mb-1 block text-xs text-slate-500">3.1 Justifique sua resposta</span>
+                  <textarea
+                    value={relatorio.advogadoAntecedenciaJustificativa}
+                    onChange={(event) =>
+                      setRelatorio((anterior) => ({
+                        ...anterior,
+                        advogadoAntecedenciaJustificativa: event.target.value,
+                      }))
+                    }
+                    className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                    required={!relatorio.advogadoAntecedencia}
+                  />
+                </label>
+              ) : null}
 
-              <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={relatorio.advogadoDominioCaso}
+              <label className="text-sm">
+                <span className="mb-1 block text-xs text-slate-500">
+                  4. Todas as informacoes estavam disponiveis no roteiro ou no corpo do e-mail?
+                </span>
+                <select
+                  value={relatorio.infoCompleta}
                   onChange={(event) =>
-                    setRelatorio((anterior) => ({ ...anterior, advogadoDominioCaso: event.target.checked }))
+                    setRelatorio((anterior) => ({
+                      ...anterior,
+                      infoCompleta: event.target.value as 'SIM' | 'NAO',
+                    }))
                   }
-                />
-                Advogado dominava o caso
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                >
+                  <option value="SIM">Sim</option>
+                  <option value="NAO">Nao</option>
+                </select>
               </label>
 
-              <label className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm md:col-span-2">
-                <input
-                  type="checkbox"
-                  checked={relatorio.problemaRelevante}
-                  onChange={(event) => setRelatorio((anterior) => ({ ...anterior, problemaRelevante: event.target.checked }))}
-                />
-                Problema relevante identificado
+              {relatorio.infoCompleta === 'NAO' ? (
+                <label className="text-sm md:col-span-2">
+                  <span className="mb-1 block text-xs text-slate-500">4.1 Justifique sua resposta</span>
+                  <textarea
+                    value={relatorio.infoFaltante}
+                    onChange={(event) => setRelatorio((anterior) => ({ ...anterior, infoFaltante: event.target.value }))}
+                    className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                    required={relatorio.infoCompleta === 'NAO'}
+                  />
+                </label>
+              ) : null}
+
+              <label className="text-sm">
+                <span className="mb-1 block text-xs text-slate-500">
+                  5. O advogado mostrou conhecimento sobre o caso e/ou lhe instruiu adequadamente?
+                </span>
+                <select
+                  value={relatorio.conhecimentoAdvogado ? 'SIM' : 'NAO'}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({
+                      ...anterior,
+                      conhecimentoAdvogado: event.target.value === 'SIM',
+                    }))
+                  }
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                >
+                  <option value="SIM">Sim</option>
+                  <option value="NAO">Nao</option>
+                </select>
               </label>
 
               <label className="text-sm md:col-span-2">
-                <span className="mb-1 block text-xs text-slate-500">Relato</span>
+                <span className="mb-1 block text-xs text-slate-500">
+                  6. Comente a avaliacao sobre a resposta da pergunta anterior
+                </span>
                 <textarea
-                  value={relatorio.relato}
-                  onChange={(event) => setRelatorio((anterior) => ({ ...anterior, relato: event.target.value }))}
+                  value={relatorio.comentarioConhecimento}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({ ...anterior, comentarioConhecimento: event.target.value }))
+                  }
+                  className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                />
+              </label>
+
+              <label className="text-sm">
+                <span className="mb-1 block text-xs text-slate-500">
+                  7. Qual a sua avaliacao quanto a atuacao do advogado na conducao da audiencia?
+                </span>
+                <select
+                  value={relatorio.avaliacaoAtuacao}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({
+                      ...anterior,
+                      avaliacaoAtuacao: event.target.value as 'BOM' | 'REGULAR' | 'RUIM',
+                    }))
+                  }
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                >
+                  <option value="BOM">Bom</option>
+                  <option value="REGULAR">Regular</option>
+                  <option value="RUIM">Ruim</option>
+                </select>
+              </label>
+
+              <label className="text-sm md:col-span-2">
+                <span className="mb-1 block text-xs text-slate-500">
+                  8. Comente a avaliacao sobre a resposta da pergunta anterior
+                </span>
+                <textarea
+                  value={relatorio.comentarioAvaliacao}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({ ...anterior, comentarioAvaliacao: event.target.value }))
+                  }
+                  className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
+                />
+              </label>
+
+              <label className="text-sm md:col-span-2">
+                <span className="mb-1 block text-xs text-slate-500">
+                  9. Espaco aberto para comentarios e sugestoes de melhorias
+                </span>
+                <textarea
+                  value={relatorio.comentarioFinal}
+                  onChange={(event) =>
+                    setRelatorio((anterior) => ({ ...anterior, comentarioFinal: event.target.value }))
+                  }
                   className="h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 outline-none ring-primary/25 focus:ring"
                 />
               </label>

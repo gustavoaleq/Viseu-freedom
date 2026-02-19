@@ -17,9 +17,11 @@ export const TEMPLATES_DEFAULT = {
   mensagemCheckin:
     'Check-in da audiencia {{numeroProcesso}} hoje as {{hora}}. Chegou no local?',
   mensagemPosAudiencia:
-    'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+    'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/9: A audiencia ocorreu?',
   mensagemCancelamento:
     'Aviso: a audiencia do processo {{numeroProcesso}} em {{data}} as {{hora}} foi cancelada. Qualquer duvida, contate o escritorio.',
+  respostaNaoPosso:
+    'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.',
   respostaD1Confirmacao:
     'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.',
   respostaReiteracaoConfirmacao:
@@ -29,15 +31,21 @@ export const TEMPLATES_DEFAULT = {
   respostaPosAudienciaConfirmacao:
     'Obrigado. Relatorio pos-audiencia finalizado com sucesso.',
   mensagemPosPergunta2:
-    'Pergunta 2/6 do processo {{numeroProcesso}}: Qual foi o resultado?',
+    'Pergunta 2/9 do processo {{numeroProcesso}}: Voce teve acesso a documentacao do processo e link da audiencia com antecedencia (48h antes da audiencia)?',
   mensagemPosPergunta3:
-    'Pergunta 3/6 do processo {{numeroProcesso}}: O advogado estava presente no horario?',
+    'Pergunta 3/9 do processo {{numeroProcesso}}: O advogado chegou com no minimo 1h de antecedencia? (Se virtual, entrou em contato com 30min de antecedencia)',
   mensagemPosPergunta4:
-    'Pergunta 4/6 do processo {{numeroProcesso}}: O advogado demonstrou dominio minimo do caso?',
+    'Pergunta 4/9 do processo {{numeroProcesso}}: Todas as informacoes estavam disponiveis no roteiro de audiencia ou no corpo do e-mail?',
   mensagemPosPergunta5:
-    'Pergunta 5/6 do processo {{numeroProcesso}}: Houve algum problema relevante?',
+    'Pergunta 5/9 do processo {{numeroProcesso}}: O advogado mostrou conhecimento sobre o caso e/ou lhe instruiu adequadamente?',
   mensagemPosPergunta6:
-    'Pergunta 6/6 do processo {{numeroProcesso}}: Deixe uma observacao curta sobre o que aconteceu. Se nao houver, responda: Sem observacoes.',
+    'Pergunta 6/9: Comente a avaliacao sobre a resposta da pergunta anterior.',
+  mensagemPosPergunta7:
+    'Pergunta 7/9 do processo {{numeroProcesso}}: Qual a sua avaliacao quanto a atuacao do advogado na conducao da audiencia?',
+  mensagemPosPergunta8:
+    'Pergunta 8/9: Comente a avaliacao sobre a resposta da pergunta anterior.',
+  mensagemPosPergunta9:
+    'Pergunta 9/9 do processo {{numeroProcesso}}: Espaco aberto para comentarios e sugestoes de melhorias. Se nao tiver nada, responda \"ok\".',
 } as const
 
 export interface ConfiguracaoGlobalDTO {
@@ -53,6 +61,7 @@ export interface ConfiguracaoGlobalDTO {
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
   mensagemCancelamento: string | null
+  respostaNaoPosso: string | null
   respostaD1Confirmacao: string | null
   respostaReiteracaoConfirmacao: string | null
   respostaCheckinConfirmacao: string | null
@@ -62,6 +71,9 @@ export interface ConfiguracaoGlobalDTO {
   mensagemPosPergunta4: string | null
   mensagemPosPergunta5: string | null
   mensagemPosPergunta6: string | null
+  mensagemPosPergunta7: string | null
+  mensagemPosPergunta8: string | null
+  mensagemPosPergunta9: string | null
   updatedAt: Date
 }
 
@@ -78,6 +90,7 @@ function configParaDTO(config: {
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
   mensagemCancelamento: string | null
+  respostaNaoPosso: string | null
   respostaD1Confirmacao: string | null
   respostaReiteracaoConfirmacao: string | null
   respostaCheckinConfirmacao: string | null
@@ -87,6 +100,9 @@ function configParaDTO(config: {
   mensagemPosPergunta4: string | null
   mensagemPosPergunta5: string | null
   mensagemPosPergunta6: string | null
+  mensagemPosPergunta7: string | null
+  mensagemPosPergunta8: string | null
+  mensagemPosPergunta9: string | null
   updatedAt: Date
 }): ConfiguracaoGlobalDTO {
   return {
@@ -102,6 +118,7 @@ function configParaDTO(config: {
     mensagemCheckin: config.mensagemCheckin,
     mensagemPosAudiencia: config.mensagemPosAudiencia,
     mensagemCancelamento: config.mensagemCancelamento,
+    respostaNaoPosso: config.respostaNaoPosso,
     respostaD1Confirmacao: config.respostaD1Confirmacao,
     respostaReiteracaoConfirmacao: config.respostaReiteracaoConfirmacao,
     respostaCheckinConfirmacao: config.respostaCheckinConfirmacao,
@@ -111,6 +128,9 @@ function configParaDTO(config: {
     mensagemPosPergunta4: config.mensagemPosPergunta4,
     mensagemPosPergunta5: config.mensagemPosPergunta5,
     mensagemPosPergunta6: config.mensagemPosPergunta6,
+    mensagemPosPergunta7: config.mensagemPosPergunta7,
+    mensagemPosPergunta8: config.mensagemPosPergunta8,
+    mensagemPosPergunta9: config.mensagemPosPergunta9,
     updatedAt: config.updatedAt,
   }
 }
@@ -157,6 +177,7 @@ export interface AtualizarConfiguracoesInput {
   mensagemCheckin?: string | null
   mensagemPosAudiencia?: string | null
   mensagemCancelamento?: string | null
+  respostaNaoPosso?: string | null
   respostaD1Confirmacao?: string | null
   respostaReiteracaoConfirmacao?: string | null
   respostaCheckinConfirmacao?: string | null
@@ -166,6 +187,9 @@ export interface AtualizarConfiguracoesInput {
   mensagemPosPergunta4?: string | null
   mensagemPosPergunta5?: string | null
   mensagemPosPergunta6?: string | null
+  mensagemPosPergunta7?: string | null
+  mensagemPosPergunta8?: string | null
+  mensagemPosPergunta9?: string | null
 }
 
 export async function atualizarConfiguracoes(

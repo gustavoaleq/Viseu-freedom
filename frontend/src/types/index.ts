@@ -182,11 +182,22 @@ export interface RelatorioAudiencia {
   id: string
   audienciaId: string
   audienciaOcorreu: 'SIM' | 'NAO' | 'REMARCADA'
-  resultado: 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA'
-  advogadoPresente: boolean
-  advogadoDominioCaso: boolean
-  problemaRelevante: boolean
+  resultado?: 'ACORDO' | 'SEM_ACORDO' | 'AUSENCIA' | 'REDESIGNADA'
+  advogadoPresente?: boolean
+  advogadoDominioCaso?: boolean
+  problemaRelevante?: boolean
   relato?: string | null
+  docAntecedencia?: boolean
+  docAntecedenciaJustificativa?: string | null
+  advogadoAntecedencia?: boolean
+  advogadoAntecedenciaJustificativa?: string | null
+  infoCompleta?: 'SIM' | 'NAO' | 'OUTRA'
+  infoFaltante?: string | null
+  conhecimentoAdvogado?: boolean
+  comentarioConhecimento?: string | null
+  avaliacaoAtuacao?: 'BOM' | 'REGULAR' | 'RUIM'
+  comentarioAvaliacao?: string | null
+  comentarioFinal?: string | null
 }
 
 export interface AudienciaDetalhe extends Audiencia {
@@ -233,23 +244,27 @@ export interface DashboardResponse {
       nao: number
       remarcada: number
     }
-    resultado: {
-      acordo: number
-      semAcordo: number
-      ausencia: number
-      redesignada: number
-    }
-    advogadoPresente: {
+    docAntecedencia: {
       sim: number
       nao: number
     }
-    advogadoDominioCaso: {
+    advogadoAntecedencia: {
       sim: number
       nao: number
     }
-    problemaRelevante: {
+    infoCompleta: {
       sim: number
       nao: number
+      outra: number
+    }
+    conhecimentoAdvogado: {
+      sim: number
+      nao: number
+    }
+    avaliacaoAtuacao: {
+      bom: number
+      regular: number
+      ruim: number
     }
   }
 }
@@ -316,6 +331,7 @@ export interface ConfiguracaoGlobal {
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
   mensagemCancelamento: string | null
+  respostaNaoPosso: string | null
   respostaD1Confirmacao: string | null
   respostaReiteracaoConfirmacao: string | null
   respostaCheckinConfirmacao: string | null
@@ -325,6 +341,9 @@ export interface ConfiguracaoGlobal {
   mensagemPosPergunta4: string | null
   mensagemPosPergunta5: string | null
   mensagemPosPergunta6: string | null
+  mensagemPosPergunta7: string | null
+  mensagemPosPergunta8: string | null
+  mensagemPosPergunta9: string | null
   updatedAt: string
 }
 

@@ -15,7 +15,6 @@ import type {
   StatusAudiencia,
   Modalidade,
   OcorrenciaAudiencia,
-  ResultadoAudiencia,
   Prisma,
 } from '../generated/prisma/client.js'
 import { criarWhatsAppAdapter } from './whatsapp.adapter.js'
@@ -83,11 +82,17 @@ interface DadosAtualizarAudiencia {
 
 interface DadosRelatorioAudiencia {
   audienciaOcorreu: OcorrenciaAudiencia
-  resultado: ResultadoAudiencia
-  advogadoPresente: boolean
-  advogadoDominioCaso: boolean
-  problemaRelevante: boolean
-  relato?: string
+  docAntecedencia: boolean
+  docAntecedenciaJustificativa?: string
+  advogadoAntecedencia: boolean
+  advogadoAntecedenciaJustificativa?: string
+  infoCompleta: 'SIM' | 'NAO'
+  infoFaltante?: string
+  conhecimentoAdvogado: boolean
+  comentarioConhecimento: string
+  avaliacaoAtuacao: 'BOM' | 'REGULAR' | 'RUIM'
+  comentarioAvaliacao: string
+  comentarioFinal: string
 }
 
 type CheckInEvento = 'ESTOU_A_CAMINHO' | 'JA_CHEGUEI' | 'ESTOU_COM_PROBLEMA'
@@ -201,25 +206,52 @@ export async function exportarRelatorioPosAudiencia(audienciaId: string) {
     NAO: 'Nao',
     REMARCADA: 'Remarcada',
   }
-  const resultadoLabel: Record<ResultadoAudiencia, string> = {
-    ACORDO: 'Acordo',
-    SEM_ACORDO: 'Sem acordo',
-    AUSENCIA: 'Encerrada por ausencia',
-    REDESIGNADA: 'Redesignada',
+  const infoCompletaLabel: Record<'SIM' | 'NAO' | 'OUTRA', string> = {
+    SIM: 'Sim',
+    NAO: 'Nao',
+    OUTRA: 'Outra',
   }
-  const boolLabel = (valor: boolean | null | undefined) => (valor ? 'Sim' : 'Nao')
+  const avaliacaoLabel: Record<'BOM' | 'REGULAR' | 'RUIM', string> = {
+    BOM: 'Bom',
+    REGULAR: 'Regular',
+    RUIM: 'Ruim',
+  }
+  const boolLabel = (valor: boolean | null | undefined) =>
+    valor === true ? 'Sim' : valor === false ? 'Nao' : '-'
 
   const concluidaEm = audiencia.historicoStatus[0]?.createdAt
     ? formatarDataHoraRelatorio(audiencia.historicoStatus[0].createdAt, env.ORQ_TIMEZONE)
     : '-'
   const dataAudiencia = formatarDataRelatorio(audiencia.data)
-  const relato = audiencia.relatorio.relato?.trim() || 'Sem observacoes.'
   const ocorrido =
     audiencia.relatorio.audienciaOcorreu
       ? ocorridoLabel[audiencia.relatorio.audienciaOcorreu]
       : '-'
-  const resultado =
-    audiencia.relatorio.resultado ? resultadoLabel[audiencia.relatorio.resultado] : '-'
+  const docAntecedencia =
+    audiencia.relatorio.docAntecedencia ?? null
+  const docAntecedenciaJustificativa =
+    audiencia.relatorio.docAntecedenciaJustificativa?.trim() || '-'
+  const advogadoAntecedencia =
+    audiencia.relatorio.advogadoAntecedencia ?? null
+  const advogadoAntecedenciaJustificativa =
+    audiencia.relatorio.advogadoAntecedenciaJustificativa?.trim() || '-'
+  const infoCompleta =
+    audiencia.relatorio.infoCompleta ? infoCompletaLabel[audiencia.relatorio.infoCompleta] : '-'
+  const infoFaltante = audiencia.relatorio.infoFaltante?.trim() || '-'
+  const conhecimentoAdvogado =
+    audiencia.relatorio.conhecimentoAdvogado ?? null
+  const comentarioConhecimento =
+    audiencia.relatorio.comentarioConhecimento?.trim() || '-'
+  const avaliacaoAtuacao =
+    audiencia.relatorio.avaliacaoAtuacao
+      ? avaliacaoLabel[audiencia.relatorio.avaliacaoAtuacao]
+      : '-'
+  const comentarioAvaliacao =
+    audiencia.relatorio.comentarioAvaliacao?.trim() || '-'
+  const comentarioFinal =
+    audiencia.relatorio.comentarioFinal?.trim() ||
+    audiencia.relatorio.relato?.trim() ||
+    '-'
   const numeroProcessoSeguro = escapeHtml(audiencia.numeroProcesso)
 
   const html = `<!doctype html>
@@ -378,26 +410,65 @@ export async function exportarRelatorioPosAudiencia(audienciaId: string) {
         <div class="a">${escapeHtml(ocorrido)}</div>
       </div>
       <div class="questao">
-        <div class="q">2. Resultado</div>
-        <div class="a">${escapeHtml(resultado)}</div>
+        <div class="q">2. Voce teve acesso a documentacao do processo e link da audiencia com antecedencia? (48h antes da audiencia)</div>
+        <div class="a">${escapeHtml(boolLabel(docAntecedencia))}</div>
+      </div>
+      ${
+        audiencia.relatorio.docAntecedencia === false
+          ? `<div class="questao">
+        <div class="q">2.1 Justificativa</div>
+        <div class="obs">${escapeHtml(docAntecedenciaJustificativa)}</div>
+      </div>`
+          : ''
+      }
+      <div class="questao">
+        <div class="q">3. O advogado chegou com no minimo 1h de antecedencia? (audiencia virtual: contato 30 min antes)</div>
+        <div class="a">${escapeHtml(boolLabel(advogadoAntecedencia))}</div>
+      </div>
+      ${
+        audiencia.relatorio.advogadoAntecedencia === false
+          ? `<div class="questao">
+        <div class="q">3.1 Justificativa</div>
+        <div class="obs">${escapeHtml(advogadoAntecedenciaJustificativa)}</div>
+      </div>`
+          : ''
+      }
+      <div class="questao">
+        <div class="q">4. Todas as informacoes estavam disponiveis no roteiro ou no corpo do e-mail?</div>
+        <div class="a">${escapeHtml(infoCompleta)}</div>
+      </div>
+      ${
+        audiencia.relatorio.infoCompleta === 'OUTRA' || audiencia.relatorio.infoCompleta === 'NAO'
+          ? `<div class="questao">
+        <div class="q">4.1 Conteudo faltante informado</div>
+        <div class="obs">${escapeHtml(infoFaltante)}</div>
+      </div>`
+          : ''
+      }
+      <div class="questao">
+        <div class="q">5. O advogado mostrou conhecimento sobre o caso e/ou lhe instruiu adequadamente?</div>
+        <div class="a">${escapeHtml(boolLabel(conhecimentoAdvogado))}</div>
       </div>
       <div class="questao">
-        <div class="q">3. Advogado estava presente no horario?</div>
-        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.advogadoPresente))}</div>
+        <div class="q">6. Comente a avaliacao sobre a resposta da pergunta anterior</div>
+        <div class="obs">${escapeHtml(comentarioConhecimento)}</div>
       </div>
       <div class="questao">
-        <div class="q">4. Advogado demonstrou dominio minimo do caso?</div>
-        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.advogadoDominioCaso))}</div>
+        <div class="q">7. Qual a sua avaliacao quanto a atuacao do advogado na conducao da audiencia?</div>
+        <div class="a">${escapeHtml(avaliacaoAtuacao)}</div>
       </div>
       <div class="questao">
-        <div class="q">5. Houve algum problema relevante?</div>
-        <div class="a">${escapeHtml(boolLabel(audiencia.relatorio.problemaRelevante))}</div>
+        <div class="q">8. Comente a avaliacao sobre a resposta da pergunta anterior</div>
+        <div class="obs">${escapeHtml(comentarioAvaliacao)}</div>
+      </div>
+      <div class="questao">
+        <div class="q">9. Espaco aberto para comentarios e sugestoes de melhorias</div>
+        <div class="obs">${escapeHtml(comentarioFinal)}</div>
       </div>
     </section>
 
     <section class="card">
-      <h2>Observacoes</h2>
-      <div class="obs">${escapeHtml(relato)}</div>
+      <h2>Fechamento</h2>
       <div class="foot">Fechamento registrado em: ${escapeHtml(concluidaEm)}</div>
     </section>
   </main>
@@ -585,10 +656,11 @@ export async function buscarDashboard() {
     substituicoesPorAutomacao24h,
     totalRelatoriosPosPeriodo,
     ocorrenciaPosPeriodo,
-    resultadoPosPeriodo,
-    advogadoPresentePosPeriodo,
-    advogadoDominioPosPeriodo,
-    problemaRelevantePosPeriodo,
+    docAntecedenciaPosPeriodo,
+    advogadoAntecedenciaPosPeriodo,
+    infoCompletaPosPeriodo,
+    conhecimentoPosPeriodo,
+    avaliacaoAtuacaoPosPeriodo,
     substituicoesAbertas,
     substituicoesResolvidasUltimos7Dias,
   ] = await Promise.all([
@@ -639,34 +711,42 @@ export async function buscarDashboard() {
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['resultado'],
+      by: ['docAntecedencia'],
       where: {
         createdAt: { gte: inicioPosRelatorio },
-        resultado: { not: null },
+        docAntecedencia: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['advogadoPresente'],
+      by: ['advogadoAntecedencia'],
       where: {
         createdAt: { gte: inicioPosRelatorio },
-        advogadoPresente: { not: null },
+        advogadoAntecedencia: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['advogadoDominioCaso'],
+      by: ['infoCompleta'],
       where: {
         createdAt: { gte: inicioPosRelatorio },
-        advogadoDominioCaso: { not: null },
+        infoCompleta: { not: null },
       },
       _count: { _all: true },
     }),
     prisma.relatorioAudiencia.groupBy({
-      by: ['problemaRelevante'],
+      by: ['conhecimentoAdvogado'],
       where: {
         createdAt: { gte: inicioPosRelatorio },
-        problemaRelevante: { not: null },
+        conhecimentoAdvogado: { not: null },
+      },
+      _count: { _all: true },
+    }),
+    prisma.relatorioAudiencia.groupBy({
+      by: ['avaliacaoAtuacao'],
+      where: {
+        createdAt: { gte: inicioPosRelatorio },
+        avaliacaoAtuacao: { not: null },
       },
       _count: { _all: true },
     }),
@@ -689,15 +769,20 @@ export async function buscarDashboard() {
   const ocorrenciaMap = new Map(
     ocorrenciaPosPeriodo.map((item) => [item.audienciaOcorreu, item._count._all]),
   )
-  const resultadoMap = new Map(resultadoPosPeriodo.map((item) => [item.resultado, item._count._all]))
-  const advogadoPresenteMap = new Map(
-    advogadoPresentePosPeriodo.map((item) => [item.advogadoPresente, item._count._all]),
+  const docAntecedenciaMap = new Map(
+    docAntecedenciaPosPeriodo.map((item) => [item.docAntecedencia, item._count._all]),
   )
-  const advogadoDominioMap = new Map(
-    advogadoDominioPosPeriodo.map((item) => [item.advogadoDominioCaso, item._count._all]),
+  const advogadoAntecedenciaMap = new Map(
+    advogadoAntecedenciaPosPeriodo.map((item) => [item.advogadoAntecedencia, item._count._all]),
   )
-  const problemaMap = new Map(
-    problemaRelevantePosPeriodo.map((item) => [item.problemaRelevante, item._count._all]),
+  const infoCompletaMap = new Map(
+    infoCompletaPosPeriodo.map((item) => [item.infoCompleta, item._count._all]),
+  )
+  const conhecimentoMap = new Map(
+    conhecimentoPosPeriodo.map((item) => [item.conhecimentoAdvogado, item._count._all]),
+  )
+  const avaliacaoMap = new Map(
+    avaliacaoAtuacaoPosPeriodo.map((item) => [item.avaliacaoAtuacao, item._count._all]),
   )
   const temposResolucaoMinutos = substituicoesResolvidasUltimos7Dias
     .map((item) => {
@@ -754,23 +839,27 @@ export async function buscarDashboard() {
         nao: ocorrenciaMap.get('NAO') ?? 0,
         remarcada: ocorrenciaMap.get('REMARCADA') ?? 0,
       },
-      resultado: {
-        acordo: resultadoMap.get('ACORDO') ?? 0,
-        semAcordo: resultadoMap.get('SEM_ACORDO') ?? 0,
-        ausencia: resultadoMap.get('AUSENCIA') ?? 0,
-        redesignada: resultadoMap.get('REDESIGNADA') ?? 0,
+      docAntecedencia: {
+        sim: docAntecedenciaMap.get(true) ?? 0,
+        nao: docAntecedenciaMap.get(false) ?? 0,
       },
-      advogadoPresente: {
-        sim: advogadoPresenteMap.get(true) ?? 0,
-        nao: advogadoPresenteMap.get(false) ?? 0,
+      advogadoAntecedencia: {
+        sim: advogadoAntecedenciaMap.get(true) ?? 0,
+        nao: advogadoAntecedenciaMap.get(false) ?? 0,
       },
-      advogadoDominioCaso: {
-        sim: advogadoDominioMap.get(true) ?? 0,
-        nao: advogadoDominioMap.get(false) ?? 0,
+      infoCompleta: {
+        sim: infoCompletaMap.get('SIM') ?? 0,
+        nao: infoCompletaMap.get('NAO') ?? 0,
+        outra: infoCompletaMap.get('OUTRA') ?? 0,
       },
-      problemaRelevante: {
-        sim: problemaMap.get(true) ?? 0,
-        nao: problemaMap.get(false) ?? 0,
+      conhecimentoAdvogado: {
+        sim: conhecimentoMap.get(true) ?? 0,
+        nao: conhecimentoMap.get(false) ?? 0,
+      },
+      avaliacaoAtuacao: {
+        bom: avaliacaoMap.get('BOM') ?? 0,
+        regular: avaliacaoMap.get('REGULAR') ?? 0,
+        ruim: avaliacaoMap.get('RUIM') ?? 0,
       },
     },
   }
@@ -1078,20 +1167,32 @@ export async function registrarRelatorioAudiencia(
     where: { audienciaId },
     update: {
       audienciaOcorreu: dados.audienciaOcorreu,
-      resultado: dados.resultado,
-      advogadoPresente: dados.advogadoPresente,
-      advogadoDominioCaso: dados.advogadoDominioCaso,
-      problemaRelevante: dados.problemaRelevante,
-      relato: dados.relato ?? null,
+      docAntecedencia: dados.docAntecedencia,
+      docAntecedenciaJustificativa: dados.docAntecedenciaJustificativa?.trim() || null,
+      advogadoAntecedencia: dados.advogadoAntecedencia,
+      advogadoAntecedenciaJustificativa: dados.advogadoAntecedenciaJustificativa?.trim() || null,
+      infoCompleta: dados.infoCompleta,
+      infoFaltante: dados.infoFaltante ?? null,
+      conhecimentoAdvogado: dados.conhecimentoAdvogado,
+      comentarioConhecimento: dados.comentarioConhecimento ?? null,
+      avaliacaoAtuacao: dados.avaliacaoAtuacao,
+      comentarioAvaliacao: dados.comentarioAvaliacao ?? null,
+      comentarioFinal: dados.comentarioFinal ?? null,
     },
     create: {
       audienciaId,
       audienciaOcorreu: dados.audienciaOcorreu,
-      resultado: dados.resultado,
-      advogadoPresente: dados.advogadoPresente,
-      advogadoDominioCaso: dados.advogadoDominioCaso,
-      problemaRelevante: dados.problemaRelevante,
-      relato: dados.relato ?? null,
+      docAntecedencia: dados.docAntecedencia,
+      docAntecedenciaJustificativa: dados.docAntecedenciaJustificativa?.trim() || null,
+      advogadoAntecedencia: dados.advogadoAntecedencia,
+      advogadoAntecedenciaJustificativa: dados.advogadoAntecedenciaJustificativa?.trim() || null,
+      infoCompleta: dados.infoCompleta,
+      infoFaltante: dados.infoFaltante ?? null,
+      conhecimentoAdvogado: dados.conhecimentoAdvogado,
+      comentarioConhecimento: dados.comentarioConhecimento ?? null,
+      avaliacaoAtuacao: dados.avaliacaoAtuacao,
+      comentarioAvaliacao: dados.comentarioAvaliacao ?? null,
+      comentarioFinal: dados.comentarioFinal ?? null,
     },
   })
 
@@ -1102,7 +1203,7 @@ export async function registrarRelatorioAudiencia(
       tipo: 'RELATORIO_POS',
       direcao: 'RECEBIDA',
       conteudo: 'Relatorio pos-audiencia recebido',
-      observacao: dados.relato ?? null,
+      observacao: dados.comentarioFinal ?? null,
       statusEnvio: 'LIDA',
     },
   })

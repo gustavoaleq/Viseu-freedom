@@ -134,10 +134,11 @@ export function DashboardPage() {
     periodoDias: 30,
     totalRelatorios: 0,
     audienciaOcorreu: { sim: 0, nao: 0, remarcada: 0 },
-    resultado: { acordo: 0, semAcordo: 0, ausencia: 0, redesignada: 0 },
-    advogadoPresente: { sim: 0, nao: 0 },
-    advogadoDominioCaso: { sim: 0, nao: 0 },
-    problemaRelevante: { sim: 0, nao: 0 },
+    docAntecedencia: { sim: 0, nao: 0 },
+    advogadoAntecedencia: { sim: 0, nao: 0 },
+    infoCompleta: { sim: 0, nao: 0, outra: 0 },
+    conhecimentoAdvogado: { sim: 0, nao: 0 },
+    avaliacaoAtuacao: { bom: 0, regular: 0, ruim: 0 },
   }
   const monitoramentoSemanal = dashboard.data.monitoramentoSemanal ?? {
     periodoDias: 7,
@@ -181,14 +182,16 @@ export function DashboardPage() {
     problemas: (pct.problemas / 100) * CIRCULO,
     aguardando: (pct.aguardando / 100) * CIRCULO,
   }
-  const totalResultados =
-    posRelatorio.resultado.acordo +
-    posRelatorio.resultado.semAcordo +
-    posRelatorio.resultado.ausencia +
-    posRelatorio.resultado.redesignada
-  const totalPresenca = posRelatorio.advogadoPresente.sim + posRelatorio.advogadoPresente.nao
-  const totalDominio = posRelatorio.advogadoDominioCaso.sim + posRelatorio.advogadoDominioCaso.nao
-  const totalProblema = posRelatorio.problemaRelevante.sim + posRelatorio.problemaRelevante.nao
+  const totalDocAntecedencia = posRelatorio.docAntecedencia.sim + posRelatorio.docAntecedencia.nao
+  const totalAdvogadoAntecedencia =
+    posRelatorio.advogadoAntecedencia.sim + posRelatorio.advogadoAntecedencia.nao
+  const totalInfoCompleta = posRelatorio.infoCompleta.sim + posRelatorio.infoCompleta.nao
+  const totalConhecimento =
+    posRelatorio.conhecimentoAdvogado.sim + posRelatorio.conhecimentoAdvogado.nao
+  const totalAvaliacao =
+    posRelatorio.avaliacaoAtuacao.bom +
+    posRelatorio.avaliacaoAtuacao.regular +
+    posRelatorio.avaliacaoAtuacao.ruim
 
   const cardsBase = (audienciasOperacao.data?.dados ?? [])
     .filter((item) => item.status !== 'CONCLUIDA' && item.status !== 'CANCELADA')
@@ -600,65 +603,73 @@ export function DashboardPage() {
             </article>
 
             <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Resultado</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Antecedencia e Info</p>
               <div className="mt-2 space-y-1.5 text-xs text-slate-700">
                 <p>
-                  Acordo: <strong>{posRelatorio.resultado.acordo}</strong>{' '}
+                  Docs 48h: <strong>{posRelatorio.docAntecedencia.sim}</strong>{' '}
                   <span className="text-slate-500">
-                    ({percentual(posRelatorio.resultado.acordo, totalResultados)}%)
+                    ({percentual(posRelatorio.docAntecedencia.sim, totalDocAntecedencia)}%)
                   </span>
                 </p>
                 <p>
-                  Sem acordo: <strong>{posRelatorio.resultado.semAcordo}</strong>
+                  Docs sem antecedencia: <strong>{posRelatorio.docAntecedencia.nao}</strong>
                 </p>
                 <p>
-                  Ausencia: <strong>{posRelatorio.resultado.ausencia}</strong>
+                  Advogado antecipou: <strong>{posRelatorio.advogadoAntecedencia.sim}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.advogadoAntecedencia.sim, totalAdvogadoAntecedencia)}%)
+                  </span>
                 </p>
                 <p>
-                  Redesignada: <strong>{posRelatorio.resultado.redesignada}</strong>
+                  Informacoes completas: <strong>{posRelatorio.infoCompleta.sim}</strong>{' '}
+                  <span className="text-slate-500">
+                    ({percentual(posRelatorio.infoCompleta.sim, totalInfoCompleta)}%)
+                  </span>
+                </p>
+                <p>
+                  Informacoes incompletas: <strong>{posRelatorio.infoCompleta.nao}</strong>
                 </p>
               </div>
             </article>
 
             <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Advogado no Caso</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Conhecimento e Avaliacao</p>
               <div className="mt-2 space-y-1.5 text-xs text-slate-700">
                 <p>
-                  Presente: <strong>{posRelatorio.advogadoPresente.sim}</strong>{' '}
+                  Conhecimento adequado: <strong>{posRelatorio.conhecimentoAdvogado.sim}</strong>{' '}
                   <span className="text-slate-500">
-                    ({percentual(posRelatorio.advogadoPresente.sim, totalPresenca)}%)
+                    ({percentual(posRelatorio.conhecimentoAdvogado.sim, totalConhecimento)}%)
                   </span>
                 </p>
                 <p>
-                  Ausente: <strong>{posRelatorio.advogadoPresente.nao}</strong>
+                  Conhecimento insuficiente: <strong>{posRelatorio.conhecimentoAdvogado.nao}</strong>
                 </p>
                 <p>
-                  Dominio minimo: <strong>{posRelatorio.advogadoDominioCaso.sim}</strong>{' '}
+                  Avaliacao boa: <strong>{posRelatorio.avaliacaoAtuacao.bom}</strong>{' '}
                   <span className="text-slate-500">
-                    ({percentual(posRelatorio.advogadoDominioCaso.sim, totalDominio)}%)
+                    ({percentual(posRelatorio.avaliacaoAtuacao.bom, totalAvaliacao)}%)
                   </span>
+                </p>
+                <p>
+                  Avaliacao regular: <strong>{posRelatorio.avaliacaoAtuacao.regular}</strong>
+                </p>
+                <p>
+                  Avaliacao ruim: <strong>{posRelatorio.avaliacaoAtuacao.ruim}</strong>
                 </p>
               </div>
             </article>
 
             <article className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Risco Operacional</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Ocorrencia</p>
               <div className="mt-2 space-y-1.5 text-xs text-slate-700">
-                <p>
-                  Problema relevante: <strong className="text-red-700">{posRelatorio.problemaRelevante.sim}</strong>{' '}
-                  <span className="text-slate-500">
-                    ({percentual(posRelatorio.problemaRelevante.sim, totalProblema)}%)
-                  </span>
-                </p>
-                <p>
-                  Sem problema: <strong>{posRelatorio.problemaRelevante.nao}</strong>
-                </p>
                 <p>
                   Audiencia ocorreu: <strong>{posRelatorio.audienciaOcorreu.sim}</strong>
                 </p>
                 <p>
-                  Nao ocorreu/remarcada:{' '}
-                  <strong>{posRelatorio.audienciaOcorreu.nao + posRelatorio.audienciaOcorreu.remarcada}</strong>
+                  Nao ocorreu: <strong>{posRelatorio.audienciaOcorreu.nao}</strong>
+                </p>
+                <p>
+                  Remarcada: <strong>{posRelatorio.audienciaOcorreu.remarcada}</strong>
                 </p>
               </div>
             </article>

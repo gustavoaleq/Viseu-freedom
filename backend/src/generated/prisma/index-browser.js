@@ -234,6 +234,17 @@ exports.Prisma.RelatorioAudienciaScalarFieldEnum = {
   advogadoDominioCaso: 'advogadoDominioCaso',
   problemaRelevante: 'problemaRelevante',
   relato: 'relato',
+  docAntecedencia: 'docAntecedencia',
+  docAntecedenciaJustificativa: 'docAntecedenciaJustificativa',
+  advogadoAntecedencia: 'advogadoAntecedencia',
+  advogadoAntecedenciaJustificativa: 'advogadoAntecedenciaJustificativa',
+  infoCompleta: 'infoCompleta',
+  infoFaltante: 'infoFaltante',
+  conhecimentoAdvogado: 'conhecimentoAdvogado',
+  comentarioConhecimento: 'comentarioConhecimento',
+  avaliacaoAtuacao: 'avaliacaoAtuacao',
+  comentarioAvaliacao: 'comentarioAvaliacao',
+  comentarioFinal: 'comentarioFinal',
   createdAt: 'createdAt'
 };
 
@@ -272,6 +283,7 @@ exports.Prisma.ConfiguracaoGlobalScalarFieldEnum = {
   mensagemCheckin: 'mensagemCheckin',
   mensagemPosAudiencia: 'mensagemPosAudiencia',
   mensagemCancelamento: 'mensagemCancelamento',
+  respostaNaoPosso: 'respostaNaoPosso',
   respostaD1Confirmacao: 'respostaD1Confirmacao',
   respostaReiteracaoConfirmacao: 'respostaReiteracaoConfirmacao',
   respostaCheckinConfirmacao: 'respostaCheckinConfirmacao',
@@ -281,6 +293,9 @@ exports.Prisma.ConfiguracaoGlobalScalarFieldEnum = {
   mensagemPosPergunta4: 'mensagemPosPergunta4',
   mensagemPosPergunta5: 'mensagemPosPergunta5',
   mensagemPosPergunta6: 'mensagemPosPergunta6',
+  mensagemPosPergunta7: 'mensagemPosPergunta7',
+  mensagemPosPergunta8: 'mensagemPosPergunta8',
+  mensagemPosPergunta9: 'mensagemPosPergunta9',
   updatedAt: 'updatedAt'
 };
 
@@ -387,6 +402,18 @@ exports.ResultadoAudiencia = exports.$Enums.ResultadoAudiencia = {
   SEM_ACORDO: 'SEM_ACORDO',
   AUSENCIA: 'AUSENCIA',
   REDESIGNADA: 'REDESIGNADA'
+};
+
+exports.InfoCompleta = exports.$Enums.InfoCompleta = {
+  SIM: 'SIM',
+  NAO: 'NAO',
+  OUTRA: 'OUTRA'
+};
+
+exports.AvaliacaoAtuacao = exports.$Enums.AvaliacaoAtuacao = {
+  BOM: 'BOM',
+  REGULAR: 'REGULAR',
+  RUIM: 'RUIM'
 };
 
 exports.StatusSubstituicao = exports.$Enums.StatusSubstituicao = {
