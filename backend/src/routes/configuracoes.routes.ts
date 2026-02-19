@@ -36,6 +36,9 @@ const atualizarSchema = z
     mensagemReiteracao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     mensagemCheckin: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     mensagemPosAudiencia: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
+    mensagemCancelamento: z
+      .union([z.string().min(10, 'Mensagem muito curta'), z.null()])
+      .optional(),
     respostaD1Confirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     respostaReiteracaoConfirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),
     respostaCheckinConfirmacao: z.union([z.string().min(10, 'Mensagem muito curta'), z.null()]).optional(),

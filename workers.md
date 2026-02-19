@@ -107,6 +107,10 @@ Ao alterar parametros de timing via `PATCH /api/v1/configuracoes`, o backend rea
 todos os jobs pendentes de audiencias ativas (status != CONCLUIDA/CANCELADA). O scheduler usa upsert
 nativo (remove + recria), sem risco de duplicidade.
 
+Regras adicionais:
+- Etapas que ja tiveram mensagem **ENVIADA** nao sao reagendadas.
+- O reagendamento por configuracao desativa o catch-up (nao dispara imediatamente jobs com horario passado).
+
 ## Jobs e Mensagens
 
 ### CONFIRMACAO_D1 (Lembrete D-1)
@@ -257,6 +261,11 @@ Quando o preposto responde com texto (fallback numerico):
   - `AUDIENCIA_SIM`
   - `AUDIENCIA_NAO`
   - `AUDIENCIA_REMARCADA`
+
+### Idempotencia de envio
+
+- Se uma mensagem de uma etapa ja foi enviada para a audiencia, o envio e ignorado.
+- A protecao vale para execucao por worker, disparo manual e reagendamento.
 
 ## Auditoria (tabela de log)
 

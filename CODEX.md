@@ -35,20 +35,21 @@ Entregar a POC do Freedom.AI Operational Hub com qualidade de producao, mantendo
 
 ## Backlog Imediato (ordem de execucao)
 
-1. Frontend + backend core da POC (quase concluido)
-- Base operacional implementada: login, dashboard, lista/kanban/detalhe de audiencias, prepostos, importacoes, usuarios.
+1. Frontend + backend core da POC — **CONCLUIDO**
+- Base operacional implementada: login, dashboard, lista/kanban/detalhe de audiencias, prepostos, parceiros, importacoes, usuarios, TRTs, configuracoes.
 - Importacao robustecida com parsing de preposto composto, mapeamento automatico e convergencia para `local`.
-- Faltam apenas refinos pontuais de UX/comportamento identificados em validacao funcional.
 
-2. Validacoes e melhorias finais (agora)
-- Testes ponta a ponta dos fluxos criticos: importacao, operacao manual, troca de preposto, check-in, relatorio.
-- Endurecimento de regras/erros para casos de borda da planilha e operacao diaria.
-- Revisao final de aderencia ao escopo contratado (sem exceder e sem faltar item).
+2. Orquestracao de mensageria WhatsApp — **CONCLUIDO**
+- BullMQ + Redis com jobs por audiencia (D-1, reiteracao 6h, check-in, pos-audiencia).
+- Adapter Z-API com cadeia de fallback (send-button-list -> send-button-actions -> send-text).
+- Webhook inbound com parse de respostas, atualizacao automatica de status, escalonamento de substituicao.
+- Checkout pos-audiencia via WhatsApp (6 perguntas sequenciais).
+- Auditoria em `logs_automacao`.
 
-3. Orquestracao de mensageria (proxima etapa apos validacao)
-- BullMQ + Redis com jobs por audiencia (D-1, H-1h30, check-in, pos-audiencia).
-- Adapter de notificacao via n8n para simulacao da POC.
-- Encadeamento de status automatizados e escalonamento operacional.
+3. Validacao final e go-live (agora)
+- Teste E2E completo em ambiente limpo com webhook publico real.
+- Validar fluxo de esqueci senha/redefinir senha.
+- Ajustes finais de UX conforme feedback do cliente.
 
 ## Regra de Qualidade
 
@@ -315,17 +316,30 @@ Proxima etapa:
 - 11:56 - Correcao de continuidade para texto livre final: adicionado `buscarContextoRelatorioPendente(prepostoId)` para recuperar contexto `RELATORIO_POS` ativo quando a resposta chega sem `buttonId` (observacao final digitada).
 - 11:56 - Validacao tecnica da rodada: `backend npm run build` executado com sucesso apos os ajustes do fluxo pos-audiencia.
 
-## Checkpoint Atual — 13/02/2026 11:56
+## Checkpoint Atual — 18/02/2026
+
+### POC funcional e operacional
+
+Entregue e validado:
+- **Orquestracao WhatsApp completa**: D-1 (com catch-up e disparo imediato na criacao), reiteracao 6h, check-in, checkout pos-audiencia (6 perguntas), escalonamento automatico de substituicao com notificacao cruzada Viseu/parceiro
+- **Scheduler resiliente**: logica de catch-up para jobs passados, flag `dispararD1Imediato` para criacao/importacao, agendamento timezone-aware
+- **Dashboard operacional**: KPIs, monitoramento semanal, SLA de substituicao, indicadores pos-relatorio, alertas dinamicos
+- **Sidebar POC Scope**: barras de progresso de audiencias (0/500) e prazo (30 dias a partir de 25/02/2026)
+- **Modulo de Configuracoes**: templates de mensagem, timings, toggle de disparo na importacao, checkout avancado
+- **Auditoria**: `logs_automacao` com eventos de agendamento, disparo, resposta e substituicao
+
+Pendencias para go-live:
+1. Teste E2E completo em ambiente limpo com webhook publico real
+2. Validar fluxo de esqueci senha/redefinir senha (parcialmente implementado)
+3. Ajustes finais de UX conforme feedback do cliente
+
+### Checkpoint anterior — 13/02/2026 11:56
 
 Entregue nesta etapa (pos-audiencia via WhatsApp):
 - Sequencia automatica de perguntas do checkout (ocorrencia -> resultado -> advogado presente -> dominio -> problema relevante -> observacao livre).
 - Persistencia incremental em `relatorios_audiencia` a cada resposta.
 - Status da audiencia permanece `RELATORIO_PENDENTE` ate completar todas as respostas.
 - Conclusao automatica para `CONCLUIDA` somente ao finalizar o questionario, com historico de status e mensagem final de confirmacao ao preposto.
-
-Pendencias objetivas para fechar o fluxo end-to-end:
-1. Validacao funcional real com webhook publico (resposta real no WhatsApp em todas as perguntas, incluindo observacao livre) e conferencia no detalhe da audiencia/kanban.
-2. Ajustar mensagens de UX (texto das perguntas e confirmacao final) conforme aprovacao operacional da POC, se necessario.
 - 12:41 - Diagnostico de pos-audiencia sem checklist concluido por logs do backend container: ao receber `AUDIENCIA_SIM` o sistema retornou `statusNovo=CONCLUIDA` imediatamente (sem enviar Pergunta 2/6), comportamento de versao antiga ainda publicada no container.
 - 12:41 - Evidencia adicional no log: multiplos callbacks com `ignored=RESPOSTA_NAO_MAPEADA` para respostas textuais fora do formato esperado, reforcando necessidade de usar botoes/opcoes numericas enquanto o parser em producao nao estiver atualizado.
 - 12:41 - Verificacao de artefato em execucao: `dist/services/whatsapp-inbound.service.js` no container backend nao contem os marcadores do fluxo novo (`Pergunta 2/6`, `RELATORIO_OBSERVACAO`), confirmando que as ultimas correcoes locais ainda nao foram publicadas via rebuild/redeploy do backend.
@@ -655,3 +669,11 @@ Pendencias objetivas para fechar o fluxo end-to-end:
 - 21:37 - Validacao tecnica executada: `frontend npm run build` OK. (lint do frontend apresentou travamento no ambiente de execucao sem retorno conclusivo).
 - 21:45 - Validacao de credenciais pos-limpeza: consulta direta na tabela `usuarios` retornou lista vazia (`[]`). Nao existe login/senha ativa no banco neste momento.
 - 21:45 - Confirmado no seed padrao (`backend/src/prisma/seed.ts`) que as credenciais de bootstrap permanecem: `admin@freedom.ai` / `admin123` (necessario rodar seed para recriar).
+- 18/02 - Diagnostico e correcao do scheduler de orquestracao: versao anterior pulava TODOS os jobs com horario passado (DISPARO_IGNORADO), impedindo D-1 de ser enviado para audiencias criadas quando o horario de disparo ja havia passado.
+- 18/02 - Implementada logica de catch-up no scheduler (`backend/src/jobs/orquestracao.scheduler.ts`): quando horario do job ja passou mas a audiencia ainda e futura, o primeiro job pre-audiencia pendente (prioridade D-1) e disparado imediatamente com delay minimo de 5s. Jobs RELATORIO_POS excluidos do catch-up (so faz sentido apos audiencia).
+- 18/02 - Implementado flag `dispararD1Imediato` no scheduler: quando ativado, D-1 e agendado com delay minimo (5s) independente do horario calculado. Usa mesmo job ID BullMQ, sem duplicacao de disparo.
+- 18/02 - `criarAudiencia()` em `backend/src/services/audiencias.service.ts` agora le toggle `enviarAvisoNaImportacao` e passa `dispararD1Imediato=true` ao scheduler quando ativo. Import pipeline ja passava o flag.
+- 18/02 - Dashboard API expandido: `buscarDashboard()` agora retorna `totalAudiencias` (count de TODAS audiencias, incluindo concluidas/canceladas) para uso no indicador de escopo POC.
+- 18/02 - Sidebar POC Scope implementado em `frontend/src/components/AppShell.tsx`: componente `EscopoPoc` com barras de progresso compactas para audiencias (0/500) e prazo (30 dias a partir de 25/02/2026), com cores adaptativas (verde/amarelo/vermelho).
+- 18/02 - Frontend `DashboardPage.tsx`: removido card grande de escopo POC (substituido pelo indicador compacto no sidebar).
+- 18/02 - Tipagem frontend: adicionado `totalAudiencias: number` em `DashboardResponse` (`frontend/src/types/index.ts`).

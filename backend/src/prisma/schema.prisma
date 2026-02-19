@@ -36,6 +36,7 @@ enum TipoMensagem {
   RELATORIO_POS
   SUBSTITUICAO_AVISO
   ESCALONAMENTO
+  CANCELAMENTO
 }
 
 enum DirecaoMensagem {
@@ -303,6 +304,7 @@ model ConfiguracaoGlobal {
   mensagemReiteracao          String?
   mensagemCheckin             String?
   mensagemPosAudiencia        String?
+  mensagemCancelamento        String?
   respostaD1Confirmacao       String?
   respostaReiteracaoConfirmacao String?
   respostaCheckinConfirmacao  String?

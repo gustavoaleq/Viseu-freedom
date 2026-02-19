@@ -36,6 +36,7 @@ enum TipoMensagem {
   RELATORIO_POS
   SUBSTITUICAO_AVISO
   ESCALONAMENTO
+  CANCELAMENTO
 }
 
 enum DirecaoMensagem {
@@ -85,14 +86,16 @@ enum RoleUsuario {
 // === Entidades ===
 
 model Usuario {
-  id        String      @id @default(uuid())
-  nome      String
-  email     String      @unique
-  senha     String
-  role      RoleUsuario @default(OPERADOR)
-  ativo     Boolean     @default(true)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id                 String      @id @default(uuid())
+  nome               String
+  email              String      @unique
+  senha              String
+  role               RoleUsuario @default(OPERADOR)
+  ativo              Boolean     @default(true)
+  resetToken         String?     @unique
+  resetTokenExpiraEm DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
 
   @@map("usuarios")
 }
@@ -301,6 +304,7 @@ model ConfiguracaoGlobal {
   mensagemReiteracao              String?
   mensagemCheckin                 String?
   mensagemPosAudiencia            String?
+  mensagemCancelamento            String?
   respostaD1Confirmacao           String?
   respostaReiteracaoConfirmacao   String?
   respostaCheckinConfirmacao      String?

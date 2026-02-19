@@ -115,7 +115,8 @@ export const TipoMensagem: {
   CHECK_IN: 'CHECK_IN',
   RELATORIO_POS: 'RELATORIO_POS',
   SUBSTITUICAO_AVISO: 'SUBSTITUICAO_AVISO',
-  ESCALONAMENTO: 'ESCALONAMENTO'
+  ESCALONAMENTO: 'ESCALONAMENTO',
+  CANCELAMENTO: 'CANCELAMENTO'
 };
 
 export type TipoMensagem = (typeof TipoMensagem)[keyof typeof TipoMensagem]
@@ -2367,6 +2368,8 @@ export namespace Prisma {
     senha: string | null
     role: $Enums.RoleUsuario | null
     ativo: boolean | null
+    resetToken: string | null
+    resetTokenExpiraEm: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2378,6 +2381,8 @@ export namespace Prisma {
     senha: string | null
     role: $Enums.RoleUsuario | null
     ativo: boolean | null
+    resetToken: string | null
+    resetTokenExpiraEm: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2389,6 +2394,8 @@ export namespace Prisma {
     senha: number
     role: number
     ativo: number
+    resetToken: number
+    resetTokenExpiraEm: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2402,6 +2409,8 @@ export namespace Prisma {
     senha?: true
     role?: true
     ativo?: true
+    resetToken?: true
+    resetTokenExpiraEm?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2413,6 +2422,8 @@ export namespace Prisma {
     senha?: true
     role?: true
     ativo?: true
+    resetToken?: true
+    resetTokenExpiraEm?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2424,6 +2435,8 @@ export namespace Prisma {
     senha?: true
     role?: true
     ativo?: true
+    resetToken?: true
+    resetTokenExpiraEm?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2508,6 +2521,8 @@ export namespace Prisma {
     senha: string
     role: $Enums.RoleUsuario
     ativo: boolean
+    resetToken: string | null
+    resetTokenExpiraEm: Date | null
     createdAt: Date
     updatedAt: Date
     _count: UsuarioCountAggregateOutputType | null
@@ -2536,6 +2551,8 @@ export namespace Prisma {
     senha?: boolean
     role?: boolean
     ativo?: boolean
+    resetToken?: boolean
+    resetTokenExpiraEm?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["usuario"]>
@@ -2547,6 +2564,8 @@ export namespace Prisma {
     senha?: boolean
     role?: boolean
     ativo?: boolean
+    resetToken?: boolean
+    resetTokenExpiraEm?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["usuario"]>
@@ -2558,6 +2577,8 @@ export namespace Prisma {
     senha?: boolean
     role?: boolean
     ativo?: boolean
+    resetToken?: boolean
+    resetTokenExpiraEm?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["usuario"]>
@@ -2569,11 +2590,13 @@ export namespace Prisma {
     senha?: boolean
     role?: boolean
     ativo?: boolean
+    resetToken?: boolean
+    resetTokenExpiraEm?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UsuarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "email" | "senha" | "role" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["usuario"]>
+  export type UsuarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "email" | "senha" | "role" | "ativo" | "resetToken" | "resetTokenExpiraEm" | "createdAt" | "updatedAt", ExtArgs["result"]["usuario"]>
 
   export type $UsuarioPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Usuario"
@@ -2585,6 +2608,8 @@ export namespace Prisma {
       senha: string
       role: $Enums.RoleUsuario
       ativo: boolean
+      resetToken: string | null
+      resetTokenExpiraEm: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["usuario"]>
@@ -3016,6 +3041,8 @@ export namespace Prisma {
     readonly senha: FieldRef<"Usuario", 'String'>
     readonly role: FieldRef<"Usuario", 'RoleUsuario'>
     readonly ativo: FieldRef<"Usuario", 'Boolean'>
+    readonly resetToken: FieldRef<"Usuario", 'String'>
+    readonly resetTokenExpiraEm: FieldRef<"Usuario", 'DateTime'>
     readonly createdAt: FieldRef<"Usuario", 'DateTime'>
     readonly updatedAt: FieldRef<"Usuario", 'DateTime'>
   }
@@ -15115,6 +15142,7 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    mensagemCancelamento: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15140,6 +15168,7 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    mensagemCancelamento: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15165,6 +15194,7 @@ export namespace Prisma {
     mensagemReiteracao: number
     mensagemCheckin: number
     mensagemPosAudiencia: number
+    mensagemCancelamento: number
     respostaD1Confirmacao: number
     respostaReiteracaoConfirmacao: number
     respostaCheckinConfirmacao: number
@@ -15206,6 +15236,7 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    mensagemCancelamento?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15231,6 +15262,7 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    mensagemCancelamento?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15256,6 +15288,7 @@ export namespace Prisma {
     mensagemReiteracao?: true
     mensagemCheckin?: true
     mensagemPosAudiencia?: true
+    mensagemCancelamento?: true
     respostaD1Confirmacao?: true
     respostaReiteracaoConfirmacao?: true
     respostaCheckinConfirmacao?: true
@@ -15368,6 +15401,7 @@ export namespace Prisma {
     mensagemReiteracao: string | null
     mensagemCheckin: string | null
     mensagemPosAudiencia: string | null
+    mensagemCancelamento: string | null
     respostaD1Confirmacao: string | null
     respostaReiteracaoConfirmacao: string | null
     respostaCheckinConfirmacao: string | null
@@ -15412,6 +15446,7 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    mensagemCancelamento?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15437,6 +15472,7 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    mensagemCancelamento?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15462,6 +15498,7 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    mensagemCancelamento?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15487,6 +15524,7 @@ export namespace Prisma {
     mensagemReiteracao?: boolean
     mensagemCheckin?: boolean
     mensagemPosAudiencia?: boolean
+    mensagemCancelamento?: boolean
     respostaD1Confirmacao?: boolean
     respostaReiteracaoConfirmacao?: boolean
     respostaCheckinConfirmacao?: boolean
@@ -15499,7 +15537,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
+  export type ConfiguracaoGlobalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "enviarAvisoNaImportacao" | "horarioD1" | "antecedenciaD1Horas" | "antecedenciaReiteracaoHoras" | "antecedenciaCheckinMinutos" | "posAudienciaMinutosDepois" | "fusoHorario" | "mensagemD1" | "mensagemReiteracao" | "mensagemCheckin" | "mensagemPosAudiencia" | "mensagemCancelamento" | "respostaD1Confirmacao" | "respostaReiteracaoConfirmacao" | "respostaCheckinConfirmacao" | "respostaPosAudienciaConfirmacao" | "mensagemPosPergunta2" | "mensagemPosPergunta3" | "mensagemPosPergunta4" | "mensagemPosPergunta5" | "mensagemPosPergunta6" | "updatedAt", ExtArgs["result"]["configuracaoGlobal"]>
 
   export type $ConfiguracaoGlobalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ConfiguracaoGlobal"
@@ -15517,6 +15555,7 @@ export namespace Prisma {
       mensagemReiteracao: string | null
       mensagemCheckin: string | null
       mensagemPosAudiencia: string | null
+      mensagemCancelamento: string | null
       respostaD1Confirmacao: string | null
       respostaReiteracaoConfirmacao: string | null
       respostaCheckinConfirmacao: string | null
@@ -15962,6 +16001,7 @@ export namespace Prisma {
     readonly mensagemReiteracao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemCheckin: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly mensagemPosAudiencia: FieldRef<"ConfiguracaoGlobal", 'String'>
+    readonly mensagemCancelamento: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaD1Confirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaReiteracaoConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
     readonly respostaCheckinConfirmacao: FieldRef<"ConfiguracaoGlobal", 'String'>
@@ -17465,6 +17505,8 @@ export namespace Prisma {
     senha: 'senha',
     role: 'role',
     ativo: 'ativo',
+    resetToken: 'resetToken',
+    resetTokenExpiraEm: 'resetTokenExpiraEm',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -17640,6 +17682,7 @@ export namespace Prisma {
     mensagemReiteracao: 'mensagemReiteracao',
     mensagemCheckin: 'mensagemCheckin',
     mensagemPosAudiencia: 'mensagemPosAudiencia',
+    mensagemCancelamento: 'mensagemCancelamento',
     respostaD1Confirmacao: 'respostaD1Confirmacao',
     respostaReiteracaoConfirmacao: 'respostaReiteracaoConfirmacao',
     respostaCheckinConfirmacao: 'respostaCheckinConfirmacao',
@@ -17946,6 +17989,8 @@ export namespace Prisma {
     senha?: StringFilter<"Usuario"> | string
     role?: EnumRoleUsuarioFilter<"Usuario"> | $Enums.RoleUsuario
     ativo?: BoolFilter<"Usuario"> | boolean
+    resetToken?: StringNullableFilter<"Usuario"> | string | null
+    resetTokenExpiraEm?: DateTimeNullableFilter<"Usuario"> | Date | string | null
     createdAt?: DateTimeFilter<"Usuario"> | Date | string
     updatedAt?: DateTimeFilter<"Usuario"> | Date | string
   }
@@ -17957,6 +18002,8 @@ export namespace Prisma {
     senha?: SortOrder
     role?: SortOrder
     ativo?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
+    resetTokenExpiraEm?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17964,6 +18011,7 @@ export namespace Prisma {
   export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    resetToken?: string
     AND?: UsuarioWhereInput | UsuarioWhereInput[]
     OR?: UsuarioWhereInput[]
     NOT?: UsuarioWhereInput | UsuarioWhereInput[]
@@ -17971,9 +18019,10 @@ export namespace Prisma {
     senha?: StringFilter<"Usuario"> | string
     role?: EnumRoleUsuarioFilter<"Usuario"> | $Enums.RoleUsuario
     ativo?: BoolFilter<"Usuario"> | boolean
+    resetTokenExpiraEm?: DateTimeNullableFilter<"Usuario"> | Date | string | null
     createdAt?: DateTimeFilter<"Usuario"> | Date | string
     updatedAt?: DateTimeFilter<"Usuario"> | Date | string
-  }, "id" | "email">
+  }, "id" | "email" | "resetToken">
 
   export type UsuarioOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17982,6 +18031,8 @@ export namespace Prisma {
     senha?: SortOrder
     role?: SortOrder
     ativo?: SortOrder
+    resetToken?: SortOrderInput | SortOrder
+    resetTokenExpiraEm?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UsuarioCountOrderByAggregateInput
@@ -17999,6 +18050,8 @@ export namespace Prisma {
     senha?: StringWithAggregatesFilter<"Usuario"> | string
     role?: EnumRoleUsuarioWithAggregatesFilter<"Usuario"> | $Enums.RoleUsuario
     ativo?: BoolWithAggregatesFilter<"Usuario"> | boolean
+    resetToken?: StringNullableWithAggregatesFilter<"Usuario"> | string | null
+    resetTokenExpiraEm?: DateTimeNullableWithAggregatesFilter<"Usuario"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Usuario"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Usuario"> | Date | string
   }
@@ -18849,6 +18902,7 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCancelamento?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18874,6 +18928,7 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrderInput | SortOrder
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
+    mensagemCancelamento?: SortOrderInput | SortOrder
     respostaD1Confirmacao?: SortOrderInput | SortOrder
     respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
     respostaCheckinConfirmacao?: SortOrderInput | SortOrder
@@ -18902,6 +18957,7 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCancelamento?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableFilter<"ConfiguracaoGlobal"> | string | null
@@ -18927,6 +18983,7 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrderInput | SortOrder
     mensagemCheckin?: SortOrderInput | SortOrder
     mensagemPosAudiencia?: SortOrderInput | SortOrder
+    mensagemCancelamento?: SortOrderInput | SortOrder
     respostaD1Confirmacao?: SortOrderInput | SortOrder
     respostaReiteracaoConfirmacao?: SortOrderInput | SortOrder
     respostaCheckinConfirmacao?: SortOrderInput | SortOrder
@@ -18960,6 +19017,7 @@ export namespace Prisma {
     mensagemReiteracao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemCheckin?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     mensagemPosAudiencia?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
+    mensagemCancelamento?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaD1Confirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaReiteracaoConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
     respostaCheckinConfirmacao?: StringNullableWithAggregatesFilter<"ConfiguracaoGlobal"> | string | null
@@ -19054,6 +19112,8 @@ export namespace Prisma {
     senha: string
     role?: $Enums.RoleUsuario
     ativo?: boolean
+    resetToken?: string | null
+    resetTokenExpiraEm?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19065,6 +19125,8 @@ export namespace Prisma {
     senha: string
     role?: $Enums.RoleUsuario
     ativo?: boolean
+    resetToken?: string | null
+    resetTokenExpiraEm?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19076,6 +19138,8 @@ export namespace Prisma {
     senha?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleUsuarioFieldUpdateOperationsInput | $Enums.RoleUsuario
     ativo?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19087,6 +19151,8 @@ export namespace Prisma {
     senha?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleUsuarioFieldUpdateOperationsInput | $Enums.RoleUsuario
     ativo?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19098,6 +19164,8 @@ export namespace Prisma {
     senha: string
     role?: $Enums.RoleUsuario
     ativo?: boolean
+    resetToken?: string | null
+    resetTokenExpiraEm?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19109,6 +19177,8 @@ export namespace Prisma {
     senha?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleUsuarioFieldUpdateOperationsInput | $Enums.RoleUsuario
     ativo?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19120,6 +19190,8 @@ export namespace Prisma {
     senha?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleUsuarioFieldUpdateOperationsInput | $Enums.RoleUsuario
     ativo?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20055,6 +20127,7 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    mensagemCancelamento?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20080,6 +20153,7 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    mensagemCancelamento?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20105,6 +20179,7 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20130,6 +20205,7 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20155,6 +20231,7 @@ export namespace Prisma {
     mensagemReiteracao?: string | null
     mensagemCheckin?: string | null
     mensagemPosAudiencia?: string | null
+    mensagemCancelamento?: string | null
     respostaD1Confirmacao?: string | null
     respostaReiteracaoConfirmacao?: string | null
     respostaCheckinConfirmacao?: string | null
@@ -20180,6 +20257,7 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20205,6 +20283,7 @@ export namespace Prisma {
     mensagemReiteracao?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemCheckin?: NullableStringFieldUpdateOperationsInput | string | null
     mensagemPosAudiencia?: NullableStringFieldUpdateOperationsInput | string | null
+    mensagemCancelamento?: NullableStringFieldUpdateOperationsInput | string | null
     respostaD1Confirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaReiteracaoConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
     respostaCheckinConfirmacao?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20327,6 +20406,32 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -20338,6 +20443,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type UsuarioCountOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
@@ -20345,6 +20455,8 @@ export namespace Prisma {
     senha?: SortOrder
     role?: SortOrder
     ativo?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpiraEm?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20356,6 +20468,8 @@ export namespace Prisma {
     senha?: SortOrder
     role?: SortOrder
     ativo?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpiraEm?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20367,6 +20481,8 @@ export namespace Prisma {
     senha?: SortOrder
     role?: SortOrder
     ativo?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpiraEm?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20405,6 +20521,38 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -20458,21 +20606,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type MensagemListRelationFilter = {
     every?: MensagemWhereInput
     some?: MensagemWhereInput
@@ -20483,11 +20616,6 @@ export namespace Prisma {
     every?: SubstituicaoWhereInput
     some?: SubstituicaoWhereInput
     none?: SubstituicaoWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type MensagemOrderByRelationAggregateInput = {
@@ -20529,24 +20657,6 @@ export namespace Prisma {
     ativo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ContatoParceiroListRelationFilter = {
@@ -21149,17 +21259,6 @@ export namespace Prisma {
     not?: NestedEnumStatusSubstituicaoFilter<$PrismaModel> | $Enums.StatusSubstituicao
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type SubstituicaoCountOrderByAggregateInput = {
     id?: SortOrder
     audienciaId?: SortOrder
@@ -21203,20 +21302,6 @@ export namespace Prisma {
     _max?: NestedEnumStatusSubstituicaoFilter<$PrismaModel>
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type ConfiguracaoGlobalCountOrderByAggregateInput = {
     id?: SortOrder
     enviarAvisoNaImportacao?: SortOrder
@@ -21230,6 +21315,7 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    mensagemCancelamento?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21262,6 +21348,7 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    mensagemCancelamento?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21287,6 +21374,7 @@ export namespace Prisma {
     mensagemReiteracao?: SortOrder
     mensagemCheckin?: SortOrder
     mensagemPosAudiencia?: SortOrder
+    mensagemCancelamento?: SortOrder
     respostaD1Confirmacao?: SortOrder
     respostaReiteracaoConfirmacao?: SortOrder
     respostaCheckinConfirmacao?: SortOrder
@@ -21350,6 +21438,14 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -21452,10 +21548,6 @@ export namespace Prisma {
     connectOrCreate?: SubstituicaoCreateOrConnectWithoutPrepostoNovoInput | SubstituicaoCreateOrConnectWithoutPrepostoNovoInput[]
     createMany?: SubstituicaoCreateManyPrepostoNovoInputEnvelope
     connect?: SubstituicaoWhereUniqueInput | SubstituicaoWhereUniqueInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type AudienciaUpdateManyWithoutPrepostoNestedInput = {
@@ -22150,10 +22242,6 @@ export namespace Prisma {
     set?: $Enums.StatusSubstituicao
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type AudienciaUpdateOneRequiredWithoutSubstituicoesNestedInput = {
     create?: XOR<AudienciaCreateWithoutSubstituicoesInput, AudienciaUncheckedCreateWithoutSubstituicoesInput>
     connectOrCreate?: AudienciaCreateOrConnectWithoutSubstituicoesInput
@@ -22220,6 +22308,31 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -22277,34 +22390,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -22331,6 +22416,34 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -22539,17 +22652,6 @@ export namespace Prisma {
     not?: NestedEnumStatusSubstituicaoFilter<$PrismaModel> | $Enums.StatusSubstituicao
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumStatusSubstituicaoWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.StatusSubstituicao | EnumStatusSubstituicaoFieldRefInput<$PrismaModel>
     in?: $Enums.StatusSubstituicao[] | ListEnumStatusSubstituicaoFieldRefInput<$PrismaModel>
@@ -22558,20 +22660,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStatusSubstituicaoFilter<$PrismaModel>
     _max?: NestedEnumStatusSubstituicaoFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type AudienciaCreateWithoutTrtInput = {

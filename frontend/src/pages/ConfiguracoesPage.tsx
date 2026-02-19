@@ -25,6 +25,8 @@ const TEMPLATES_DEFAULT = {
     'Check-in da audiencia {{numeroProcesso}} hoje as {{hora}}. Chegou no local?',
   mensagemPosAudiencia:
     'Checkout pos-audiencia do processo {{numeroProcesso}}. Pergunta 1/6: A audiencia ocorreu?',
+  mensagemCancelamento:
+    'Aviso: a audiencia do processo {{numeroProcesso}} em {{data}} as {{hora}} foi cancelada. Qualquer duvida, contate o escritorio.',
   respostaD1Confirmacao:
     'Agradecemos a colaboracao. Ja iremos marcar sua visita na audiencia em nosso sistema.',
   respostaReiteracaoConfirmacao:
@@ -112,6 +114,7 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
     mensagemReiteracao: dados.mensagemReiteracao,
     mensagemCheckin: dados.mensagemCheckin,
     mensagemPosAudiencia: dados.mensagemPosAudiencia,
+    mensagemCancelamento: dados.mensagemCancelamento,
     respostaD1Confirmacao: dados.respostaD1Confirmacao,
     respostaReiteracaoConfirmacao: dados.respostaReiteracaoConfirmacao,
     respostaCheckinConfirmacao: dados.respostaCheckinConfirmacao,
@@ -489,6 +492,14 @@ function ConfiguracoesForm({ dados }: { dados: ConfiguracaoGlobal }) {
               defaultValue={TEMPLATES_DEFAULT.mensagemPosAudiencia}
               onChange={(v) => setForm((f) => ({ ...f, mensagemPosAudiencia: v }))}
               onRestaurar={() => restaurarTemplate('mensagemPosAudiencia')}
+            />
+            <TemplateField
+              label="Mensagem de cancelamento"
+              value={form.mensagemCancelamento}
+              defaultValue={TEMPLATES_DEFAULT.mensagemCancelamento}
+              onChange={(v) => setForm((f) => ({ ...f, mensagemCancelamento: v }))}
+              onRestaurar={() => restaurarTemplate('mensagemCancelamento')}
+              rows={2}
             />
             <TemplateField
               label="Resposta de checkout (confirmacao final)"

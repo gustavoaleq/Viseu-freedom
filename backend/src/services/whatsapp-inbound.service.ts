@@ -91,9 +91,11 @@ const RESPOSTAS: Record<RespostaId, RegraResposta> = {
   NAO_POSSO: {
     id: 'NAO_POSSO',
     tipoMensagem: 'CONFIRMACAO_D1',
-    statusNovo: 'NAO_POSSO',
-    motivo: 'Resposta WhatsApp: indisponibilidade do preposto',
+    statusNovo: 'SUBSTITUICAO_NECESSARIA',
+    motivo: 'Resposta WhatsApp: indisponibilidade do preposto (D-1)',
     label: 'Nao, nao posso',
+    abrirSubstituicao: true,
+    interromperOrquestracao: true,
   },
   ESTOU_A_CAMINHO: {
     id: 'ESTOU_A_CAMINHO',
@@ -232,11 +234,20 @@ const FALLBACK_NUMERICO: Record<TipoMensagem, RespostaId[]> = {
   REITERACAO_H1H30: ['CONFIRMO', 'NAO_POSSO'],
   SUBSTITUICAO_AVISO: ['NAO_POSSO'],
   ESCALONAMENTO: ['NAO_POSSO'],
+  CANCELAMENTO: [],
 }
 
 const STATUS_VALIDOS_POR_RESPOSTA: Record<RespostaId, StatusAudiencia[]> = {
   CONFIRMO: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CHECK_IN_PENDENTE', 'NAO_POSSO'],
-  NAO_POSSO: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CONFIRMADA', 'CHECK_IN_PENDENTE', 'NAO_POSSO'],
+  NAO_POSSO: [
+    'IMPORTADA',
+    'AGENDADA',
+    'A_CONFIRMAR',
+    'CONFIRMADA',
+    'CHECK_IN_PENDENTE',
+    'NAO_POSSO',
+    'SUBSTITUICAO_NECESSARIA',
+  ],
   ESTOU_A_CAMINHO: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CONFIRMADA', 'CHECK_IN_PENDENTE'],
   JA_CHEGUEI: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CONFIRMADA', 'CHECK_IN_PENDENTE'],
   ESTOU_COM_PROBLEMA: ['IMPORTADA', 'AGENDADA', 'A_CONFIRMAR', 'CONFIRMADA', 'CHECK_IN_PENDENTE'],
@@ -1984,11 +1995,7 @@ function montarRespostaAutomaticaPreposto(params: {
   }
 
   if (params.respostaId === 'NAO_POSSO') {
-    if (params.respostaEmReiteracao) {
-      return 'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.'
-    }
-
-    return 'Entendemos que nao pode participar no momento e agradecemos. Enviaremos uma nova confirmacao mais proxima da audiencia.'
+    return 'Entendemos que nao podera participar e agradecemos o retorno. Vamos iniciar o fluxo de substituicao e manter voce informado.'
   }
 
   if (params.respostaId === 'ESTOU_A_CAMINHO' || params.respostaId === 'JA_CHEGUEI') {

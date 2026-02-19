@@ -18,6 +18,7 @@ interface ResultadoProcessamento {
     | 'SEM_PREPOSTO'
     | 'STATUS_FINAL'
     | 'REITERACAO_NAO_APLICAVEL'
+    | 'JA_ENVIADA'
   audienciaId?: string
   tipo?: TipoJobOrquestracao
   providerMessageId?: string
@@ -89,6 +90,32 @@ export async function processarOrquestracaoAudiencia(
 
   const config = await obterConfiguracoes()
   const mensagem = montarMensagem(tipo, audiencia, config)
+  const jaEnviada = await prisma.mensagem.findFirst({
+    where: {
+      audienciaId: audiencia.id,
+      direcao: 'ENVIADA',
+      tipo: mensagem.tipo,
+      prepostoId: audiencia.prepostoId,
+    },
+    select: { id: true, createdAt: true },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  if (jaEnviada) {
+    await registrarLogAutomacao({
+      audienciaId: audiencia.id,
+      origem,
+      evento: 'DISPARO_IGNORADO',
+      etapa: tipo,
+      status: 'IGNORADO',
+      mensagem: 'Disparo ignorado: mensagem ja enviada anteriormente',
+      metadados: {
+        tipoMensagem: mensagem.tipo,
+        enviadoEm: jaEnviada.createdAt.toISOString(),
+      },
+    })
+    return { ok: false, reason: 'JA_ENVIADA' }
+  }
   try {
     const envio = await whatsapp.enviarMensagem({
       para: audiencia.preposto.telefoneWhatsapp,

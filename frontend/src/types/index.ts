@@ -315,6 +315,7 @@ export interface ConfiguracaoGlobal {
   mensagemReiteracao: string | null
   mensagemCheckin: string | null
   mensagemPosAudiencia: string | null
+  mensagemCancelamento: string | null
   respostaD1Confirmacao: string | null
   respostaReiteracaoConfirmacao: string | null
   respostaCheckinConfirmacao: string | null

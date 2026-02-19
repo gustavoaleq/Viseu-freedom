@@ -14,6 +14,8 @@ interface AgendarParams {
   data: Date
   hora: string
   dispararD1Imediato?: boolean
+  pularTipos?: TipoJobOrquestracao[]
+  desativarCatchup?: boolean
 }
 
 export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
@@ -50,6 +52,19 @@ export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
   let jaAgendouCatchup = false
 
   for (const [tipo, quando] of pares) {
+    if (params.pularTipos?.includes(tipo)) {
+      await registrarLogAutomacao({
+        audienciaId: params.audienciaId,
+        origem: 'SCHEDULER',
+        evento: 'DISPARO_IGNORADO',
+        etapa: tipo,
+        status: 'IGNORADO',
+        mensagem: 'Agendamento ignorado: etapa ja enviada anteriormente',
+        metadados: { motivo: 'JA_ENVIADA' },
+      })
+      continue
+    }
+
     // Flag dispararD1Imediato: forca D-1 com delay minimo (criacao/importacao com toggle ativado)
     if (params.dispararD1Imediato && tipo === 'CONFIRMACAO_D1') {
       jobs.push(await upsertJob(tipo, params.audienciaId, new Date(agora + DELAY_MINIMO_MS)))
@@ -75,7 +90,12 @@ export async function agendarOrquestracaoAudiencia(params: AgendarParams) {
       // Se a audiencia ainda e futura e nenhum catch-up foi agendado,
       // disparar este job imediatamente (primeiro contato com preposto).
       // Exclui RELATORIO_POS que so faz sentido apos a audiencia.
-      if (audienciaNoFuturo && !jaAgendouCatchup && tipo !== 'RELATORIO_POS') {
+      if (
+        audienciaNoFuturo &&
+        !jaAgendouCatchup &&
+        !params.desativarCatchup &&
+        tipo !== 'RELATORIO_POS'
+      ) {
         jobs.push(await upsertJob(tipo, params.audienciaId, new Date(agora + DELAY_MINIMO_MS)))
         jaAgendouCatchup = true
 
@@ -170,13 +190,40 @@ export async function reagendarTodasAudienciasAtivas(): Promise<number> {
     },
   })
 
+  const ids = audiencias.map((aud) => aud.id)
+  const mensagens = ids.length
+    ? await prisma.mensagem.findMany({
+        where: {
+          audienciaId: { in: ids },
+          direcao: 'ENVIADA',
+          tipo: { in: ['CONFIRMACAO_D1', 'REITERACAO_H1H30', 'CHECK_IN', 'RELATORIO_POS'] },
+        },
+        select: { audienciaId: true, tipo: true },
+      })
+    : []
+
+  const mensagensPorAudiencia = mensagens.reduce<Map<string, Set<string>>>((acc, msg) => {
+    if (!acc.has(msg.audienciaId)) acc.set(msg.audienciaId, new Set())
+    acc.get(msg.audienciaId)?.add(msg.tipo)
+    return acc
+  }, new Map())
+
   let reagendadas = 0
   for (const aud of audiencias) {
     try {
+      const enviados = mensagensPorAudiencia.get(aud.id) ?? new Set()
+      const pularTipos: TipoJobOrquestracao[] = []
+      if (enviados.has('CONFIRMACAO_D1')) pularTipos.push('CONFIRMACAO_D1')
+      if (enviados.has('REITERACAO_H1H30')) pularTipos.push('REITERACAO_6H')
+      if (enviados.has('CHECK_IN')) pularTipos.push('CHECKIN_DIA')
+      if (enviados.has('RELATORIO_POS')) pularTipos.push('RELATORIO_POS')
+
       await agendarOrquestracaoAudiencia({
         audienciaId: aud.id,
         data: aud.data,
         hora: aud.hora,
+        pularTipos,
+        desativarCatchup: true,
       })
       reagendadas++
     } catch (error) {

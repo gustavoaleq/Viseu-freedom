@@ -5,7 +5,7 @@ import {
   agendarOrquestracaoAudiencia,
   removerOrquestracaoAudiencia,
 } from '../jobs/orquestracao.scheduler.js'
-import { obterConfiguracoes } from './configuracoes.service.js'
+import { aplicarTemplate, obterConfiguracoes, TEMPLATES_DEFAULT } from './configuracoes.service.js'
 import { registrarLogAutomacao } from './automacao-log.service.js'
 import {
   dispararEscalonamentoSubstituicao,
@@ -18,6 +18,9 @@ import type {
   ResultadoAudiencia,
   Prisma,
 } from '../generated/prisma/client.js'
+import { criarWhatsAppAdapter } from './whatsapp.adapter.js'
+
+const whatsapp = criarWhatsAppAdapter()
 
 // === Tipos de filtros ===
 
@@ -835,7 +838,12 @@ export async function trocarPreposto(
     usuarioId,
   )
 
-  await agendarComTolerancia(audienciaAtualizada.id, audienciaAtualizada.data, audienciaAtualizada.hora)
+  await agendarComTolerancia(
+    audienciaAtualizada.id,
+    audienciaAtualizada.data,
+    audienciaAtualizada.hora,
+    true,
+  )
 
   if (substituicaoAberta) {
     try {
@@ -921,6 +929,8 @@ export async function cancelarAudiencia(audienciaId: string, motivo: string, usu
   }
 
   await removerComTolerancia(audienciaId)
+
+  await notificarCancelamentoPreposto(audiencia, motivo)
 
   return atualizada
 }
@@ -1296,6 +1306,83 @@ async function agendarComTolerancia(audienciaId: string, data: Date, hora: strin
     console.error('[orquestracao] falha ao agendar audiencia', {
       audienciaId,
       error: error instanceof Error ? error.message : String(error),
+    })
+  }
+}
+
+async function notificarCancelamentoPreposto(
+  audiencia: {
+    id: string
+    numeroProcesso: string
+    data: Date
+    hora: string
+    prepostoId: string
+    preposto?: { nome: string; telefoneWhatsapp: string } | null
+  },
+  motivo: string,
+) {
+  try {
+    const config = await obterConfiguracoes()
+    const preposto = audiencia.preposto
+      ? audiencia.preposto
+      : await prisma.preposto.findUnique({
+          where: { id: audiencia.prepostoId },
+          select: { nome: true, telefoneWhatsapp: true },
+        })
+
+    if (!preposto) return
+
+    const dataFmt = new Intl.DateTimeFormat('pt-BR').format(audiencia.data)
+    const variaveis: Record<string, string> = {
+      nomePreposto: preposto.nome,
+      numeroProcesso: audiencia.numeroProcesso,
+      data: dataFmt,
+      hora: audiencia.hora,
+      local: 'local a confirmar',
+      escritorioParceiro: '',
+      trt: '',
+      motivoCancelamento: motivo,
+    }
+
+    const template = config.mensagemCancelamento || TEMPLATES_DEFAULT.mensagemCancelamento
+    const texto = aplicarTemplate(template, variaveis)
+
+    const envio = await whatsapp.enviarMensagem({
+      para: preposto.telefoneWhatsapp,
+      texto,
+      audienciaId: audiencia.id,
+      tipo: 'CANCELAMENTO',
+    })
+
+    await prisma.mensagem.create({
+      data: {
+        audienciaId: audiencia.id,
+        prepostoId: audiencia.prepostoId,
+        tipo: 'CANCELAMENTO',
+        direcao: 'ENVIADA',
+        conteudo: texto,
+        whatsappMessageId: envio.providerMessageId ?? null,
+        statusEnvio: 'ENVIADA',
+      },
+    })
+
+    await registrarLogAutomacao({
+      audienciaId: audiencia.id,
+      origem: 'MANUAL',
+      evento: 'DISPARO',
+      etapa: 'CANCELAMENTO',
+      status: 'SUCESSO',
+      mensagem: 'Mensagem de cancelamento enviada ao preposto',
+    })
+  } catch (error) {
+    await registrarLogAutomacao({
+      audienciaId: audiencia.id,
+      origem: 'MANUAL',
+      evento: 'ERRO',
+      etapa: 'CANCELAMENTO',
+      status: 'ERRO',
+      mensagem: 'Falha ao enviar mensagem de cancelamento',
+      metadados: { erro: error instanceof Error ? error.message : String(error) },
     })
   }
 }

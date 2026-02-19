@@ -1,89 +1,94 @@
-# Freedom.AI Operational Hub - Viseu (POC)
+# Freedom.AI Operational Hub — Viseu (POC)
 
-POC de um hub operacional para gestao de audiencias trabalhistas do Viseu Advogados.
+POC de um hub operacional para gestão de audiências trabalhistas do Viseu Advogados. O sistema é **manual-first**: toda operação pode ser feita sem importação, e a planilha é apenas um atalho para entrada em massa.
 
-## Objetivo
+## Visão Geral
 
-Construir um sistema que funcione de forma autonoma para operar audiencias, prepostos e parceiros, com ou sem importacao de planilha.
+O Hub centraliza a operação de audiências (criação, acompanhamento, check-in e pós‑audiência), orquestra comunicações via WhatsApp (com fallback), e registra toda a trilha de auditoria. A POC foca nos TRTs 2 e 15.
 
-Regra central:
-- O Hub deve operar 100% manualmente.
-- A importacao de planilha e um atalho para entrada em massa.
+## Principais Funcionalidades
 
-## Escopo da POC
+- Operação manual completa de audiências, prepostos e parceiros
+- Importação assíncrona de planilhas com mapeamento e validação por linha
+- Orquestração automática de mensagens (D‑1, reiteração configurável, check‑in e pós‑audiência)
+- Webhook inbound do WhatsApp com transições automáticas de status
+- Fluxo de substituição com escalonamento e coleta de novo preposto via WhatsApp
+- Configurações globais administrativas (timings e templates de mensagens)
+- Dashboard operacional, lista, kanban e exportações
 
-- Regioes foco: TRT 2 e TRT 15.
-- Ciclo operacional: D-1, H-1h30, substituicao, check-in no dia, relatorio pos-audiencia.
-- Painel operacional: lista/kanban, contadores, filtros e exportacao.
+## Arquitetura em Alto Nível
+
+```
+Frontend (React/Vite)
+        |
+        v
+Backend API (Fastify)
+        |
+        |-- PostgreSQL (Prisma)
+        |-- Redis (BullMQ)
+        v
+Worker de Orquestração
+```
 
 ## Stack
 
-- Frontend: React + TypeScript + Vite + Tailwind v4
-- Backend: Node.js + Fastify + TypeScript
+- Frontend: React + TypeScript + Vite + Tailwind CSS v4
+- Backend: Node.js + Fastify + TypeScript (ESM)
 - Banco: PostgreSQL 16
 - ORM: Prisma 7
 - Filas: BullMQ + Redis
 - Containers: Docker Compose
 
-## Estado Atual
+## Estrutura do Repositório
 
-- Concluido: arquitetura macro e modelagem de banco (11 entidades)
-- Concluido: schema Prisma, migration inicial e seed (TRTs + usuario admin)
-- Concluido: backend com autenticacao JWT (`/auth/login`, `/auth/me`, `/auth/logout`)
-- Concluido: backend de audiencias (lista, detalhe, criar, atualizar, kanban, dashboard, trocar preposto)
-- Concluido: setup frontend com React Query, Router, cliente API e tipos
-- Em andamento: implementacao completa do backend (modulos faltantes e orquestracao)
-- Nao iniciado (funcional): telas React de operacao (frontend ainda em placeholder)
+```
+.
+├── backend/              # API Fastify + jobs + services
+├── frontend/             # SPA React
+├── docs/                 # Documentação e contrato OpenAPI
+├── docker-compose.yml    # Stack completa
+├── arquitetura.md        # Visão arquitetural
+├── database.md           # Modelagem do banco
+├── workers.md            # Orquestração e WhatsApp
+├── CLAUDE.md             # Contexto do agente
+└── CODEX.md              # Guia operacional do agente
+```
 
-## Decisoes Fechadas (11/02/2026)
+## Fluxos Operacionais (resumo)
 
-- O Hub e independente de importacao (manual first).
-- Integracao oficial com WhatsApp Business API fica para depois da POC.
-- Para simulacoes/testes da comunicacao, usar n8n como camada de automacao.
-- Orquestracao por BullMQ com jobs por audiencia.
-- Importacao recomendada: pipeline assincrono com upload + preview + confirmacao.
-
-## Proxima Fase (Backend)
-
-1. Modulos CRUD faltantes
-- Prepostos, Parceiros/Contatos, TRTs, Usuarios (admin)
-
-2. Importacao de planilha (assincrona)
-- Upload, mapeamento, preview de validacao, confirmacao
-- Filtro de processamento para TRT 2/15
-
-3. Orquestracao e automacao
-- Agendamentos D-1, H-1h30, check-in, relatorio pos
-- Abertura de substituicao e notificacoes de escalonamento
-- Adapter de notificacao para n8n (mock/simulacao)
-
-4. Exportacao e trilha operacional
-- Export xlsx/csv
-- Logs e auditoria minima da POC
+- **D‑1 (Confirmação)**: lembrete para confirmar presença
+- **Reiteração (configurável, default 6h)**: segunda tentativa se não houver resposta
+- **Check‑in**: antes da audiência
+- **Pós‑audiência**: coleta de relatório
+- **Substituição**: abertura automática, escalonamento e troca de preposto
 
 ## Como Rodar
 
-Backend:
+### Backend
 ```bash
 cd backend
 npm run dev
 ```
 
-Frontend:
+### Frontend
 ```bash
 cd frontend
 npm run dev
 ```
 
-Docker (full stack):
+### Docker (stack completa)
 ```bash
 docker-compose up --build
 ```
 
-## Documentos de Referencia
+## Configurações
 
-- `CLAUDE.md`
-- `CODEX.md`
-- `arquitetura.md`
-- `database.md`
-- `docs/ESCOPO POC VIZEU (1).docx`
+A orquestração é parametrizada em `configuracao_global` (via tela `/configuracoes`, ADMIN).
+Há fallback por variáveis de ambiente no backend (`backend/.env`).
+
+## Documentação
+
+- `docs/openapi.yaml` — contrato oficial da API
+- `arquitetura.md` — visão arquitetural detalhada
+- `database.md` — modelo e enums do banco
+- `workers.md` — orquestração, jobs e WhatsApp

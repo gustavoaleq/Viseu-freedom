@@ -127,6 +127,8 @@ exports.Prisma.UsuarioScalarFieldEnum = {
   senha: 'senha',
   role: 'role',
   ativo: 'ativo',
+  resetToken: 'resetToken',
+  resetTokenExpiraEm: 'resetTokenExpiraEm',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -269,6 +271,7 @@ exports.Prisma.ConfiguracaoGlobalScalarFieldEnum = {
   mensagemReiteracao: 'mensagemReiteracao',
   mensagemCheckin: 'mensagemCheckin',
   mensagemPosAudiencia: 'mensagemPosAudiencia',
+  mensagemCancelamento: 'mensagemCancelamento',
   respostaD1Confirmacao: 'respostaD1Confirmacao',
   respostaReiteracaoConfirmacao: 'respostaReiteracaoConfirmacao',
   respostaCheckinConfirmacao: 'respostaCheckinConfirmacao',
@@ -356,7 +359,8 @@ exports.TipoMensagem = exports.$Enums.TipoMensagem = {
   CHECK_IN: 'CHECK_IN',
   RELATORIO_POS: 'RELATORIO_POS',
   SUBSTITUICAO_AVISO: 'SUBSTITUICAO_AVISO',
-  ESCALONAMENTO: 'ESCALONAMENTO'
+  ESCALONAMENTO: 'ESCALONAMENTO',
+  CANCELAMENTO: 'CANCELAMENTO'
 };
 
 exports.DirecaoMensagem = exports.$Enums.DirecaoMensagem = {

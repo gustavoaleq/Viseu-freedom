@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { formatarDataHora } from '../lib/format'
 import { importacoesApi } from '../services/hub'
@@ -181,6 +181,7 @@ export function ImportacoesPage() {
   const [arquivo, setArquivo] = useState<File | null>(null)
   const [importacaoId, setImportacaoId] = useState<string>('')
   const [mapeamento, setMapeamento] = useState<Record<string, string>>({})
+  const previewRef = useRef<HTMLDivElement | null>(null)
 
   const historico = useQuery({
     queryKey: ['importacoes-historico'],
@@ -215,6 +216,11 @@ export function ImportacoesPage() {
     queryFn: () => importacoesApi.preview(importacaoId),
     enabled: !!importacaoId && mapear.isSuccess,
   })
+
+  useEffect(() => {
+    if (!preview.data || !previewRef.current) return
+    previewRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [preview.data])
 
   const confirmar = useMutation({
     mutationFn: () => importacoesApi.confirmar(importacaoId),
@@ -432,7 +438,7 @@ export function ImportacoesPage() {
           ) : null}
 
           {preview.data ? (
-            <div className="mt-5 space-y-3">
+            <div ref={previewRef} className="mt-5 space-y-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">3. Preview e validacao</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
