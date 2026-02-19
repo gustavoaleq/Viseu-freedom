@@ -50,8 +50,7 @@ Worker de Orquestração
 ├── arquitetura.md        # Visão arquitetural
 ├── database.md           # Modelagem do banco
 ├── workers.md            # Orquestração e WhatsApp
-├── CLAUDE.md             # Contexto do agente
-└── CODEX.md              # Guia operacional do agente
+
 ```
 
 ## Fluxos Operacionais (resumo)
